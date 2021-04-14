@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator;
 
 import com.github.javafaker.Faker;
-import fr.jordanmartin.datagenerator.output.JsonObjectWriter;
+import fr.jordanmartin.datagenerator.output.JsonWriter;
 import fr.jordanmartin.datagenerator.output.ObjectWriter;
 import fr.jordanmartin.datagenerator.provider.ListOf;
 import fr.jordanmartin.datagenerator.provider.Repeat;
@@ -84,11 +84,11 @@ public abstract class ObjectBuilder extends ObjectProvider {
     }
 
     protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, int count) {
-        return new Repeat<T>(provider, count);
+        return new Repeat<>(provider, count);
     }
 
     protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, ValueProvider<Integer> count) {
-        return new Repeat<T>(provider, count);
+        return new Repeat<>(provider, count);
     }
 
     protected ListOf list(ValueProvider<?>... providers) {
@@ -112,11 +112,11 @@ public abstract class ObjectBuilder extends ObjectProvider {
     }
 
     public void writeOne(OutputStream output, ObjectWriter objectWriter) throws IOException {
-        objectWriter.write(output, getOne());
+        objectWriter.writeOne(output, getOne());
     }
 
     public void writeMultiple(int count, OutputStream output, ObjectWriter objectWriter) throws IOException {
-        Stream<Map<String, Object>> stream = getStream(count);
+        Stream<Map<String, ?>> stream = getStream(count);
 
         if (log.isInfoEnabled()) {
             AtomicInteger current = new AtomicInteger();
@@ -125,7 +125,7 @@ public abstract class ObjectBuilder extends ObjectProvider {
                 System.err.printf("\r%d%% Génération de %d/%d objets", percent, current.get(), count);
             });
         }
-        objectWriter.write(output, stream);
+        objectWriter.writeMany(output, stream);
         if (log.isInfoEnabled()) {
             System.err.println();
         }
@@ -134,12 +134,12 @@ public abstract class ObjectBuilder extends ObjectProvider {
     public void toGzipJsonFile(String filepath, int count) throws IOException {
         log.info("Création du fichier \"{}\"", filepath);
         OutputStream out = new GZIPOutputStream(new FileOutputStream(filepath));
-        writeMultiple(count, out, new JsonObjectWriter());
+        writeMultiple(count, out, new JsonWriter());
     }
 
     public void toJsonFile(String filepath, int count) throws IOException {
         log.info("Création du fichier \"{}\"", filepath);
         OutputStream out = new FileOutputStream(filepath);
-        writeMultiple(count, out, new JsonObjectWriter());
+        writeMultiple(count, out, new JsonWriter());
     }
 }

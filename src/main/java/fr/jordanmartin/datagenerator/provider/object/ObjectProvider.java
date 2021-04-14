@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Génère un objet à partir d'autre générateurs
  */
-public class ObjectProvider implements ValueProvider<Map<String, Object>> {
+public class ObjectProvider implements ValueProvider<Map<String, ?>> {
 
     private final boolean preserveFieldOrder;
 
@@ -77,7 +77,7 @@ public class ObjectProvider implements ValueProvider<Map<String, Object>> {
     }
 
     @Override
-    public Map<String, Object> getOne() {
+    public Map<String, ?> getOne() {
         // Génération des valeurs pour les générateurs de référence
         Map<String, Object> providersSnapshot = new HashMap<>();
         for (Map.Entry<String, ValueProvider<?>> entry : refProviders.entrySet()) {

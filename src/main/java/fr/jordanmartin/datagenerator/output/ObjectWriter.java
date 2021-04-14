@@ -7,8 +7,9 @@ import java.util.stream.Stream;
 
 public interface ObjectWriter {
 
-    void write(OutputStream outputStream, Map<String, Object> object) throws IOException;
+    void writeOne(OutputStream out, Map<String, ?> object) throws IOException;
 
-    void write(OutputStream outputStream, Stream<Map<String, Object>> stream) throws IOException;
+    void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException;
+
 }
 

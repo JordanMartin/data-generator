@@ -12,52 +12,52 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format JSON
  */
-public class JsonObjectWriter implements ObjectWriter {
+public class JsonWriter implements ObjectWriter {
 
     /**
      * Activation du pretty print
      */
     private final boolean pretty;
 
-    public JsonObjectWriter() {
+    public JsonWriter() {
         this(false);
     }
 
-    public JsonObjectWriter(boolean pretty) {
+    public JsonWriter(boolean pretty) {
         this.pretty = pretty;
     }
 
     @Override
-    public void write(OutputStream outputStream, Map<String, Object> object) throws IOException {
+    public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
         com.fasterxml.jackson.databind.ObjectWriter objectWriter;
         if (pretty) {
             objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
         } else {
             objectWriter = new ObjectMapper().writer();
         }
-        objectWriter.writeValue(outputStream, object);
+        objectWriter.writeValue(out, object);
+        out.flush();
     }
 
     @Override
-    public void write(OutputStream outputStream, Stream<Map<String, Object>> stream) throws IOException {
+    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         JsonGenerator jsonGenerator = new JsonFactory()
-                .createGenerator(outputStream)
+                .createGenerator(out)
                 .setCodec(new ObjectMapper());
 
         if (this.pretty) {
             jsonGenerator.useDefaultPrettyPrinter();
         }
 
-        try (jsonGenerator) {
-            jsonGenerator.writeStartArray();
-            stream.forEach(object -> {
-                try {
-                    jsonGenerator.writeObject(object);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            jsonGenerator.writeEndArray();
-        }
+        jsonGenerator.writeStartArray();
+        stream.forEach(object -> {
+            try {
+                jsonGenerator.writeObject(object);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        jsonGenerator.writeEndArray();
+        jsonGenerator.flush();
     }
 }

@@ -5,7 +5,6 @@ import fr.jordanmartin.datagenerator.provider.constant.Constant;
 import fr.jordanmartin.datagenerator.provider.random.RandomInt;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ObjectProviderTest {
 
     @Test
-    void nestFieldObject() throws IOException {
+    void nestFieldObject() {
         Faker faker = new Faker();
         var personProvider = new ObjectProvider()
                 .providerRef("firstname", () -> faker.name().firstName())
@@ -53,7 +52,7 @@ class ObjectProviderTest {
             provider.field(field, () -> field);
         }
         int idx = 0;
-        for (Map.Entry<String, Object> entry : provider.getOne().entrySet()) {
+        for (Map.Entry<String, ?> entry : provider.getOne().entrySet()) {
             assertEquals(fields.get(idx++), entry.getKey());
         }
     }
@@ -64,7 +63,7 @@ class ObjectProviderTest {
                 .field("a", () -> "a")
                 .field("b", () -> "b");
 
-        Map<String, Object> object = provider.getOne();
+        Map<String, ?> object = provider.getOne();
         assertEquals(2, provider.getOne().size());
         assertEquals("a", object.get("a"));
         assertEquals("b", object.get("b"));
@@ -74,7 +73,7 @@ class ObjectProviderTest {
     void nullField() {
         ObjectProvider provider = new ObjectProvider()
                 .field("a", () -> null);
-        Map<String, Object> object = provider.getOne();
+        Map<String, ?> object = provider.getOne();
         assertEquals(1, provider.getOne().size());
         assertNull(object.get("a"));
     }
@@ -94,7 +93,7 @@ class ObjectProviderTest {
                 .field("ref", new Reference<>("theRef"))
                 .field("expression", new Expression("${theRef}"));
 
-        Map<String, Object> object = provider.getOne();
+        Map<String, ?> object = provider.getOne();
         assertEquals(2, object.size());
         assertEquals(REF_VALUE, object.get("ref"));
         assertEquals(REF_VALUE, object.get("expression"));
@@ -106,7 +105,7 @@ class ObjectProviderTest {
                 .field("firstname", () -> "John")
                 .field("lastname", () -> "Doe")
                 .field("fullname", new Expression("${firstname} ${lastname}"));
-        Map<String, Object> object = provider.getOne();
+        Map<String, ?> object = provider.getOne();
         assertEquals(3, object.size());
         assertEquals("John Doe", object.get("fullname"));
     }

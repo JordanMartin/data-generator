@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
@@ -19,7 +20,12 @@ public class RandomDate implements ValueProvider<Date> {
     private Date from;
     private Date to;
 
+    /**
+     * Par défaut, une date random entre l'année dernière et l'année prochaine courante
+     */
     public RandomDate() {
+        from = Date.from(Instant.now().minus(365, ChronoUnit.DAYS));
+        to = Date.from(Instant.now().plus(365, ChronoUnit.DAYS));
     }
 
     public RandomDate(Date from, Date to) {
@@ -48,7 +54,9 @@ public class RandomDate implements ValueProvider<Date> {
     }
 
     private Date getDate(int year, int month, int day) {
-        Instant instant = LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant instant = LocalDate
+                .of(year, month, day)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
 
