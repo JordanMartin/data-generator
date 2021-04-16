@@ -1,0 +1,16 @@
+references:
+  firstname: Constant("Jordan")
+  lastname: Constant("Martin")
+
+template:
+  id: RandomUUID()
+  index: IntAutoIncrement()
+  age: AsString(RandomInt(0, 10))
+  test: Constant(1)
+  test2: Constant("1")
+  fullname: Expression("${firstname} ${lastname}")
+  children:
+    age: RandomInt(1, 10)
+    name: Constant("Jo")
+
+

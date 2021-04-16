@@ -63,6 +63,10 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new RandomFromList<>(list);
     }
 
+    protected RandomFromList<?> randomFromList(ValueProvider<?>... list) {
+        return new RandomFromList<>(list);
+    }
+
     protected RandomFromList.ItemWeight<?> itemWeight(Object item, int weight) {
         return new RandomFromList.ItemWeight<>(item, weight);
     }
