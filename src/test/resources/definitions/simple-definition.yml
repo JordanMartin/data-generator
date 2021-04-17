@@ -1,16 +1,10 @@
 references:
-  firstname: Constant("Jordan")
-  lastname: Constant("Martin")
+  firstname: Sample("Name.firstName")
+  lastname: Sample("Name.lastName")
+  item:
+    name: RandomFromList(["A", "B", "C", "D", "E"])
+    price: Round(RandomDouble(0, 10), 2)
 
 template:
-  id: RandomUUID()
-  index: IntAutoIncrement()
-  age: AsString(RandomInt(0, 10))
-  test: Constant(1)
-  test2: Constant("1")
-  fullname: Expression("${firstname} ${lastname}")
-  children:
-    age: RandomInt(1, 10)
-    name: Constant("Jo")
-
-
+  id: IntAutoIncrement()
+  items: ListByRepeat(Reference("item"), 2)

@@ -1,15 +1,17 @@
 package fr.jordanmartin.datagenerator.definition;
 
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import lombok.SneakyThrows;
+import fr.jordanmartin.datagenerator.provider.transform.ListOf;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.yaml.snakeyaml.Yaml;
 
-import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class YamlDefinitionParser extends DefinitionParser {
 
@@ -32,8 +34,8 @@ public class YamlDefinitionParser extends DefinitionParser {
         }
 
         if (definition.getReferences() != null && !definition.getReferences().isEmpty()) {
-            parseTemplate(definition.getTemplate())
-                    .forEach(rootProvider::field);
+            parseTemplate(definition.getReferences())
+                    .forEach(rootProvider::providerRef);
         }
 
         parseTemplate(definition.getTemplate())
@@ -42,34 +44,47 @@ public class YamlDefinitionParser extends DefinitionParser {
         return rootProvider;
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, ValueProvider<?>> parseTemplate(Map<String, Object> template) {
-        Map<String, ValueProvider<?>> providers = new HashMap<>();
+    private Map<String, ValueProvider<?>> parseTemplate(Map<String, Object> fields) {
+        // LinkedHashMap pour préserver l'ordre des champs
+        Map<String, ValueProvider<?>> providers = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Object> field : template.entrySet()) {
+        for (Map.Entry<String, Object> field : fields.entrySet()) {
             String fieldName = field.getKey();
             Object providerDefinition = field.getValue();
-            ValueProvider<?> provider;
-
-            // Création du générateur à partir de la definition
-            if (providerDefinition instanceof String) {
-                provider = newProviderFromDefinition((String) providerDefinition);
-            }
-            // Si c'est un objet => création d'un sous générateur
-            else if (providerDefinition instanceof Map) {
-                provider = new ObjectProvider();
-                parseTemplate((Map<String, Object>) providerDefinition)
-                        .forEach(((ObjectProvider) provider)::field);
-            }
-            // Ne devrait jamais arriver
-            else {
-                throw new DefinitionException("Definition incorrect du champ \"" + fieldName + "\" : " + providerDefinition);
-            }
-
+            ValueProvider<?> provider = parseProviderDefinition(fieldName, providerDefinition);
             providers.put(fieldName, provider);
         }
 
         return providers;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ValueProvider<?> parseProviderDefinition(String fieldName, Object definition) {
+        ValueProvider<?> provider;
+
+        if (definition instanceof String) {
+            provider = newProviderFromDefinition((String) definition);
+        }
+        // Si c'est un tableau
+        else if (definition instanceof List) {
+            List<ValueProvider<?>> providers = ((List<?>) definition).stream()
+                    .map(def -> parseProviderDefinition(fieldName, def))
+                    .collect(Collectors.toList());
+            // TODO throw ereur si présence d'une ComputedValueProvider
+            provider = new ListOf(providers);
+        }
+        // Si c'est un objet => création d'un sous générateur
+        else if (definition instanceof Map) {
+            provider = new ObjectProvider();
+            parseTemplate((Map<String, Object>) definition)
+                    .forEach(((ObjectProvider) provider)::field);
+        }
+        // Ne devrait jamais arriver
+        else {
+            throw new DefinitionException("Definition incorrect du champ \"" + fieldName + "\" : " + definition);
+        }
+
+        return provider;
     }
 
     private ValueProvider<?> newProviderFromDefinition(String providerDefinition) {
@@ -82,54 +97,11 @@ public class YamlDefinitionParser extends DefinitionParser {
     }
 
     private class DefinitionVisitor extends ProviderDefintionBaseVisitor<Object> {
-        @SneakyThrows
         @Override
         public Object visitFunc(ProviderDefintionParser.FuncContext ctx) {
-            String provider = ctx.func_name().getText();
+            String providerName = ctx.func_name().getText();
             Object[] providerParams = (Object[]) visitFunc_params(ctx.func_params());
-
-            Class<?> classProvider = defaultProvider.get(provider);
-
-            if (classProvider == null) {
-                // TODO écrire la liste des générateurs dispo
-                throw new DefinitionException("Le générateur \"" + provider + "\" n'existe pas");
-            }
-
-            Class<?>[] paramsClass = Arrays.stream(providerParams)
-                    .map(Object::getClass)
-                    .toArray(Class<?>[]::new);
-
-            Constructor<?> constructor = Arrays.stream(classProvider.getConstructors())
-                    .filter(c -> {
-                        Class<?>[] types = c.getParameterTypes();
-                        // Aucun argument
-                        if (types.length == paramsClass.length && types.length == 0) {
-                            return true;
-                        }
-
-                        // Nombre différent de paramètres
-                        if (types.length != paramsClass.length) {
-                            return false;
-                        }
-
-                        // Vérifie si le type des paramètres correspond
-                        for (int i = 0; i < types.length; i++) {
-                            if (types[i].isAssignableFrom(paramsClass[i])) {
-                                return true;
-                            } else if (types[i] == int.class && paramsClass[i] == Integer.class
-                                    || types[i] == Integer.class && paramsClass[i] == int.class) {
-                                return true;
-                            } else if (types[i] == double.class && paramsClass[i] == Double.class
-                                    || types[i] == Double.class && paramsClass[i] == double.class) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    })
-                    .findFirst().orElseThrow(() ->
-                            new DefinitionException("Les paramètres du générateur \"" + provider + "\" sont incorrectes"));
-
-            return constructor.newInstance(providerParams);
+            return createNewProvider(providerName, providerParams);
         }
 
         @Override
@@ -147,9 +119,38 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitFunc(ctx.func());
             } else if (ctx.string() != null) {
                 // Supprime les quotes
-                return ctx.getText().substring(1, ctx.getText().length() - 1);
+                return visitString(ctx.string());
+            } else if (ctx.list() != null) {
+                return visitList(ctx.list());
             }
+
             return null;
+        }
+
+        @Override
+        public Object visitList(ProviderDefintionParser.ListContext ctx) {
+            return ctx.list_element().stream()
+                    .map(this::visitList_element)
+                    .collect(Collectors.toList());
+        }
+
+        @Override
+        public Object visitList_element(ProviderDefintionParser.List_elementContext ctx) {
+            if (ctx.number() != null) {
+                return visitNumber(ctx.number());
+            } else if (ctx.func() != null) {
+                return visitFunc(ctx.func());
+            } else if (ctx.string() != null) {
+                return visitString(ctx.string());
+            }
+
+            return null;
+        }
+
+        @Override
+        public Object visitString(ProviderDefintionParser.StringContext ctx) {
+            // Supprime les quotes
+            return ctx.getText().substring(1, ctx.getText().length() - 1);
         }
 
         @Override
@@ -160,50 +161,6 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return Double.parseDouble(ctx.getText());
             }
             return null;
-        }
-    }
-
-    private class DefinitionListener extends ProviderDefintionBaseListener {
-
-        ValueProvider<?> rootProvider;
-        String currentProvider;
-        List<Object> currentProviderParams;
-
-        @Override
-        public void exitFunc_name(ProviderDefintionParser.Func_nameContext ctx) {
-            currentProvider = ctx.getText();
-            currentProviderParams = new ArrayList<>();
-            System.out.println(currentProvider);
-        }
-
-        @Override
-        public void exitFunc_param(ProviderDefintionParser.Func_paramContext ctx) {
-            Object param = null;
-            if (ctx.number() != null) {
-                if (ctx.number().Integer() != null) {
-                    param = Integer.parseInt(ctx.getText());
-                } else if (ctx.number().Double() != null) {
-                    param = Double.parseDouble(ctx.getText());
-                }
-            } else if (ctx.func() != null) {
-                param = "function";
-            } else if (ctx.string() != null) {
-                // Supprime les quotes
-                param = ctx.getText().substring(1, ctx.getText().length() - 1);
-            }
-
-            currentProviderParams.add(param);
-            System.out.println(param);
-        }
-
-        public ValueProvider<?> buildProvider() {
-            Class<? extends ValueProvider<?>> providerClass = defaultProvider.get(currentProvider);
-            System.out.println(providerClass);
-            return null;
-        }
-
-        public ValueProvider<?> getRootProvider() {
-            return rootProvider;
         }
     }
 }

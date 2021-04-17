@@ -16,4 +16,5 @@ class YamlDefinitionParserTest {
         ObjectProvider generator = parser.parse();
         new JsonWriter(true).writeMany(System.out, generator.getStream(10));
     }
+
 }
