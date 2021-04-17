@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.sequence;
 
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 
 /**
  * Génère un entier incrémenté à chaque appel.

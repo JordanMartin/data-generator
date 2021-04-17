@@ -1,18 +1,15 @@
-package fr.jordanmartin.datagenerator;
+package fr.jordanmartin.datagenerator.provider.object;
 
 import com.github.javafaker.Faker;
 import fr.jordanmartin.datagenerator.output.JsonWriter;
 import fr.jordanmartin.datagenerator.output.ObjectWriter;
-import fr.jordanmartin.datagenerator.provider.ListOf;
-import fr.jordanmartin.datagenerator.provider.Repeat;
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
-import fr.jordanmartin.datagenerator.provider.constant.Constant;
-import fr.jordanmartin.datagenerator.provider.object.Expression;
-import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import fr.jordanmartin.datagenerator.provider.object.Reference;
+import fr.jordanmartin.datagenerator.provider.base.Constant;
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.random.*;
 import fr.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
-import fr.jordanmartin.datagenerator.provider.transformer.FormatDate;
+import fr.jordanmartin.datagenerator.provider.transform.FormatDate;
+import fr.jordanmartin.datagenerator.provider.transform.ListByRepeat;
+import fr.jordanmartin.datagenerator.provider.transform.ListOf;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileOutputStream;
@@ -87,12 +84,12 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new IntAutoIncrement();
     }
 
-    protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, int count) {
-        return new Repeat<>(provider, count);
+    protected <T> ListByRepeat<T> listByRepeat(ValueProvider<T> provider, int count) {
+        return new ListByRepeat<>(provider, count);
     }
 
-    protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, ValueProvider<Integer> count) {
-        return new Repeat<>(provider, count);
+    protected <T> ListByRepeat<T> listByRepeat(ValueProvider<T> provider, ValueProvider<Integer> count) {
+        return new ListByRepeat<>(provider, count);
     }
 
     protected ListOf list(ValueProvider<?>... providers) {

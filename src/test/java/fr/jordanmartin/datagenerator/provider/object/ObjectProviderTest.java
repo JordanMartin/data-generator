@@ -1,8 +1,9 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
 import com.github.javafaker.Faker;
-import fr.jordanmartin.datagenerator.provider.constant.Constant;
+import fr.jordanmartin.datagenerator.provider.base.Constant;
 import fr.jordanmartin.datagenerator.provider.random.RandomInt;
+import fr.jordanmartin.datagenerator.provider.random.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,12 +20,12 @@ class ObjectProviderTest {
                 .providerRef("firstname", () -> faker.name().firstName())
                 .providerRef("lastname", () -> faker.name().lastName())
                 .field("age", new RandomInt(20, 50))
-                .field("fullname", new Expression("${firstname} ${lastname}"))
+                .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"))
                 .field("children", ctx -> new ObjectProvider()
                         .providerRef("firstname", () -> faker.name().firstName())
                         .providerRef("lastname", new Constant<>(ctx.getRefProviderValue("lastname")))
                         .field("age", new RandomInt(1, 20))
-                        .field("fullname", new Expression("${firstname} ${lastname}"))
+                        .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"))
                         .repeat(new RandomInt(0, 3))
                         .getOne())
                 .field("number_child", ctx -> ctx.getFieldValue("children", List.class).size());
@@ -35,11 +36,11 @@ class ObjectProviderTest {
     @Test
     void throwExceptionOnMissingRef() {
         assertThrows(IllegalArgumentException.class, () -> new ObjectProvider()
-                .field("field", new Expression("${missingReference}"))
+                .field("field", (ContextAwareProvider<?>) new Expression("${missingReference}"))
                 .getOne());
 
         assertThrows(IllegalArgumentException.class, () -> new ObjectProvider()
-                .field("field", new Reference<>("missingReference"))
+                .field("field", (ContextAwareProvider<?>) new Reference<>("missingReference"))
                 .getOne());
     }
 
@@ -70,6 +71,19 @@ class ObjectProviderTest {
     }
 
     @Test
+    void sampleField() {
+        ObjectProvider provider = new ObjectProvider()
+                .field("a", () -> "a")
+                .field("firstname", new Sample("Name.firstName"))
+                .field("lastname", new Sample("#{Name.lastName}"));
+
+        Map<String, ?> object = provider.getOne();
+        assertEquals(3, provider.getOne().size());
+        assertFalse(((String)object.get("firstname")).isBlank());
+        assertFalse(((String)object.get("lastname")).isBlank());
+    }
+
+    @Test
     void nullField() {
         ObjectProvider provider = new ObjectProvider()
                 .field("a", () -> null);
@@ -90,8 +104,8 @@ class ObjectProviderTest {
         ObjectProvider provider = new ObjectProvider()
                 .providerRef("theRef", () -> REF_VALUE)
 
-                .field("ref", new Reference<>("theRef"))
-                .field("expression", new Expression("${theRef}"));
+                .field("ref", (ContextAwareProvider<?>) new Reference<>("theRef"))
+                .field("expression", (ContextAwareProvider<?>) new Expression("${theRef}"));
 
         Map<String, ?> object = provider.getOne();
         assertEquals(2, object.size());
@@ -104,7 +118,7 @@ class ObjectProviderTest {
         ObjectProvider provider = new ObjectProvider()
                 .field("firstname", () -> "John")
                 .field("lastname", () -> "Doe")
-                .field("fullname", new Expression("${firstname} ${lastname}"));
+                .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"));
         Map<String, ?> object = provider.getOne();
         assertEquals(3, object.size());
         assertEquals("John Doe", object.get("fullname"));

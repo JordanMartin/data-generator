@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 
 import java.util.UUID;
 

@@ -1,15 +1,17 @@
-package fr.jordanmartin.datagenerator.provider;
+package fr.jordanmartin.datagenerator.provider.transform;
+
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 
 /**
  * Génère toujours la même donnée à partir d'un générateur
  * @param <T>
  */
-public class IdempotentProvider<T> implements ValueProvider<T> {
+public class Idempotent<T> implements ValueProvider<T> {
 
     private final ValueProvider<T> provider;
     private T value;
 
-    public IdempotentProvider(ValueProvider<T> provider) {
+    public Idempotent(ValueProvider<T> provider) {
         this.provider = provider;
     }
 

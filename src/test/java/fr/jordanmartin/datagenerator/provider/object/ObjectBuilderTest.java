@@ -1,8 +1,8 @@
-package fr.jordanmartin.datagenerator;
+package fr.jordanmartin.datagenerator.provider.object;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ObjectBuilderTest {
 
@@ -23,8 +23,8 @@ class ObjectBuilderTest {
             field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
             field("firstname", () -> faker.name().firstName());
             field("lastname", () -> faker.name().lastName());
-            field("expression", expression("${firstname} ${lastname}"));
-            field("reference", reference("randomInt"));
+            field("expression", (ContextAwareProvider<?>) expression("${firstname} ${lastname}"));
+            field("reference", (ContextAwareProvider<?>) reference("randomInt"));
         }
     }
 }

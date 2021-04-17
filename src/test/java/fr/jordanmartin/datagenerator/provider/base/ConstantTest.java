@@ -1,8 +1,8 @@
-package fr.jordanmartin.datagenerator.provider.constant;
+package fr.jordanmartin.datagenerator.provider.base;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConstantTest {
 

@@ -1,4 +1,6 @@
-package fr.jordanmartin.datagenerator.provider;
+package fr.jordanmartin.datagenerator.provider.transform;
+
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;

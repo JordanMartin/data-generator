@@ -1,4 +1,7 @@
-package fr.jordanmartin.datagenerator.provider;
+package fr.jordanmartin.datagenerator.provider.base;
+
+import fr.jordanmartin.datagenerator.provider.transform.Idempotent;
+import fr.jordanmartin.datagenerator.provider.transform.ListByRepeat;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,14 +53,14 @@ public interface ValueProvider<T> {
      * Le générateur d'origine ne sera donc appelé qu'une seul fois
      */
     default ValueProvider<T> idempotent() {
-        return new IdempotentProvider<>(this);
+        return new Idempotent<>(this);
     }
 
-    default Repeat<?> repeat(int count) {
-        return new Repeat<>(this, count);
+    default ListByRepeat<?> repeat(int count) {
+        return new ListByRepeat<>(this, count);
     }
 
-    default Repeat<?> repeat(ValueProvider<Integer> count) {
-        return new Repeat<>(this, count);
+    default ListByRepeat<?> repeat(ValueProvider<Integer> count) {
+        return new ListByRepeat<>(this, count);
     }
 }

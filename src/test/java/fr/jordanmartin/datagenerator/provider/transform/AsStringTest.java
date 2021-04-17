@@ -1,9 +1,9 @@
-package fr.jordanmartin.datagenerator.provider.transformer;
+package fr.jordanmartin.datagenerator.provider.transform;
 
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AsStringTest {
 

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * Permet d'utiliser la valeur d'un champ ou générateur faire de la concaténation
  * Ex: "${firstname} ${lastname}"
  */
-public class Expression implements ComputedProvider<String> {
+public class Expression extends ValueProviderWithContext<String> {
 
     /**
      * L'expression à évaluer

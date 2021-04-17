@@ -5,11 +5,11 @@ package fr.jordanmartin.datagenerator.provider.object;
  *
  * @param <T> Le type de la valeur
  */
-public class Reference<T> implements ComputedProvider<T> {
+public class Reference<T> extends ValueProviderWithContext<T> {
 
     /**
      * Nom de la reference
-     */
+     **/
     private final String refName;
 
     public Reference(String refName) {

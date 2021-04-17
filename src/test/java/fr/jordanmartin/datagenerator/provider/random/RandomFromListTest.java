@@ -2,23 +2,20 @@ package fr.jordanmartin.datagenerator.provider.random;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RandomFromListTest {
 
     @Test
     void getOneConstructorCollection() {
-        Set<String> set = Set.of("a", "b", "c");
+        List<String> set = List.of("a", "b", "c");
         RandomFromList<String> provider = new RandomFromList<>(set);
 
         for (int i = 0; i < 10; i++) {

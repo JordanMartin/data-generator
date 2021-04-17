@@ -1,6 +1,4 @@
-package fr.jordanmartin.datagenerator.provider.constant;
-
-import fr.jordanmartin.datagenerator.provider.ValueProvider;
+package fr.jordanmartin.datagenerator.provider.base;
 
 /**
  * Générateur de valeur constante

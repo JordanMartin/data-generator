@@ -1,8 +1,9 @@
 package fr.jordanmartin.datagenerator;
 
-import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
+import fr.jordanmartin.datagenerator.provider.base.Constant;
+import fr.jordanmartin.datagenerator.provider.object.ContextAwareProvider;
 import fr.jordanmartin.datagenerator.provider.object.Expression;
-import fr.jordanmartin.datagenerator.provider.constant.Constant;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import fr.jordanmartin.datagenerator.provider.random.*;
 
 import java.io.IOException;
@@ -30,10 +31,10 @@ public class Main {
                 .field("complementSource", new Constant<>("ACH1"))
                 .field("urlAbsReferentiel", new Constant<>("urlAbsReferentiel"))
                 .field("libelleAbsReferentiel", new Constant<>("urlAbsReferentiel"))
-                .field("idAgentReferentiel", new Expression("${codeCp}"))
+                .field("idAgentReferentiel", (ContextAwareProvider<?>) new Expression("${codeCp}"))
                 .field("urlAgentReferentiel", new Constant<>("urlAbsReferentiel"))
-                .field("codeCPAgent", new Expression("ID-${codeCp}"))
-                .field("familleMetier", new RandomFromList("A", "B", "C"))
-                .field("child", subProvider);
+                .field("codeCPAgent", (ContextAwareProvider<?>) new Expression("ID-${codeCp}"))
+                .field("familleMetier", new RandomFromList<>("A", "B", "C"))
+                .field("child", (ContextAwareProvider<?>) subProvider);
     }
 }

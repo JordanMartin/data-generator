@@ -1,13 +1,13 @@
 package fr.jordanmartin.datagenerator.provider;
 
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ValueProviderTest {
 

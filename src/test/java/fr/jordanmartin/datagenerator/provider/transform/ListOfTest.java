@@ -1,10 +1,11 @@
-package fr.jordanmartin.datagenerator.provider;
+package fr.jordanmartin.datagenerator.provider.transform;
 
+import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ListOfTest {
 
