@@ -1,7 +1,6 @@
 package fr.jordanmartin.datagenerator;
 
 import fr.jordanmartin.datagenerator.provider.base.Constant;
-import fr.jordanmartin.datagenerator.provider.object.ContextAwareProvider;
 import fr.jordanmartin.datagenerator.provider.object.Expression;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import fr.jordanmartin.datagenerator.provider.random.*;
@@ -27,14 +26,14 @@ public class Main {
                 .field("dateAcquis", new RandomDate().from(2020, 12, 25).to(2021, 12, 25))
                 .field("dateEtat", new RandomDate().from(2020, 12, 25).to(2021, 12, 25))
                 .field("dateDemandeAbsence", new RandomDate().from(2020, 12, 25).to(2021, 12, 25))
-                .field("source",new Constant<>( "1"))
+                .field("source", new Constant<>("1"))
                 .field("complementSource", new Constant<>("ACH1"))
                 .field("urlAbsReferentiel", new Constant<>("urlAbsReferentiel"))
                 .field("libelleAbsReferentiel", new Constant<>("urlAbsReferentiel"))
-                .field("idAgentReferentiel", (ContextAwareProvider<?>) new Expression("${codeCp}"))
+                .field("idAgentReferentiel", new Expression("${codeCp}"))
                 .field("urlAgentReferentiel", new Constant<>("urlAbsReferentiel"))
-                .field("codeCPAgent", (ContextAwareProvider<?>) new Expression("ID-${codeCp}"))
+                .field("codeCPAgent", new Expression("ID-${codeCp}"))
                 .field("familleMetier", new RandomFromList<>("A", "B", "C"))
-                .field("child", (ContextAwareProvider<?>) subProvider);
+                .field("child", subProvider);
     }
 }

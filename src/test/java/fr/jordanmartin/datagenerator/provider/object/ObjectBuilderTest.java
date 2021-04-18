@@ -8,11 +8,11 @@ class ObjectBuilderTest {
 
     @Test
     void useBuilder() {
-        SampleObjectBuilder generator = new SampleObjectBuilder();
+        SimpleObjectBuilder generator = new SimpleObjectBuilder();
         assertEquals(8, generator.getOne().size());
     }
 
-    static class SampleObjectBuilder extends ObjectBuilder {
+    static class SimpleObjectBuilder extends ObjectBuilder {
         @Override
         public void configure() {
             providerRef("randomInt", randomInt(0, 10));
@@ -23,8 +23,8 @@ class ObjectBuilderTest {
             field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
             field("firstname", () -> faker.name().firstName());
             field("lastname", () -> faker.name().lastName());
-            field("expression", (ContextAwareProvider<?>) expression("${firstname} ${lastname}"));
-            field("reference", (ContextAwareProvider<?>) reference("randomInt"));
+            field("expression", expression("${firstname} ${lastname}"));
+            field("reference", reference("randomInt"));
         }
     }
 }

@@ -1,7 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
-@FunctionalInterface
-public interface ContextAwareProvider<T> {
+public interface ObjectContextHandler<T> {
 
     T evaluate(ObjectProviderContext ctx);
 

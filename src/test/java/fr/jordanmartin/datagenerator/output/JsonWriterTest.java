@@ -1,6 +1,5 @@
 package fr.jordanmartin.datagenerator.output;
 
-import fr.jordanmartin.datagenerator.provider.object.ContextAwareProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,7 @@ class JsonWriterTest {
         ObjectProvider provider = new ObjectProvider()
                 .field("id", () -> 0)
                 .field("a", () -> "a")
-                .field("child", (ContextAwareProvider<?>) child);
+                .field("child", child);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         new JsonWriter(false).writeOne(out, provider.getOne());

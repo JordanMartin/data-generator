@@ -17,4 +17,6 @@ public interface ObjectProviderContext {
         return getRefProviderValue(name, Object.class);
     }
 
+    Object evaluate(Object object);
+
 }

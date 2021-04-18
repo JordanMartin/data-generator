@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
-import com.github.javafaker.Faker;
 import fr.jordanmartin.datagenerator.provider.base.Constant;
+import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 import fr.jordanmartin.datagenerator.provider.random.RandomInt;
 import fr.jordanmartin.datagenerator.provider.random.Sample;
 import org.junit.jupiter.api.Test;
@@ -14,33 +14,119 @@ import static org.junit.jupiter.api.Assertions.*;
 class ObjectProviderTest {
 
     @Test
-    void nestFieldObject() {
-        Faker faker = new Faker();
-        var personProvider = new ObjectProvider()
-                .providerRef("firstname", () -> faker.name().firstName())
-                .providerRef("lastname", () -> faker.name().lastName())
+    @SuppressWarnings("unchecked")
+    void nestedFieldObject() {
+        var childProvider = new ObjectProvider()
+                .providerRef("child_ref", () -> "child_ref_value")
+                .field("child_field", () -> "child")
+                .field("child_ref_field", new Reference<>("child_ref"));
+
+        var rootProvider = new ObjectProvider()
+                .providerRef("root_ref", () -> "root_ref_value")
+                .field("root_field", () -> "root")
+                .field("child", childProvider)
+                .field("root_ref_field", new Reference<>("root_ref"));
+
+        Map<String, ?> root = rootProvider.getOne();
+        assertEquals(3, root.size());
+        assertEquals("root", root.get("root_field"));
+        assertEquals("root_ref_value", root.get("root_ref_field"));
+
+        Map<String, ?> child = (Map<String, ?>) root.get("child");
+        assertEquals(2, child.size());
+        assertEquals("child", child.get("child_field"));
+        assertEquals("child_ref_value", child.get("child_ref_field"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void nestObjectAccessParentReferencesWithoutOverride() {
+        ObjectProvider childProvider = new ObjectProvider()
+                .providerRef("ref", () -> "ref_value_of_child")
+                .field("root_ref", new Reference<>("root_ref"))
+                .field("ref", new Reference<>("ref"));
+
+        var rootProvider = new ObjectProvider()
+                .providerRef("root_ref", () -> "root_ref_value")
+                .providerRef("ref", () -> "ref_value_of_root")
+                .field("root_ref", new Reference<>("root_ref"))
+                .field("ref", new Reference<>("ref"))
+                .field("child", childProvider);
+
+        Map<String, ?> root = rootProvider.getOne();
+        assertEquals("root_ref_value", root.get("root_ref"));
+        assertEquals("ref_value_of_root", root.get("ref"));
+
+        Map<String, ?> child = (Map<String, ?>) root.get("child");
+        assertEquals("root_ref_value", child.get("root_ref"));
+        assertEquals("ref_value_of_child", child.get("ref"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void nestObjectWithContextAccessParentReferencesWithoutOverride() {
+        ObjectProvider childProvider = new ObjectProvider()
+                .providerRef("ref", () -> "ref_value_of_child")
+                .field("root_ref", new Reference<>("root_ref"))
+                .field("ref", new Reference<>("ref"));
+
+        var rootProvider = new ObjectProvider()
+                .providerRef("root_ref", () -> "root_ref_value")
+                .providerRef("ref", () -> "ref_value_of_root")
+                .field("root_ref", new Reference<>("root_ref"))
+                .field("ref", new Reference<>("ref"))
+                .field("child", ctx -> childProvider);
+
+        Map<String, ?> root = rootProvider.getOne();
+        assertEquals("root_ref_value", root.get("root_ref"));
+        assertEquals("ref_value_of_root", root.get("ref"));
+
+        Map<String, ?> child = (Map<String, ?>) root.get("child");
+        assertEquals("root_ref_value", child.get("root_ref"));
+        assertEquals("ref_value_of_child", child.get("ref"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void nestedFieldWithContextObject() {
+        var rootProvider = new ObjectProvider()
+                .providerRef("firstname", new Constant<>("root_firstname"))
+                .providerRef("lastname", new Constant<>("root_lastname"))
                 .field("age", new RandomInt(20, 50))
-                .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"))
+                .field("fullname", new Expression("${firstname} ${lastname}"))
                 .field("children", ctx -> new ObjectProvider()
-                        .providerRef("firstname", () -> faker.name().firstName())
-                        .providerRef("lastname", new Constant<>(ctx.getRefProviderValue("lastname")))
-                        .field("age", new RandomInt(1, 20))
-                        .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"))
-                        .repeat(new RandomInt(0, 3))
-                        .getOne())
+                        .providerRef("child_firstname", new Constant<>("child_firstname"))
+                        .providerRef("child_lastname", new Constant<>(ctx.getRefProviderValue("lastname")))
+                        .field("age", new RandomInt(1, 19))
+                        .field("child_fullname", new Expression("${child_firstname} ${child_lastname}"))
+                        .repeat(2))
                 .field("number_child", ctx -> ctx.getFieldValue("children", List.class).size());
 
-        personProvider.getStream(10).forEach(System.out::println);
+        Map<String, ?> root = rootProvider.getOne();
+        assertEquals(4, root.size());
+        assertEquals("root_firstname root_lastname", root.get("fullname"));
+        int rootAge = (int) root.get("age");
+        assertTrue(rootAge >= 20 && rootAge <= 50);
+
+
+        List<Map<String, ?>> children = (List<Map<String, ?>>) root.get("children");
+        assertEquals(2, children.size());
+        for (Map<String, ?> child : children) {
+            assertEquals(2, child.size());
+            int childAge = (int) child.get("age");
+            assertTrue(childAge >= 1 && childAge <= 19);
+            assertEquals("child_firstname root_lastname", child.get("child_fullname"));
+        }
     }
 
     @Test
     void throwExceptionOnMissingRef() {
-        assertThrows(IllegalArgumentException.class, () -> new ObjectProvider()
-                .field("field", (ContextAwareProvider<?>) new Expression("${missingReference}"))
+        assertThrows(ValueProviderException.class, () -> new ObjectProvider()
+                .field("field", new Expression("${missingReference}"))
                 .getOne());
 
-        assertThrows(IllegalArgumentException.class, () -> new ObjectProvider()
-                .field("field", (ContextAwareProvider<?>) new Reference<>("missingReference"))
+        assertThrows(ValueProviderException.class, () -> new ObjectProvider()
+                .field("field", new Reference<>("missingReference"))
                 .getOne());
     }
 
@@ -79,8 +165,8 @@ class ObjectProviderTest {
 
         Map<String, ?> object = provider.getOne();
         assertEquals(3, provider.getOne().size());
-        assertFalse(((String)object.get("firstname")).isBlank());
-        assertFalse(((String)object.get("lastname")).isBlank());
+        assertFalse(((String) object.get("firstname")).isBlank());
+        assertFalse(((String) object.get("lastname")).isBlank());
     }
 
     @Test
@@ -104,8 +190,8 @@ class ObjectProviderTest {
         ObjectProvider provider = new ObjectProvider()
                 .providerRef("theRef", () -> REF_VALUE)
 
-                .field("ref", (ContextAwareProvider<?>) new Reference<>("theRef"))
-                .field("expression", (ContextAwareProvider<?>) new Expression("${theRef}"));
+                .field("ref", new Reference<>("theRef"))
+                .field("expression", new Expression("${theRef}"));
 
         Map<String, ?> object = provider.getOne();
         assertEquals(2, object.size());
@@ -118,7 +204,7 @@ class ObjectProviderTest {
         ObjectProvider provider = new ObjectProvider()
                 .field("firstname", () -> "John")
                 .field("lastname", () -> "Doe")
-                .field("fullname", (ContextAwareProvider<?>) new Expression("${firstname} ${lastname}"));
+                .field("fullname", new Expression("${firstname} ${lastname}"));
         Map<String, ?> object = provider.getOne();
         assertEquals(3, object.size());
         assertEquals("John Doe", object.get("fullname"));

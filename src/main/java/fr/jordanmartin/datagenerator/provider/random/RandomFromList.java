@@ -70,12 +70,12 @@ public class RandomFromList<T> implements ValueProvider<T> {
     @AllArgsConstructor
     public static class ItemWeight<T> {
 
+        private Object item;
+        private int weight;
+
         public ItemWeight(ValueProvider<T> item, int weight) {
             this.item = item;
             this.weight = weight;
         }
-
-        private Object item;
-        private int weight;
     }
 }

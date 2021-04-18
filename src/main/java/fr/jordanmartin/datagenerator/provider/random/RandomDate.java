@@ -2,6 +2,7 @@ package fr.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +40,7 @@ public class RandomDate implements ValueProvider<Date> {
             this.from = sdf.parse(from);
             this.to = sdf.parse(to);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new ValueProviderException(this, "Format de date incorrect", e);
         }
     }
 

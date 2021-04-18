@@ -13,14 +13,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Un parseur de definition au format YAML.
+ *
+ * Le fichier de définition doit avoir la structure :
+ * <pre>
+ *  references:
+ *    ref1: <provider_definition>
+ *    ...
+ *  template:
+ *    field1: <provider_definition>
+ *    ...
+ * </pre>
+ */
 public class YamlDefinitionParser extends DefinitionParser {
 
+    /**
+     * Contenu de la definition
+     */
     private final String definitionContent;
 
     public YamlDefinitionParser(String definitionContent) {
         this.definitionContent = definitionContent;
     }
 
+    @Override
     public ObjectProvider parse() {
         Definition definition = new Yaml().loadAs(definitionContent, Definition.class);
         return parseDefinition(definition);
@@ -87,6 +104,11 @@ public class YamlDefinitionParser extends DefinitionParser {
         return provider;
     }
 
+    /**
+     * Parse la définition d'un générateur avec ANTLR4
+     *
+     * @param providerDefinition Le texte de definition du générateur
+     */
     private ValueProvider<?> newProviderFromDefinition(String providerDefinition) {
         CharStream in = CharStreams.fromString(providerDefinition);
         ProviderDefintionLexer lexer = new ProviderDefintionLexer(in);
@@ -96,6 +118,9 @@ public class YamlDefinitionParser extends DefinitionParser {
         return (ValueProvider<?>) visitor.visitDefinition(parser.definition());
     }
 
+    /**
+     * Visiteur pour créer le générateur à partie du fichier de définition
+     */
     private class DefinitionVisitor extends ProviderDefintionBaseVisitor<Object> {
         @Override
         public Object visitFunc(ProviderDefintionParser.FuncContext ctx) {
@@ -118,13 +143,13 @@ public class YamlDefinitionParser extends DefinitionParser {
             } else if (ctx.func() != null) {
                 return visitFunc(ctx.func());
             } else if (ctx.string() != null) {
-                // Supprime les quotes
                 return visitString(ctx.string());
             } else if (ctx.list() != null) {
                 return visitList(ctx.list());
             }
 
-            return null;
+            // Ne devrait jamais arriver
+            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
         }
 
         @Override
@@ -144,12 +169,13 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitString(ctx.string());
             }
 
-            return null;
+            // Ne devrait jamais arriver
+            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
         }
 
         @Override
         public Object visitString(ProviderDefintionParser.StringContext ctx) {
-            // Supprime les quotes
+            // Supprime les quotes pour ne garder que la chaine de caracètres
             return ctx.getText().substring(1, ctx.getText().length() - 1);
         }
 
@@ -160,7 +186,8 @@ public class YamlDefinitionParser extends DefinitionParser {
             } else if (ctx.Double() != null) {
                 return Double.parseDouble(ctx.getText());
             }
-            return null;
+            // Ne devrait jamais arriver
+            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
         }
     }
 }

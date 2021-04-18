@@ -2,9 +2,6 @@ package fr.jordanmartin.datagenerator.provider.random;
 
 import org.junit.jupiter.api.Test;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

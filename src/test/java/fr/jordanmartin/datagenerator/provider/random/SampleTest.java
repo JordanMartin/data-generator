@@ -31,4 +31,10 @@ class SampleTest {
             new Sample("#{badexpression}").getOne();
         });
     }
+
+    @Test
+    void withLocale() {
+        String sample = new Sample("Name.name", "dz").getOne();
+        System.out.println(sample);
+    }
 }

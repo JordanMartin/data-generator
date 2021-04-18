@@ -18,17 +18,14 @@ import java.util.stream.Stream;
 public class RandomFromRegex implements ValueProvider<String> {
 
     private final Faker faker = new Faker();
-
-    /**
-     * Liste de donnée pré-généré. utilisé si {@link #count} est spécifié
-     */
-    private List<String> source = null;
-
     /**
      * La regex utilisé pour la génération d'une valeur
      */
     private final String regex;
-
+    /**
+     * Liste de donnée pré-généré. utilisé si {@link #count} est spécifié
+     */
+    private List<String> source = null;
     /**
      * Nombre d'éléments à générer à partir de la regex
      */

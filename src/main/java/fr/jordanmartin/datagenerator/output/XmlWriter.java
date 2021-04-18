@@ -24,7 +24,6 @@ public class XmlWriter implements ObjectWriter {
     private final Document doc;
     private final Transformer transformer;
     private final String objectName;
-    private final boolean pretty;
 
     public XmlWriter() {
         this("object", false);
@@ -33,7 +32,6 @@ public class XmlWriter implements ObjectWriter {
     @SneakyThrows
     public XmlWriter(String objectName, boolean pretty) {
         this.objectName = objectName;
-        this.pretty = pretty;
         this.doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         transformer = TransformerFactory
                 .newInstance()

@@ -1,38 +1,30 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 
 import java.util.*;
 
 /**
  * Génère un objet à partir d'autre générateurs
  */
-public class ObjectProvider extends ValueProviderWithContext<Map<String, ?>> {
+public class ObjectProvider implements ValueProvider<Map<String, ?>> {
 
     /* Conserve l'ordre des champs à depuis l'ordre d'ajout */
     private final boolean preserveFieldOrder;
-
-    /* Liste des paramètres */
-    private Map<Object, Object> refProvidersSnapshot;
-
-    /* Objet résultat */
-    private Map<String, Object> resultObject;
+    /**
+     * Champs à générer
+     */
+    private final List<Field> fields = new ArrayList<>();
+    private final List<String> fieldsOrder = new ArrayList<>();
+    /**
+     * Liste des générateurs de référence dont la valeur est calculée une fois
+     * pour chaque génération d'objet via {@link #getOne()}
+     */
+    private final Map<String, ValueProvider<?>> refProviders = new HashMap<>();
 
     public ObjectProvider(boolean preserveFieldOrder) {
         this.preserveFieldOrder = preserveFieldOrder;
-        setCtx(new ObjectProviderContext() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public <T> T getFieldValue(String name, Class<T> clazz) {
-                return (T) resultObject.get(name);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public <T> T getRefProviderValue(String name, Class<T> clazz) {
-                return (T) refProvidersSnapshot.get(name);
-            }
-        });
     }
 
     public ObjectProvider() {
@@ -40,21 +32,14 @@ public class ObjectProvider extends ValueProviderWithContext<Map<String, ?>> {
     }
 
     /**
-     * Champs à générer
+     * Enregistre un nouveau champ
+     *
+     * @param name     Nom du champ
+     * @param provider Le générateur de valeur
      */
-    private final List<Field> fields = new ArrayList<>();
-    private final List<String> fieldsOrder = new ArrayList<>();
-
-    /**
-     * Champ dynamique (calculés à partir d'une expression par exemple)
-     */
-    private final Map<String, ContextAwareProvider<?>> fieldsWithContext = new HashMap<>();
-
-    /**
-     * Liste des générateurs de référence dont la valeur est calculée une fois
-     * pour chaque génération d'objet via {@link #getOne()}
-     */
-    private final Map<String, ValueProvider<?>> refProviders = new HashMap<>();
+    public ObjectProvider field(String name, ObjectContextHandler<?> provider) {
+        return field(name, () -> provider);
+    }
 
     /**
      * Enregistre un nouveau champ
@@ -64,29 +49,9 @@ public class ObjectProvider extends ValueProviderWithContext<Map<String, ?>> {
      */
     public ObjectProvider field(String name, ValueProvider<?> provider) {
         if (provider == this) {
-            throw new IllegalArgumentException(String.format("Le champ \"%s\" est récursif", name));
+            throw new ValueProviderException(this, String.format("Le champ \"%s\" est récursif", name));
         }
-
-        if (provider instanceof ValueProviderWithContext) {
-            fieldsWithContext.put(name, (ValueProviderWithContext<?>) provider);
-        } else {
-            fields.add(new Field(name, provider));
-        }
-        fieldsOrder.add(name);
-        return this;
-    }
-
-    /**
-     * Enregistre un nouveau champ
-     *
-     * @param name     Nom du champ
-     * @param provider Le générateur de valeur
-     */
-    public ObjectProvider field(String name, ContextAwareProvider<?> provider) {
-        if (provider == this) {
-            throw new IllegalArgumentException(String.format("Le champ \"%s\" est récursif", name));
-        }
-        fieldsWithContext.put(name, provider);
+        fields.add(new Field(name, provider));
         fieldsOrder.add(name);
         return this;
     }
@@ -94,7 +59,8 @@ public class ObjectProvider extends ValueProviderWithContext<Map<String, ?>> {
     /**
      * Enregistre un générateur. Ce générateur est appelé une seul fois pour chaque création d'objet lors de l'appel
      * à la méthode {@link #getOne()}.
-     * Ce générateur ne créé pas de nouveau champs mais la valeur générée peut être utilisée avec un  {@link ValueProviderWithContext}
+     * Ce générateur ne créé pas de nouveau champs mais la valeur générée peut être utilisée avec une  {@link Reference}
+     * ou {@link Expression}
      *
      * @param name     Nom de la référence
      * @param provider Le générateur
@@ -105,42 +71,73 @@ public class ObjectProvider extends ValueProviderWithContext<Map<String, ?>> {
     }
 
     @Override
-    public Map<String, ?> evaluate(ObjectProviderContext ctx) {
+    public Map<String, ?> getOne() {
 
         // Génération des valeurs pour les générateurs de référence
-        this.refProvidersSnapshot = new HashMap<>();
+        Map<Object, Object> refProvidersSnapshot = new HashMap<>();
         for (Map.Entry<String, ValueProvider<?>> entry : refProviders.entrySet()) {
             ValueProvider<?> provider = entry.getValue();
-            if (provider instanceof ValueProviderWithContext) {
-                ((ValueProviderWithContext<?>) provider).setCtx(ctx);
-            }
             Object value = provider.getOne();
             String name = entry.getKey();
             refProvidersSnapshot.put(name, value);
         }
 
-        // Génération des champs de type "ValueProvider"
-        this.resultObject = new HashMap<>();
-        for (Field field : fields) {
-            resultObject.put(field.name, field.provider.getOne());
-        }
+        Map<String, Object> object = new HashMap<>();
+        ObjectProviderContext context = new ObjectProviderContext() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public <T> T getFieldValue(String name, Class<T> clazz) {
+                return (T) object.get(name);
+            }
 
-        // Générateurs ayant besoin du context
-        for (Map.Entry<String, ContextAwareProvider<?>> entry : fieldsWithContext.entrySet()) {
-            String name = entry.getKey();
-            Object value = entry.getValue().evaluate(ctx);
-            resultObject.put(name, value);
+            @SuppressWarnings("unchecked")
+            @Override
+            public <T> T getRefProviderValue(String name, Class<T> clazz) {
+                return (T) refProvidersSnapshot.get(name);
+            }
+
+            @Override
+            public Object evaluate(Object object) {
+                return ObjectProvider.this.evaluate(object, this);
+            }
+        };
+
+        // Généère une valeur pour chaque champ
+        for (Field field : fields) {
+            Object value = evaluate(field.provider, context);
+            object.put(field.name, value);
         }
 
         if (preserveFieldOrder) {
             Map<String, Object> orderedObject = new LinkedHashMap<>();
             for (String fieldName : fieldsOrder) {
-                orderedObject.put(fieldName, resultObject.get(fieldName));
+                orderedObject.put(fieldName, object.get(fieldName));
             }
             return orderedObject;
         }
 
-        return resultObject;
+        return object;
+    }
+
+    private Object evaluate(Object value, ObjectProviderContext context) {
+
+        if (value instanceof ObjectProvider) {
+            ObjectProvider provider = (ObjectProvider) value;
+            // Recopie des references vers un objet enfant si elles n'existent pas
+            refProviders.forEach(provider.refProviders::putIfAbsent);
+            value = provider.getOne();
+            return evaluate(value, context);
+        } else if (value instanceof ValueProvider<?>) {
+            ValueProvider<?> provider = (ValueProvider<?>) value;
+            value = provider.getOne();
+            return evaluate(value, context);
+        } else if (value instanceof ObjectContextHandler) {
+            ObjectContextHandler<?> objectContextHandler = (ObjectContextHandler<?>) value;
+            value = objectContextHandler.evaluate(context);
+            return evaluate(value, context);
+        }
+
+        return value;
     }
 
     /**

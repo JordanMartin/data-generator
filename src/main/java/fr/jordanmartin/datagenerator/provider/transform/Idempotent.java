@@ -3,8 +3,9 @@ package fr.jordanmartin.datagenerator.provider.transform;
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
 
 /**
- * Génère toujours la même donnée à partir d'un générateur
- * @param <T>
+ * Utilise un autre générateur pour récupérer la valeur et la retourne à chaque appel
+ *
+ * @param <T> Type de la donnée à générer
  */
 public class Idempotent<T> implements ValueProvider<T> {
 
