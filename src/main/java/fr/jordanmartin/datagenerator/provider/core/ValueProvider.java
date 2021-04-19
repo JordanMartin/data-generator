@@ -1,4 +1,4 @@
-package fr.jordanmartin.datagenerator.provider.base;
+package fr.jordanmartin.datagenerator.provider.core;
 
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 import fr.jordanmartin.datagenerator.provider.transform.Idempotent;
@@ -37,11 +37,11 @@ public interface ValueProvider<T> {
      */
     default Stream<T> getStream(int count) {
         return IntStream.range(0, count)
-                .mapToObj(idx -> getOneWithContext(null));
+                .mapToObj(idx -> getOne());
     }
 
     default Stream<T> getStream(ValueProvider<Integer> countProvider) {
-        return getStream(countProvider.getOneWithContext(null));
+        return getStream(countProvider.getOne());
     }
 
     /**
@@ -49,14 +49,14 @@ public interface ValueProvider<T> {
      * Le générateur d'origine ne sera donc appelé qu'une seul fois
      */
     default Idempotent<T> idempotent() {
-        return new Idempotent<T>(this);
+        return new Idempotent<>(this);
     }
 
-    default ListByRepeat<?> repeat(int count) {
+    default ListByRepeat<T> repeat(int count) {
         return new ListByRepeat<>(this, count);
     }
 
-    default ListByRepeat<?> repeat(ValueProvider<Integer> count) {
+    default ListByRepeat<T> repeat(ValueProvider<Integer> count) {
         return new ListByRepeat<>(this, count);
     }
 
@@ -70,7 +70,7 @@ public interface ValueProvider<T> {
         if (ctx == null) {
             return provider.getOne();
         }
-        return ctx.evaluate(provider);
+        return ctx.evaluateProvider(provider);
     }
 
 }

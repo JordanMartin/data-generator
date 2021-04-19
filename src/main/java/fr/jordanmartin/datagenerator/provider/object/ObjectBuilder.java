@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import fr.jordanmartin.datagenerator.output.JsonWriter;
 import fr.jordanmartin.datagenerator.output.ObjectWriter;
 import fr.jordanmartin.datagenerator.provider.base.Constant;
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.random.*;
 import fr.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
 import fr.jordanmartin.datagenerator.provider.transform.FormatDate;
@@ -30,7 +30,7 @@ public abstract class ObjectBuilder extends ObjectProvider {
 
     protected Faker faker = new Faker(Locale.FRANCE);
 
-    public ObjectBuilder() {
+    protected ObjectBuilder() {
         this.configure();
     }
 
@@ -52,19 +52,19 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new FormatDate(dateProvider, format);
     }
 
-    protected RandomFromList<?> randomFromList(Object... list) {
+    protected RandomFromList<Object> randomFromList(Object... list) {
         return new RandomFromList<>(list);
     }
 
-    protected RandomFromList<?> randomFromList(RandomFromList.ItemWeight<?>... list) {
+    protected RandomFromList<Object> randomFromList(RandomFromList.ItemWeight<?>... list) {
         return new RandomFromList<>(list);
     }
 
-    protected RandomFromList<?> randomFromList(ValueProvider<?>... list) {
+    protected RandomFromList<Object> randomFromList(ValueProvider<?>... list) {
         return new RandomFromList<>(list);
     }
 
-    protected RandomFromList.ItemWeight<?> itemWeight(Object item, int weight) {
+    protected RandomFromList.ItemWeight<Object> itemWeight(Object item, int weight) {
         return new RandomFromList.ItemWeight<>(item, weight);
     }
 
@@ -108,7 +108,7 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new Expression(expression);
     }
 
-    protected Reference<?> reference(String ref) {
+    protected Reference<Object> reference(String ref) {
         return new Reference<>(ref);
     }
 
@@ -117,9 +117,7 @@ public abstract class ObjectBuilder extends ObjectProvider {
     }
 
     public void writeMultiple(int count, OutputStream output, ObjectWriter objectWriter) throws IOException {
-// FIXME
-        //        Stream<Map<String, ?>> stream = getStream(count);
-        Stream<Map<String, ?>> stream = Stream.empty();
+        Stream<Map<String, ?>> stream = getStream(count);
         if (log.isInfoEnabled()) {
             AtomicInteger current = new AtomicInteger();
             stream = stream.peek(o -> {

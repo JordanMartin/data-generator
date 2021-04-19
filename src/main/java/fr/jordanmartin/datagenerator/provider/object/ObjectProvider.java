@@ -1,8 +1,8 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
-import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
-import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
+import fr.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProviderException;
 
 import java.util.*;
 
@@ -76,11 +76,6 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
     }
 
     @Override
-    public Map<String, ?> getOne() {
-        return getOneWithContext(null);
-    }
-
-    @Override
     public Map<String, ?> getOneWithContext(ObjectProviderContext ctx) {
 
         Map<String, Object> object = new HashMap<>();
@@ -88,10 +83,10 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
         ObjectProviderContext context = new ObjectProviderContext() {
             @SuppressWarnings("unchecked")
             @Override
-            public <T> T getFieldValue(String name, Class<T> clazz) {
-                T ref = (T) object.get(name);
+            public <T> T getFieldValue(String fieldName, Class<T> clazz) {
+                T ref = (T) object.get(fieldName);
                 if (ref == null && ctx != null) {
-                    return ctx.getFieldValue(name, clazz);
+                    return ctx.getFieldValue(fieldName, clazz);
                 } else {
                     return ref;
                 }
@@ -99,13 +94,30 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
 
             @SuppressWarnings("unchecked")
             @Override
-            public <T> T getRefProviderValue(String name, Class<T> clazz) {
-                T ref = (T) refProvidersSnapshot.get(name);
-                if (ref == null && ctx != null) {
-                    return ctx.getRefProviderValue(name, clazz);
-                } else {
+            public <T> T getRefValue(String refName, Class<T> clazz) {
+                ValueProvider<?> refProvider = refProviders.get(refName);
+                if (refProvider != null) {
+                    T ref = (T) refProvider.getOneWithContext(this);
+                    if (ref != null) {
+                        return ref;
+                    }
+                }
+
+                if (ctx != null) {
+                    return ctx.getRefValue(refName, clazz);
+                }
+
+                return null;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> T getFixedRefValue(String refName, Class<T> clazz) {
+                T ref = (T) refProvidersSnapshot.get(refName);
+                if (ref != null) {
                     return ref;
                 }
+                return ctx.getFixedRefValue(refName, clazz);
             }
         };
 
@@ -119,7 +131,7 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
 
         // Génère une valeur pour chaque champ
         for (Field field : fields) {
-            Object value = context.evaluate(field.provider);
+            Object value = context.evaluateProvider(field.provider);
             object.put(field.name, value);
         }
 

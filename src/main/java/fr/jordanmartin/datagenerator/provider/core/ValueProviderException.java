@@ -1,8 +1,8 @@
-package fr.jordanmartin.datagenerator.provider.base;
+package fr.jordanmartin.datagenerator.provider.core;
 
 public class ValueProviderException extends RuntimeException {
 
-    private ValueProvider<?> provider;
+    private transient ValueProvider<?> provider;
 
     public ValueProviderException() {
     }
@@ -17,7 +17,7 @@ public class ValueProviderException extends RuntimeException {
     }
 
     public ValueProviderException(ValueProvider<?> provider, Throwable cause) {
-        this(provider, null, null);
+        this(provider, null, cause);
     }
 
     @Override

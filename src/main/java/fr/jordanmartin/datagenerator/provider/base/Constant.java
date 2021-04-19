@@ -1,5 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.base;
 
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 /**

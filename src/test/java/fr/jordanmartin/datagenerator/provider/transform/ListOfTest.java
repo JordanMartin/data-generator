@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
+import fr.jordanmartin.datagenerator.provider.core.ValueProviderException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +33,8 @@ class SampleTest {
     }
 
     @Test
-    void withLocale() {
-        String sample = new Sample("Name.name", "dz").getOne();
-        System.out.println(sample);
+    void defaultLocalIsFrenchH() {
+        String sample = new Sample("Name.name", "fr").getOne();
+        assertFalse(sample.isBlank());
     }
 }

@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

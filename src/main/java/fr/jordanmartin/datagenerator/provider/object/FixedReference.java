@@ -8,14 +8,14 @@ import fr.jordanmartin.datagenerator.provider.core.ValueProviderException;
  *
  * @param <T> Le type de la valeur
  */
-public class Reference<T> implements ValueProvider<T> {
+public class FixedReference<T> implements ValueProvider<T> {
 
     /**
      * Nom de la reference
      **/
     private final String refName;
 
-    public Reference(String refName) {
+    public FixedReference(String refName) {
         this.refName = refName;
     }
 
@@ -23,7 +23,7 @@ public class Reference<T> implements ValueProvider<T> {
     @Override
     public T getOneWithContext(ObjectProviderContext ctx) {
         // On cherche dans générateurs de références
-        T objectField = (T) ctx.getRefValue(refName);
+        T objectField = (T) ctx.getFixedRefValue(refName);
         if (objectField == null) {
             // Sinon dans les autres champs
             objectField = (T) ctx.getFieldValue(refName);

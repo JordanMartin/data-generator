@@ -1,11 +1,9 @@
 package fr.jordanmartin.datagenerator.definition;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import fr.jordanmartin.datagenerator.provider.transform.ListOf;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.LinkedHashMap;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Un parseur de definition au format YAML.
- *
+ * <p>
  * Le fichier de définition doit avoir la structure :
  * <pre>
  *  references:
@@ -80,14 +78,13 @@ public class YamlDefinitionParser extends DefinitionParser {
         ValueProvider<?> provider;
 
         if (definition instanceof String) {
-            provider = newProviderFromDefinition((String) definition);
+            provider = newProviderFromDefinition(fieldName, (String) definition);
         }
         // Si c'est un tableau
         else if (definition instanceof List) {
             List<ValueProvider<?>> providers = ((List<?>) definition).stream()
                     .map(def -> parseProviderDefinition(fieldName, def))
                     .collect(Collectors.toList());
-            // TODO throw ereur si présence d'une ComputedValueProvider
             provider = new ListOf(providers);
         }
         // Si c'est un objet => création d'un sous générateur
@@ -107,13 +104,21 @@ public class YamlDefinitionParser extends DefinitionParser {
     /**
      * Parse la définition d'un générateur avec ANTLR4
      *
+     * @param fieldName          Nom du champ
      * @param providerDefinition Le texte de definition du générateur
      */
-    private ValueProvider<?> newProviderFromDefinition(String providerDefinition) {
+    private ValueProvider<?> newProviderFromDefinition(String fieldName, String providerDefinition) {
         CharStream in = CharStreams.fromString(providerDefinition);
         ProviderDefintionLexer lexer = new ProviderDefintionLexer(in);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ProviderDefintionParser parser = new ProviderDefintionParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                throw new DefinitionException("\"" + fieldName + ": " + providerDefinition + "\" => " + msg);
+            }
+        });
         DefinitionVisitor visitor = new DefinitionVisitor();
         return (ValueProvider<?>) visitor.visitDefinition(parser.definition());
     }
@@ -149,7 +154,7 @@ public class YamlDefinitionParser extends DefinitionParser {
             }
 
             // Ne devrait jamais arriver
-            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
+            return notSupportedDefinition(ctx);
         }
 
         @Override
@@ -170,7 +175,7 @@ public class YamlDefinitionParser extends DefinitionParser {
             }
 
             // Ne devrait jamais arriver
-            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
+            return notSupportedDefinition(ctx);
         }
 
         @Override
@@ -187,6 +192,10 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return Double.parseDouble(ctx.getText());
             }
             // Ne devrait jamais arriver
+            return notSupportedDefinition(ctx);
+        }
+
+        private Void notSupportedDefinition(ParserRuleContext ctx) throws UnsupportedOperationException {
             throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
         }
     }

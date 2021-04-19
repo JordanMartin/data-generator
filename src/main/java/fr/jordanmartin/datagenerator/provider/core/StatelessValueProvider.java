@@ -1,4 +1,4 @@
-package fr.jordanmartin.datagenerator.provider.base;
+package fr.jordanmartin.datagenerator.provider.core;
 
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 

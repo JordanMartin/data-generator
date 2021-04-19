@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
 import fr.jordanmartin.datagenerator.provider.base.Constant;
-import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
+import fr.jordanmartin.datagenerator.provider.core.ValueProviderException;
 import fr.jordanmartin.datagenerator.provider.random.RandomInt;
 import fr.jordanmartin.datagenerator.provider.random.Sample;
 import org.junit.jupiter.api.Test;
@@ -11,10 +11,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 class ObjectProviderTest {
 
     @Test
-    @SuppressWarnings("unchecked")
     void nestedFieldObject() {
         var childProvider = new ObjectProvider()
                 .providerRef("child_ref", (objectContext) -> "child_ref_value")
@@ -39,7 +39,6 @@ class ObjectProviderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void nestObjectAccessParentReferencesWithoutOverride() {
         ObjectProvider childProvider = new ObjectProvider()
                 .providerRef("ref", (objectContext) -> "ref_value_of_child")
@@ -63,7 +62,6 @@ class ObjectProviderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void nestObjectWithContextAccessParentReferencesWithoutOverride() {
         ObjectProvider childProvider = new ObjectProvider()
                 .providerRef("ref", (objectContext) -> "ref_value_of_child")
@@ -87,7 +85,6 @@ class ObjectProviderTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void nestedFieldWithContextObject() {
         var rootProvider = new ObjectProvider()
                 .providerRef("firstname", new Constant<>("root_firstname"))
@@ -96,7 +93,7 @@ class ObjectProviderTest {
                 .field("fullname", new Expression("${firstname} ${lastname}"))
                 .field("children", ctx -> new ObjectProvider()
                         .providerRef("child_firstname", new Constant<>("child_firstname"))
-                        .providerRef("child_lastname", new Constant<>(ctx.getRefProviderValue("lastname")))
+                        .providerRef("child_lastname", new Constant<>(ctx.getRefValue("lastname")))
                         .field("age", new RandomInt(1, 19))
                         .field("child_fullname", new Expression("${child_firstname} ${child_lastname}"))
                         .repeat(2))
@@ -208,5 +205,45 @@ class ObjectProviderTest {
         Map<String, ?> object = provider.getOne();
         assertEquals(3, object.size());
         assertEquals("John Doe", object.get("fullname"));
+    }
+
+    @Test
+    void referencesAreEvaluatedEachTime() {
+        ObjectProvider provider = new ObjectProvider()
+                .providerRef("nanotime", System::nanoTime)
+                .field("a", new Reference<>("nanotime"))
+                .field("b", new Reference<>("nanotime"))
+                .field("c", new Reference<>("nanotime"))
+                .field("child", new ObjectProvider()
+                        .field("d", new Reference<>("nanotime"))
+                );
+
+        Map<String, ?> object = provider.getOne();
+        Map<String, Object> child = (Map<String, Object>) object.get("child");
+
+        assertEquals(4, object.size());
+        assertNotEquals(object.get("a"), object.get("b"));
+        assertNotEquals(object.get("b"), object.get("c"));
+        assertNotEquals(child.get("d"), object.get("c"));
+    }
+
+    @Test
+    void fixedReferenceAreEqualsInsideObject() {
+        ObjectProvider provider = new ObjectProvider()
+                .providerRef("nanotime", System::nanoTime)
+                .field("a", new FixedReference<>("nanotime"))
+                .field("b", new FixedReference<>("nanotime"))
+                .field("c", new FixedReference<>("nanotime"))
+                .field("child", new ObjectProvider()
+                        .field("d", new FixedReference<>("nanotime"))
+                );
+
+        Map<String, ?> object = provider.getOne();
+        Map<String, Object> child = (Map<String, Object>) object.get("child");
+
+        assertEquals(4, object.size());
+        assertEquals(object.get("a"), object.get("b"));
+        assertEquals(object.get("b"), object.get("c"));
+        assertEquals(object.get("c"), child.get("d"));
     }
 }

@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
-import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;

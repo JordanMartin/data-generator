@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.object;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
-import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProviderException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +37,7 @@ public class Expression implements ValueProvider<String> {
             Object objectField = ctx.getFieldValue(ref);
             if (objectField == null) {
                 // Sinon les génrateurs de references
-                objectField = ctx.getRefProviderValue(ref);
+                objectField = ctx.getRefValue(ref);
             }
 
             if (objectField == null) {

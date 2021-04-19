@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 /**

@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
-import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 
 import java.util.UUID;
 

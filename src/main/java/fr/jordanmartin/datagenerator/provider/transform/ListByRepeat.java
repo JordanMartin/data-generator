@@ -1,11 +1,13 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.Constant;
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Répète un généteur pour construire une liste
@@ -45,10 +47,9 @@ public class ListByRepeat<T> implements ValueProvider<List<T>> {
         return array;
     }
 
-    // FIXME
-//    public Stream<T> getAsStream() {
-//        int count = countProvider.getOne();
-//        return IntStream.of(0, count)
-//                .mapToObj(idx -> this.valueProvider.getOne());
-//    }
+    public Stream<T> getAsStream() {
+        int count = countProvider.getOne();
+        return IntStream.of(0, count)
+                .mapToObj(idx -> this.valueProvider.getOne());
+    }
 }

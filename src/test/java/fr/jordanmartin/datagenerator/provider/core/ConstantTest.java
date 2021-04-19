@@ -1,5 +1,6 @@
-package fr.jordanmartin.datagenerator.provider.base;
+package fr.jordanmartin.datagenerator.provider.core;
 
+import fr.jordanmartin.datagenerator.provider.base.Constant;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

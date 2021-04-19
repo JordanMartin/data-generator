@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -31,11 +32,17 @@ public class XmlWriter implements ObjectWriter {
 
     @SneakyThrows
     public XmlWriter(String objectName, boolean pretty) {
+        DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
+        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
         this.objectName = objectName;
-        this.doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        transformer = TransformerFactory
-                .newInstance()
-                .newTransformer();
+        this.doc = df.newDocumentBuilder().newDocument();
+        transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, pretty ? "yes" : "no");
     }
 

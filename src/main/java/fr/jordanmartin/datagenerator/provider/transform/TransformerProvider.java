@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 /**
@@ -11,9 +11,12 @@ import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
  */
 public abstract class TransformerProvider<I, O> implements ValueProvider<O> {
 
+    /**
+     * Générateur à transformer
+     */
     private final ValueProvider<I> provider;
 
-    public TransformerProvider(ValueProvider<I> provider) {
+    protected TransformerProvider(ValueProvider<I> provider) {
         this.provider = provider;
     }
 

@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
-import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
+import fr.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
