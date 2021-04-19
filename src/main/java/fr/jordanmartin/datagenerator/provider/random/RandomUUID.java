@@ -1,13 +1,13 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 
 import java.util.UUID;
 
 /**
  * Génère un UUID
  */
-public class RandomUUID implements ValueProvider<String> {
+public class RandomUUID implements StatelessValueProvider<String> {
 
     @Override
     public String getOne() {

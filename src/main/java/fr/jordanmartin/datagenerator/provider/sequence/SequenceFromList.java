@@ -1,6 +1,6 @@
 package fr.jordanmartin.datagenerator.provider.sequence;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <T> Le type des valeurs
  */
-public class SequenceFromList<T> implements ValueProvider<T> {
+public class SequenceFromList<T> implements StatelessValueProvider<T> {
 
     private final List<T> items;
     private int nextIdx;

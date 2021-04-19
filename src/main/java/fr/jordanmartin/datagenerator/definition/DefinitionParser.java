@@ -105,12 +105,12 @@ public abstract class DefinitionParser {
 //        if (!ValueProviderWithContext.class.isAssignableFrom(providerClass)) {
 //            throw new IllegalArgumentException("Le générateur de référence \"" + providerClass + "\" doit implémenter " + ValueProviderWithContext.class);
 //        }
-//        Class<? extends ValueProviderWithContext<?>> existingProviderClass = defaultComputedProvider.get(name);
+//        Class<? implements ValueProviderWithContext<?>> existingProviderClass = defaultComputedProvider.get(name);
 //        if (existingProviderClass != null) {
 //            throw new IllegalArgumentException("Le générateur de référence \"" + existingProviderClass
 //                    + "\" et \"" + providerClass + "\" ne peuvent pas être enregistrés sous le même nom");
 //        }
-//        defaultComputedProvider.put(name, (Class<? extends ValueProviderWithContext<?>>) providerClass);
+//        defaultComputedProvider.put(name, (Class<? implements ValueProviderWithContext<?>>) providerClass);
 //    }
 
 //    public void registerComputedProvider(Class<?> providerClass) {
@@ -127,7 +127,7 @@ public abstract class DefinitionParser {
 //        if (!ValueProvider.class.isAssignableFrom(providerClass)) {
 //            throw new IllegalArgumentException("Le générateur \"" + providerClass + "\" doit implémenter " + ValueProvider.class);
 //        }
-//        Class<? extends ValueProvider<?>> existingProviderClass = defaultProvider.get(name);
+//        Class<? implements ValueProvider<?>> existingProviderClass = defaultProvider.get(name);
 //        if (existingProviderClass != null) {
 //            throw new IllegalArgumentException("Le générateur \"" + existingProviderClass
 //                    + "\" et \"" + providerClass + "\" ne peuvent pas être enregistrés sous le même nom");

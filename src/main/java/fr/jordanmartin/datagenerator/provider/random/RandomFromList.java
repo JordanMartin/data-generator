@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,13 +54,13 @@ public class RandomFromList<T> implements ValueProvider<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public T getOne() {
+    public T getOneWithContext(ObjectProviderContext ctx) {
         int idx = random.nextInt(items.size());
         Object item = items.get(idx);
 
         // Autorise l'utilisation d'un autre générateur
         if (item instanceof ValueProvider) {
-            return ((ValueProvider<T>) item).getOne();
+            return evaluateProviderWithContext((ValueProvider<T>) item, ctx);
         }
 
         return (T) item;

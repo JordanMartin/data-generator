@@ -4,7 +4,8 @@ references:
   item:
     name: RandomFromList(["A", "B", "C", "D", "E"])
     price: Round(RandomDouble(0, 10), 2)
+    test: Expression("${firstname} ${lastname}")
 
 template:
-  id: IntAutoIncrement()
+  id: Round(Idempotent(RandomDouble(100)), 1)
   items: ListByRepeat(Reference("item"), 2)

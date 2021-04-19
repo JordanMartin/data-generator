@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 /**
  * Utilise un autre générateur pour récupérer la valeur et la retourne à chaque appel
@@ -17,11 +18,10 @@ public class Idempotent<T> implements ValueProvider<T> {
     }
 
     @Override
-    public T getOne() {
-        if (value == null) {
-            value = provider.getOne();
+    public T getOneWithContext(ObjectProviderContext ctx) {
+        if (this.value == null) {
+            this.value = provider.getOneWithContext(ctx);
         }
-
-        return value;
+        return this.value;
     }
 }

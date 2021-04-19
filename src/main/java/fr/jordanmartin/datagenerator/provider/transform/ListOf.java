@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +26,10 @@ public class ListOf implements ValueProvider<List<?>> {
     }
 
     @Override
-    public List<Object> getOne() {
+    public List<?> getOneWithContext(ObjectProviderContext ctx) {
         List<Object> array = new ArrayList<>(valueProviers.size());
         for (ValueProvider<?> provider : valueProviers) {
-            array.add(provider.getOne());
+            array.add(evaluateProviderWithContext(provider, ctx));
         }
         return array;
     }

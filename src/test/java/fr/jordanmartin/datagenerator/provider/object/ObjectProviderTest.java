@@ -17,13 +17,13 @@ class ObjectProviderTest {
     @SuppressWarnings("unchecked")
     void nestedFieldObject() {
         var childProvider = new ObjectProvider()
-                .providerRef("child_ref", () -> "child_ref_value")
-                .field("child_field", () -> "child")
+                .providerRef("child_ref", (objectContext) -> "child_ref_value")
+                .field("child_field", (objectContext) -> "child")
                 .field("child_ref_field", new Reference<>("child_ref"));
 
         var rootProvider = new ObjectProvider()
-                .providerRef("root_ref", () -> "root_ref_value")
-                .field("root_field", () -> "root")
+                .providerRef("root_ref", (objectContext) -> "root_ref_value")
+                .field("root_field", (objectContext) -> "root")
                 .field("child", childProvider)
                 .field("root_ref_field", new Reference<>("root_ref"));
 
@@ -42,13 +42,13 @@ class ObjectProviderTest {
     @SuppressWarnings("unchecked")
     void nestObjectAccessParentReferencesWithoutOverride() {
         ObjectProvider childProvider = new ObjectProvider()
-                .providerRef("ref", () -> "ref_value_of_child")
+                .providerRef("ref", (objectContext) -> "ref_value_of_child")
                 .field("root_ref", new Reference<>("root_ref"))
                 .field("ref", new Reference<>("ref"));
 
         var rootProvider = new ObjectProvider()
-                .providerRef("root_ref", () -> "root_ref_value")
-                .providerRef("ref", () -> "ref_value_of_root")
+                .providerRef("root_ref", (objectContext) -> "root_ref_value")
+                .providerRef("ref", (objectContext) -> "ref_value_of_root")
                 .field("root_ref", new Reference<>("root_ref"))
                 .field("ref", new Reference<>("ref"))
                 .field("child", childProvider);
@@ -66,13 +66,13 @@ class ObjectProviderTest {
     @SuppressWarnings("unchecked")
     void nestObjectWithContextAccessParentReferencesWithoutOverride() {
         ObjectProvider childProvider = new ObjectProvider()
-                .providerRef("ref", () -> "ref_value_of_child")
+                .providerRef("ref", (objectContext) -> "ref_value_of_child")
                 .field("root_ref", new Reference<>("root_ref"))
                 .field("ref", new Reference<>("ref"));
 
         var rootProvider = new ObjectProvider()
-                .providerRef("root_ref", () -> "root_ref_value")
-                .providerRef("ref", () -> "ref_value_of_root")
+                .providerRef("root_ref", (objectContext) -> "root_ref_value")
+                .providerRef("ref", (objectContext) -> "ref_value_of_root")
                 .field("root_ref", new Reference<>("root_ref"))
                 .field("ref", new Reference<>("ref"))
                 .field("child", ctx -> childProvider);

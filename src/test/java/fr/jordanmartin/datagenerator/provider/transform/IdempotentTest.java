@@ -11,7 +11,7 @@ class IdempotentTest {
 
     @Test
     void getOne() {
-        ValueProvider<String> provider = () -> UUID.randomUUID().toString();
+        ValueProvider<String> provider = (obectContext) -> UUID.randomUUID().toString();
         Idempotent<String> idempotent = new Idempotent<>(provider);
 
         String first = idempotent.getOne();

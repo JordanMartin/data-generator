@@ -11,10 +11,10 @@ class ListOfTest {
 
     @Test
     void getOne() {
-        ValueProvider<String> providerA = () -> "a";
-        ValueProvider<Integer> providerB = () -> 1;
+        ValueProvider<String> providerA = (obectContext) -> "a";
+        ValueProvider<Integer> providerB = (obectContext) -> 1;
         ListOf listProvider = new ListOf(providerA, providerB);
-        List<Object> list = listProvider.getOne();
+        List<?> list = listProvider.getOne();
         assertEquals(2, list.size());
         assertEquals(providerA.getOne(), list.get(0));
         assertEquals(providerB.getOne(), list.get(1));

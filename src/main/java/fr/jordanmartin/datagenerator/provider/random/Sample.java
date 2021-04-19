@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 
 import java.util.Locale;
@@ -10,7 +10,7 @@ import java.util.Locale;
  * Générateur de donnée à partir d'une expression {@link Faker}
  * http://dius.github.io/java-faker/apidocs/index.html
  */
-public class Sample implements ValueProvider<String> {
+public class Sample implements StatelessValueProvider<String> {
 
     private final Faker faker;
     private final String expression;

@@ -8,7 +8,7 @@ import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
  *
  * @param <T> Le type de la valeur
  */
-public class Reference<T> implements ValueProvider<ObjectContextHandler<?>> {
+public class Reference<T> implements ValueProvider<T> {
 
     /**
      * Nom de la reference
@@ -19,21 +19,20 @@ public class Reference<T> implements ValueProvider<ObjectContextHandler<?>> {
         this.refName = refName;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public ObjectContextHandler<?> getOne() {
-        return (ctx) -> {
-            // On cherche dans les autres champs de l'objet
-            Object objectField = ctx.getFieldValue(refName);
-            if (objectField == null) {
-                // Sinon dans les générateurs de références
-                objectField = ctx.getRefProviderValue(refName);
-            }
+    public T getOneWithContext(ObjectProviderContext ctx) {
+        // On cherche dans générateurs de références
+        T objectField = (T) ctx.getRefProviderValue(refName);
+        if (objectField == null) {
+            // Sinon dans les autres champs
+            objectField = (T) ctx.getFieldValue(refName);
+        }
 
-            if (objectField == null) {
-                throw new ValueProviderException(this, "La référence \"" + refName + "\" n'existe pas");
-            }
+        if (objectField == null) {
+            throw new ValueProviderException(this, "La référence \"" + refName + "\" n'existe pas");
+        }
 
-            return objectField;
-        };
+        return objectField;
     }
 }

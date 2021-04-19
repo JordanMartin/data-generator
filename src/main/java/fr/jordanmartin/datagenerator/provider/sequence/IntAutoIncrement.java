@@ -1,12 +1,12 @@
 package fr.jordanmartin.datagenerator.provider.sequence;
 
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 
 /**
  * Génère un entier incrémenté à chaque appel.
  * Lorsque la maximum est atteint on revient à la première valeur
  */
-public class IntAutoIncrement implements ValueProvider<Integer> {
+public class IntAutoIncrement implements StatelessValueProvider<Integer> {
 
     /**
      * Première minmum

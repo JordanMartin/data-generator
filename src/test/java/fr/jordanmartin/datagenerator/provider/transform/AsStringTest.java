@@ -9,8 +9,8 @@ class AsStringTest {
 
     @Test
     void getOne() {
-        ValueProvider<Integer> provider = () -> 1;
+        ValueProvider<Integer> provider = (ctx) -> 1;
         AsString<Integer> asStringProvider = new AsString<>(provider);
-        assertEquals("1", asStringProvider.getOne());
+        assertEquals("1", asStringProvider.getOneWithContext(null));
     }
 }

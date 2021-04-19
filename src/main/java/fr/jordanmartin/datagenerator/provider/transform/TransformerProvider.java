@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 /**
  * Transforme une donnée
@@ -25,8 +26,8 @@ public abstract class TransformerProvider<I, O> implements ValueProvider<O> {
     protected abstract O map(I input);
 
     @Override
-    public O getOne() {
-        I input = provider.getOne();
+    public O getOneWithContext(ObjectProviderContext ctx) {
+        I input = evaluateProviderWithContext(provider, ctx);
         return map(input);
     }
 }

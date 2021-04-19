@@ -1,7 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
-import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * A noter: il peut y avoir des doublons
  */
 @Slf4j
-public class RandomFromRegex implements ValueProvider<String> {
+public class RandomFromRegex implements StatelessValueProvider<String> {
 
     private final Faker faker = new Faker();
     /**

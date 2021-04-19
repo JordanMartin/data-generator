@@ -113,12 +113,13 @@ public abstract class ObjectBuilder extends ObjectProvider {
     }
 
     public void writeOne(OutputStream output, ObjectWriter objectWriter) throws IOException {
-        objectWriter.writeOne(output, getOne());
+        objectWriter.writeOne(output, getOneWithContext(null));
     }
 
     public void writeMultiple(int count, OutputStream output, ObjectWriter objectWriter) throws IOException {
-        Stream<Map<String, ?>> stream = getStream(count);
-
+// FIXME
+        //        Stream<Map<String, ?>> stream = getStream(count);
+        Stream<Map<String, ?>> stream = Stream.empty();
         if (log.isInfoEnabled()) {
             AtomicInteger current = new AtomicInteger();
             stream = stream.peek(o -> {

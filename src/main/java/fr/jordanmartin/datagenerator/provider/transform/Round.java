@@ -2,6 +2,7 @@ package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.DoubleProvider;
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,10 +10,10 @@ import java.math.RoundingMode;
 /**
  * Générateur pour arrondir un nombre decimal
  */
-public class Round implements DoubleProvider {
+public class Round extends DoubleProvider {
 
-    private final ValueProvider<Double> provider;
     private final int precision;
+    private final ValueProvider<Double> provider;
     private final RoundingMode roundingMode;
 
     public Round(ValueProvider<Double> provider, int precision, RoundingMode roundingMode) {
@@ -25,14 +26,15 @@ public class Round implements DoubleProvider {
         this(provider, precision, RoundingMode.valueOf(roundingMode));
     }
 
-    public Round(ValueProvider<Double> provider, int precision) {
-        this(provider, precision, RoundingMode.UP);
-    }
-
     @Override
-    public Double getOne() {
-        return BigDecimal.valueOf(provider.getOne())
+    public Double getOneWithContext(ObjectProviderContext ctx) {
+        Double value = evaluateProviderWithContext(provider, ctx);
+        return BigDecimal.valueOf(value)
                 .setScale(precision, roundingMode)
                 .doubleValue();
+    }
+
+    public Round(ValueProvider<Double> provider, int precision) {
+        this(provider, precision, RoundingMode.UP);
     }
 }

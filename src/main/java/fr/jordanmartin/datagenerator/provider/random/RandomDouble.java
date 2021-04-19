@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import fr.jordanmartin.datagenerator.provider.base.DoubleProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Random;
 /**
  * Génère un double aléatoire
  */
-public class RandomDouble implements DoubleProvider {
+public class RandomDouble extends DoubleProvider implements StatelessValueProvider<Double> {
     private final Random random = new Random();
     private final double min;
     private final double max;

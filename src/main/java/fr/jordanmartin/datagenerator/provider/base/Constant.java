@@ -1,5 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.base;
 
+import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
+
 /**
  * Générateur de valeur constante
  *
@@ -14,7 +16,7 @@ public class Constant<T> implements ValueProvider<T> {
     }
 
     @Override
-    public T getOne() {
+    public T getOneWithContext(ObjectProviderContext ctx) {
         return value;
     }
 }

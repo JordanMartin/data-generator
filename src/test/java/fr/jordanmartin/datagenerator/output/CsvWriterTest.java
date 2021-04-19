@@ -13,8 +13,8 @@ class CsvWriterTest {
     @Test
     void writeOne() throws IOException {
         ObjectProvider provider = new ObjectProvider()
-                .field("id", () -> 0)
-                .field("a", () -> "a");
+                .field("id", (objectContext) -> 0)
+                .field("a", (objectContext) -> "a");
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         new CsvWriter().writeOne(out, provider.getOne());

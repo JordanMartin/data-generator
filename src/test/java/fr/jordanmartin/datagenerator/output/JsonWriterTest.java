@@ -13,12 +13,12 @@ class JsonWriterTest {
     @Test
     void writeOne() throws IOException {
         ObjectProvider child = new ObjectProvider()
-                .field("b", () -> "b")
-                .field("c", () -> "c");
+                .field("b", (objectContext) -> "b")
+                .field("c", (objectContext) -> "c");
 
         ObjectProvider provider = new ObjectProvider()
-                .field("id", () -> 0)
-                .field("a", () -> "a")
+                .field("id", (objectContext) -> 0)
+                .field("a", (objectContext) -> "a")
                 .field("child", child);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -2,7 +2,6 @@ package fr.jordanmartin.datagenerator.provider.transform;
 
 import fr.jordanmartin.datagenerator.provider.base.Constant;
 import fr.jordanmartin.datagenerator.provider.base.ValueProvider;
-import fr.jordanmartin.datagenerator.provider.object.ContextualValueProvider;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProviderContext;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
  *
  * @param <T> Le type de la donnée de la liste
  */
-public class ListByRepeat<T> implements ContextualValueProvider<List<T>> {
+public class ListByRepeat<T> implements ValueProvider<List<T>> {
 
     /**
      * Le générateur qui alimentera la liste
@@ -34,13 +33,13 @@ public class ListByRepeat<T> implements ContextualValueProvider<List<T>> {
         this(valueProvier, new Constant<>(count));
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
-    public List<T> getOne(ObjectProviderContext ctx) {
-        int count = countProvider.getOne();
+    public List<T> getOneWithContext(ObjectProviderContext ctx) {
+        int count = evaluateProviderWithContext(this.countProvider, ctx);
         List<T> array = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            T value = (T) ctx.evaluate(valueProvider);
+            T value = evaluateProviderWithContext(this.valueProvider, ctx);
             array.add(value);
         }
         return array;

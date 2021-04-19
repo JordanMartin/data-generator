@@ -11,7 +11,7 @@ class ListByRepeatTest {
 
     @Test
     void getOne() {
-        List<String> list = new ListByRepeat<>(() -> "a", 5).getOne().evaluate(null);
+        List<String> list = new ListByRepeat<>((obectContext) -> "a", 5).getOne();
         assertEquals(5, list.size());
         for (String s : list) {
             assertEquals("a", s);

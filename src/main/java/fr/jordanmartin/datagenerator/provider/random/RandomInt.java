@@ -1,6 +1,7 @@
 package fr.jordanmartin.datagenerator.provider.random;
 
 import fr.jordanmartin.datagenerator.provider.base.IntegerProvider;
+import fr.jordanmartin.datagenerator.provider.base.StatelessValueProvider;
 import fr.jordanmartin.datagenerator.provider.base.ValueProviderException;
 
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Random;
 /**
  * Génère un entier aléatoire
  */
-public class RandomInt implements IntegerProvider {
+public class RandomInt implements IntegerProvider, StatelessValueProvider<Integer> {
 
     private final Random random = new Random();
     private final int min;

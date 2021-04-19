@@ -13,8 +13,8 @@ class SqlWriterTest {
     @Test
     void writeOne() throws IOException {
         ObjectProvider provider = new ObjectProvider()
-                .field("id", () -> 0)
-                .field("a", () -> "a");
+                .field("id", (objectContext) -> 0)
+                .field("a", (objectContext) -> "a");
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         new SqlWriter("test_table").writeOne(out, provider.getOne());
