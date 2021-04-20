@@ -23,7 +23,7 @@ public class Round implements DoubleProvider {
     }
 
     public Round(ValueProvider<Double> provider, int precision, String roundingMode) {
-        this(provider, precision, RoundingMode.valueOf(roundingMode));
+        this(provider, precision, RoundingMode.valueOf(roundingMode.toUpperCase()));
     }
 
     @Override
