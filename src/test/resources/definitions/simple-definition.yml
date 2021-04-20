@@ -1,14 +1,14 @@
 references:
-  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
   firstname: Sample("Name.firstName")
   lastname: Sample("Name.lastName")
+  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
   item:
-    name: RandomFromList(["A", "B", "C", "D", "E"])
-    price: Round(RandomDouble(0, 10), 2)
-    test: Expression("${firstname} ${lastname}")
-    horodatage: Reference("gen_date")
+    horodatage: $gen_date
+    exp: $("${firstname} ${lastname}")
+
 
 template:
-  horodatage: Reference("gen_date")
-  id: Round(Idempotent(RandomDouble(100)), 1)
-  items: ListByRepeat(FixedReference("item"), RandomInt(0, 10))
+  id: RandomUUID()
+  num: IntAutoIncrement()
+  horodatage: $gen_date
+  items: ListByRepeat($item, 2)
