@@ -1,7 +1,10 @@
 package fr.jordanmartin.datagenerator.definition;
 
 import fr.jordanmartin.datagenerator.provider.core.ValueProvider;
+import fr.jordanmartin.datagenerator.provider.object.Expression;
+import fr.jordanmartin.datagenerator.provider.object.FixedReference;
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
+import fr.jordanmartin.datagenerator.provider.object.Reference;
 import fr.jordanmartin.datagenerator.provider.transform.ListOf;
 import org.antlr.v4.runtime.*;
 import org.yaml.snakeyaml.Yaml;
@@ -151,6 +154,8 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitString(ctx.string());
             } else if (ctx.list() != null) {
                 return visitList(ctx.list());
+            } else if (ctx.reference() != null) {
+                return visitReference(ctx.reference());
             }
 
             // Ne devrait jamais arriver
@@ -193,6 +198,38 @@ public class YamlDefinitionParser extends DefinitionParser {
             }
             // Ne devrait jamais arriver
             return notSupportedDefinition(ctx);
+        }
+
+        @Override
+        public Object visitReference(ProviderDefintionParser.ReferenceContext ctx) {
+            if (ctx.standardRef() != null) {
+                return visitStandardRef(ctx.standardRef());
+            } else if (ctx.fixedRef() != null) {
+                return visitFixedRef(ctx.fixedRef());
+            } else if (ctx.expression() != null) {
+                return visitExpression(ctx.expression());
+            }
+
+            // Ne devrait jamais arriver
+            return notSupportedDefinition(ctx);
+        }
+
+        @Override
+        public Object visitFixedRef(ProviderDefintionParser.FixedRefContext ctx) {
+            String ref = ctx.Ident().getText();
+            return new FixedReference<>(ref);
+        }
+
+        @Override
+        public Object visitStandardRef(ProviderDefintionParser.StandardRefContext ctx) {
+            String ref = ctx.Ident().getText();
+            return new Reference<>(ref);
+        }
+
+        @Override
+        public Object visitExpression(ProviderDefintionParser.ExpressionContext ctx) {
+            String expression = (String) visitString(ctx.string());
+            return new Expression(expression);
         }
 
         private Void notSupportedDefinition(ParserRuleContext ctx) throws UnsupportedOperationException {

@@ -4,17 +4,22 @@ grammar ProviderDefintion;
 package fr.jordanmartin.datagenerator.definition;
 }
 
-definition: func;
+definition: func | reference;
 
 func: func_name LPAREN func_params RPAREN;
 func_params: ( | func_param (COMMA func_param)*);
 func_name: Ident;
-func_param: func | string | number | list;
+func_param: func | string | number | list | reference;
 number: Integer | Double;
 string: StringLiteral;
 
 list: LBRACK ( | list_element (COMMA list_element)*) RBRACK;
-list_element:  func | string | number;
+list_element:  func | string | number | reference;
+
+reference: fixedRef | standardRef | expression;
+fixedRef: DOLLAR DOLLAR Ident;
+standardRef: DOLLAR Ident;
+expression: DOLLAR LPAREN string RPAREN;
 
 StringLiteral: '"' StringCharacter* '"';
 fragment StringCharacter    : ~["\\\r\n] |	EscapeSequence;
@@ -29,4 +34,5 @@ LPAREN : '(';
 RPAREN : ')';
 LBRACK : '[';
 RBRACK : ']';
+DOLLAR: '$';
 WS : [ \r\n\t] + -> skip;

@@ -117,6 +117,11 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
                 if (ref != null) {
                     return ref;
                 }
+
+                if (ctx == null) {
+                    return null;
+                }
+
                 return ctx.getFixedRefValue(refName, clazz);
             }
         };
