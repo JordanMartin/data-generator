@@ -12,6 +12,10 @@ Retourne toujours la même valeur
 
 Génère un UUID
 
+**Exemple** :
+
+- `RandomUUID()` => `"fd768fbf-6e86-4e46-a654-12b5e8106d19"`
+
 ### `RandomInt(int min, int max)`
 
 Retourne un entier aléatoire dans un interval. Si les paramètres `min` et `max` ne sont pas spécifié, l'interval
@@ -23,7 +27,7 @@ Retourne séquentiellement les éléments spécifiés en paramètre.
 
 *Exemple* : `SequenceFromList("a", "b", "c")`
 
-*Résultat pour 5 éléments*: `["a", "b", "c", "a", "b"]`
+*Résultat pour 5 générations successives*: `["a", "b", "c", "a", "b"]`
 
 ### `RandomDouble(double min, double max)`
 
@@ -39,6 +43,13 @@ Génère une fausse donnée selon une expression.
   L'expression peut être composée avec la notation suivante.
   `Sample("#{TYPE} #{TYPE}")`. *Exemple: `Sample("#{Name.firstName} #{Name.lastName}")`*
 - `String locale (optionnel)` : La locale a utilisé pour les données générés. *Exemple: "fr", "us", "it", "de", ...*
+
+**Exemple**:
+
+- `Sample("Name.fullName")` => "Mme Lina Royer"
+- `Sample("Name.firstName")` => "Paul"
+- `Sample("Internet.emailAddress")` => "victor.david@hotmail.fr"
+- `Sample("#{Name.fullName} (#{Address.cityName})")` => "Mme Lina Royer (Paris)"
 
 ### `Round(<generateur>, <nombre_decimal>)`
 

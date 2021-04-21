@@ -22,6 +22,12 @@ class SampleTest {
     }
 
     @Test
+    void multiple() {
+        Sample sample = new Sample("#{Name.fullName} (#{Address.cityName})");
+        assertTrue(sample.getOne().matches("[^()]+ \\([^()]+\\)"));
+    }
+
+    @Test
     void badExpression() {
         assertThrows(ValueProviderException.class, () -> {
             new Sample("badexpression").getOne();
