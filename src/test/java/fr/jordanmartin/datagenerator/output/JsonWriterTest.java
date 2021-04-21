@@ -20,7 +20,7 @@ class JsonWriterTest {
                 .field("a", (objectContext) -> "a")
                 .field("child", child);
 
-        String result = new JsonWriter(false).asString(provider.getOne());
+        String result = new JsonOutput(provider).writeOneToString();
         assertEquals("{\"id\":0,\"a\":\"a\",\"child\":{\"b\":\"b\",\"c\":\"c\"}}", result);
     }
 }

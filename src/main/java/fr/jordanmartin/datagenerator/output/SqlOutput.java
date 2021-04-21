@@ -1,5 +1,7 @@
 package fr.jordanmartin.datagenerator.output;
 
+import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -10,15 +12,29 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format insertion SQL
  */
-public class SqlWriter implements ObjectWriter {
+public class SqlOutput extends ObjectWriterOuput {
 
-    private final String tableName;
+    private String tableName;
 
-    public SqlWriter(String tableName) {
+    public SqlOutput(ObjectProvider provider, String tableName) {
+        super(provider);
         this.tableName = tableName;
     }
 
+    public SqlOutput(ObjectProvider provider) {
+        this(provider, "object");
+    }
+
     @Override
+    public void writeMany(OutputStream out, int count) throws IOException {
+        writeMany(out, provider.getStream(count));
+    }
+
+    @Override
+    public void writeOne(OutputStream out) throws IOException {
+        writeOne(out, provider.getOne());
+    }
+
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out);
         writeInsertIntoPart(writer, object);
@@ -28,7 +44,6 @@ public class SqlWriter implements ObjectWriter {
         writer.flush();
     }
 
-    @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out);
         stream.forEach(object -> {
@@ -69,5 +84,10 @@ public class SqlWriter implements ObjectWriter {
             }
         }
         writer.append(")");
+    }
+
+    public SqlOutput setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
     }
 }

@@ -1,9 +1,10 @@
 package fr.jordanmartin.datagenerator.output;
 
+import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -12,21 +13,21 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format JSON
  */
-public class CsvWriter implements ObjectWriter {
+public class CsvOutput extends ObjectWriterOuput {
 
     private final String separator;
 
-    public CsvWriter(String separator) {
+    public CsvOutput(ObjectProvider provider) {
+        this(provider, ";");
+    }
+
+    public CsvOutput(ObjectProvider provider, String separator) {
+        super(provider);
         this.separator = separator;
     }
 
-    public CsvWriter() {
-        this(";");
-    }
-
-    @Override
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
-        Writer writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out);
         String fields = object.values().stream().map(Object::toString).collect(Collectors.joining(";"));
         writer.write(String.join(";", object.keySet()));
         writer.write('\n');
@@ -34,9 +35,8 @@ public class CsvWriter implements ObjectWriter {
         writer.flush();
     }
 
-    @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
-        Writer writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out);
         AtomicBoolean headerLine = new AtomicBoolean(false);
         stream.forEach(object -> {
             try {
@@ -54,5 +54,14 @@ public class CsvWriter implements ObjectWriter {
             }
         });
         writer.flush();
+    }
+
+    @Override
+    public void writeMany(OutputStream out, int count) throws IOException {
+        if (count == 1) {
+            writeOne(out, provider.getOne());
+        } else {
+            writeMany(out, provider.getStream(count));
+        }
     }
 }

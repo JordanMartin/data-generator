@@ -2,13 +2,15 @@ references:
   firstname: Sample("Name.firstName")
   lastname: Sample("Name.lastName")
   gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
+  id: RandomUUID()
   item:
+    parent_id: $$id
     horodatage: $gen_date
     exp: $("${firstname} ${lastname}")
 
-
 template:
-  id: RandomUUID()
+  id: $$id
   num: IntAutoIncrement()
+  random: RandomInt(100, 1000)
   horodatage: $gen_date
   items: ListByRepeat($item, 2)

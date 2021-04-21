@@ -3,6 +3,7 @@ package fr.jordanmartin.datagenerator.output;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,23 +13,23 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format JSON
  */
-public class JsonWriter implements ObjectWriter {
+public class JsonOutput extends ObjectWriterOuput {
 
     /**
      * Activation du pretty print
      */
-    private final boolean pretty;
+    private boolean pretty;
 
-    public JsonWriter() {
-        this(false);
+    public JsonOutput(ObjectProvider provider) {
+        this(provider, false);
     }
 
-    public JsonWriter(boolean pretty) {
+    public JsonOutput(ObjectProvider provider, boolean pretty) {
+        super(provider);
         this.pretty = pretty;
     }
 
-    @Override
-    public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
+    public void writeObject(OutputStream out, Map<String, ?> object) throws IOException {
         com.fasterxml.jackson.databind.ObjectWriter objectWriter;
         if (pretty) {
             objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
@@ -39,8 +40,7 @@ public class JsonWriter implements ObjectWriter {
         out.flush();
     }
 
-    @Override
-    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
+    public void writeObjects(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         JsonGenerator jsonGenerator = new JsonFactory()
                 .createGenerator(out)
                 .setCodec(new ObjectMapper());
@@ -59,5 +59,19 @@ public class JsonWriter implements ObjectWriter {
         });
         jsonGenerator.writeEndArray();
         jsonGenerator.flush();
+    }
+
+    @Override
+    public void writeMany(OutputStream out, int count) throws IOException {
+        if (count == 1) {
+            writeObject(out, provider.getOne());
+        } else {
+            writeObjects(out, provider.getStream(count));
+        }
+    }
+
+    public JsonOutput setPretty(boolean pretty) {
+        this.pretty = pretty;
+        return this;
     }
 }

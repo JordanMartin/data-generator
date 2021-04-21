@@ -21,8 +21,8 @@ class ObjectBuilderTest {
             field("list", list(randomInt(0, 100), increment()));
             field("randomUUID", randomUUID());
             field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
-            field("firstname", (objectContext) -> faker.name().firstName());
-            field("lastname", (objectContext) -> faker.name().lastName());
+            field("firstname", ctx -> faker.name().firstName());
+            field("lastname", ctx -> faker.name().lastName());
             field("expression", expression("${firstname} ${lastname}"));
             field("reference", reference("randomInt"));
         }

@@ -15,7 +15,9 @@ class SqlWriterTest {
                 .field("id", (objectContext) -> 0)
                 .field("a", (objectContext) -> "a");
 
-        String result = new SqlWriter("test_table").asString(provider.getOne());
+        String result = new SqlOutput(provider)
+                .setTableName("test_table")
+                .writeOneToString();
         assertEquals("INSERT INTO test_table(id,a) VALUES(0,'a');", result);
     }
 }

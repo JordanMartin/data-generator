@@ -80,6 +80,7 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
 
         Map<String, Object> object = new HashMap<>();
         Map<Object, Object> refProvidersSnapshot = new HashMap<>();
+        // TODO extraire ce morceau ailleur
         ObjectProviderContext context = new ObjectProviderContext() {
             @SuppressWarnings("unchecked")
             @Override
