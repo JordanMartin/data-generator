@@ -119,7 +119,7 @@ public class YamlDefinitionParser extends DefinitionParser {
         parser.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new DefinitionException("\"" + fieldName + ": " + providerDefinition + "\" => " + msg);
+                throw new DefinitionException("\"" + fieldName + ": " + providerDefinition + "\" at position " + charPositionInLine + " => " + msg);
             }
         });
         DefinitionVisitor visitor = new DefinitionVisitor();
