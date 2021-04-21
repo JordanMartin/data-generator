@@ -1,4 +1,5 @@
 # Data generator
+[![Compile & Unit tests](https://github.com/JordanMartin/data-generator/actions/workflows/maven.yml/badge.svg)](https://github.com/JordanMartin/data-generator/actions/workflows/maven.yml)
 
 Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
