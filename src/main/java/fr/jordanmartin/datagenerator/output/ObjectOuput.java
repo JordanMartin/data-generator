@@ -2,10 +2,21 @@ package fr.jordanmartin.datagenerator.output;
 
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
 
+/**
+ * Classe de base pour les formats de sortie des générateurs
+ */
 public class ObjectOuput {
 
+    /**
+     * Le générateur d'objet
+     */
     private final ObjectProvider provider;
 
+    /**
+     * Constructeur privé. Utiliser {@link #from(ObjectProvider)}
+     *
+     * @param provider Le générateur d'objet
+     */
     protected ObjectOuput(ObjectProvider provider) {
         this.provider = provider;
     }
@@ -30,6 +41,11 @@ public class ObjectOuput {
         return new SqlOutput(provider);
     }
 
+    /**
+     * Retourne une instance de l'ObjectOutput avec le générateur spécifié
+     *
+     * @param provider Le générateur d'objet
+     */
     public static ObjectOuput from(ObjectProvider provider) {
         return new ObjectOuput(provider);
     }

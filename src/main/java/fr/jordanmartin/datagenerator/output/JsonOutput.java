@@ -29,7 +29,17 @@ public class JsonOutput extends ObjectWriterOuput {
         this.pretty = pretty;
     }
 
-    public void writeObject(OutputStream out, Map<String, ?> object) throws IOException {
+    @Override
+    public void writeMany(OutputStream out, int count) throws IOException {
+        writeObjects(out, provider.getStream(count));
+    }
+
+    @Override
+    public void writeOne(OutputStream out) throws IOException {
+        writeObject(out, provider.getOne());
+    }
+
+    private void writeObject(OutputStream out, Map<String, ?> object) throws IOException {
         com.fasterxml.jackson.databind.ObjectWriter objectWriter;
         if (pretty) {
             objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
@@ -40,7 +50,7 @@ public class JsonOutput extends ObjectWriterOuput {
         out.flush();
     }
 
-    public void writeObjects(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
+    private void writeObjects(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         JsonGenerator jsonGenerator = new JsonFactory()
                 .createGenerator(out)
                 .setCodec(new ObjectMapper());
@@ -54,22 +64,16 @@ public class JsonOutput extends ObjectWriterOuput {
             try {
                 jsonGenerator.writeObject(object);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new OutputException(e);
             }
         });
         jsonGenerator.writeEndArray();
         jsonGenerator.flush();
     }
 
-    @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        if (count == 1) {
-            writeObject(out, provider.getOne());
-        } else {
-            writeObjects(out, provider.getStream(count));
-        }
-    }
-
+    /**
+     * Active ou désactive le formattage pretty json
+     */
     public JsonOutput setPretty(boolean pretty) {
         this.pretty = pretty;
         return this;

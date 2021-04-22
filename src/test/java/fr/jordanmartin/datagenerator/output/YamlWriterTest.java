@@ -19,7 +19,7 @@ class YamlWriterTest {
                 .field("a", (objectContext) -> "a")
                 .field("child", child);
 
-        String result = new YamlOutput(provider).writeManyToString(2);
+        String result = new YamlOutput(provider).manyToString(2);
         var expected = "- id: 0\n" +
                 "  a: a\n" +
                 "  child:\n" +

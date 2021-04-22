@@ -17,7 +17,7 @@ class SqlWriterTest {
 
         String result = new SqlOutput(provider)
                 .setTableName("test_table")
-                .writeOneToString();
+                .oneToString();
         assertEquals("INSERT INTO test_table(id,a) VALUES(0,'a');", result);
     }
 }

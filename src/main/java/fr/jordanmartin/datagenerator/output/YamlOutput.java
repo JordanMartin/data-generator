@@ -26,16 +26,16 @@ public class YamlOutput extends ObjectWriterOuput {
         super(provider);
     }
 
-    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
+    @Override
+    public void writeMany(OutputStream out, int count) throws IOException {
+        writeMany(out, provider.getStream(count));
+    }
+
+    private void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         Yaml yaml = newYaml();
         List<Map<String, ?>> list = stream.collect(Collectors.toList());
         yaml.dump(list, new OutputStreamWriter(out));
         out.flush();
-    }
-
-    @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        writeMany(out, provider.getStream(count));
     }
 
     private Yaml newYaml() {

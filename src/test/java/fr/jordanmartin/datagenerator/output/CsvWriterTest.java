@@ -15,7 +15,7 @@ class CsvWriterTest {
                 .field("id", (objectContext) -> 0)
                 .field("a", (objectContext) -> "a");
 
-        String result = new CsvOutput(provider).writeOneToString();
+        String result = new CsvOutput(provider).oneToString();
         assertEquals("id;a\n0;a", result);
     }
 }

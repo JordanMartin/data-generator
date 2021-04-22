@@ -15,8 +15,16 @@ import java.util.stream.Stream;
  */
 public class CsvOutput extends ObjectWriterOuput {
 
-    private final String separator;
+    /**
+     * Séparateur CSV
+     */
+    private String separator;
 
+    /**
+     * Nouveau CsvOuput avec ";" en tant que séparateur
+     *
+     * @param provider Le générateur d'objet
+     */
     public CsvOutput(ObjectProvider provider) {
         this(provider, ";");
     }
@@ -50,7 +58,7 @@ public class CsvOutput extends ObjectWriterOuput {
                 writer.write(fields);
                 writer.write('\n');
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new OutputException(e);
             }
         });
         writer.flush();
@@ -63,5 +71,11 @@ public class CsvOutput extends ObjectWriterOuput {
         } else {
             writeMany(out, provider.getStream(count));
         }
+    }
+
+
+    public CsvOutput setSeparator(String separator) {
+        this.separator = separator;
+        return this;
     }
 }

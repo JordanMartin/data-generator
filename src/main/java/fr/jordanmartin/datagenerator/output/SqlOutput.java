@@ -54,7 +54,7 @@ public class SqlOutput extends ObjectWriterOuput {
                 writer.append(";");
                 writer.append('\n');
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new OutputException(e);
             }
         });
         writer.flush();

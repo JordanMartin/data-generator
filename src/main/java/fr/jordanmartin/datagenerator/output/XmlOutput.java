@@ -1,16 +1,13 @@
 package fr.jordanmartin.datagenerator.output;
 
 import fr.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import lombok.SneakyThrows;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
@@ -36,24 +33,26 @@ public class XmlOutput extends ObjectWriterOuput {
         return this;
     }
 
-    @SneakyThrows
     public XmlOutput(ObjectProvider provider, String objectName, boolean pretty) {
         super(provider);
         this.objectName = objectName;
         this.pretty = pretty;
     }
 
-    @SneakyThrows
-    public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
+    public void writeOne(OutputStream out, Map<String, ?> object) throws OutputException {
         Document doc = newDocument();
         Transformer transformer = newTransformer();
         Element root = doc.createElement(objectName);
         doc.appendChild(root);
         appendChild(doc, root, object);
-        transformer.transform(new DOMSource(doc), new StreamResult(out));
+        try {
+            transformer.transform(new DOMSource(doc), new StreamResult(out));
+        } catch (TransformerException e) {
+            throw new OutputException(e);
+        }
     }
 
-    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) {
+    private void writeMany(OutputStream out, Stream<Map<String, ?>> stream) {
         Document doc = newDocument();
         Transformer transformer = newTransformer();
         Element root = doc.createElement("data");
@@ -66,7 +65,7 @@ public class XmlOutput extends ObjectWriterOuput {
         try {
             transformer.transform(new DOMSource(doc), new StreamResult(out));
         } catch (TransformerException e) {
-            throw new RuntimeException(e);
+            throw new OutputException(e);
         }
     }
 
@@ -94,22 +93,29 @@ public class XmlOutput extends ObjectWriterOuput {
         writeOne(out, provider.getOne());
     }
 
-    @SneakyThrows
     private Document newDocument() {
         DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
         df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        return df.newDocumentBuilder().newDocument();
+        try {
+            return df.newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            throw new OutputException(e);
+        }
     }
 
-    @SneakyThrows
     private Transformer newTransformer() {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, pretty ? "yes" : "no");
-        return transformer;
+
+        try {
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, pretty ? "yes" : "no");
+            return transformer;
+        } catch (TransformerConfigurationException e) {
+            throw new OutputException(e);
+        }
     }
 
     public XmlOutput setObjectName(String objectName) {
