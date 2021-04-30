@@ -113,9 +113,6 @@
                             <goal>antlr4</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>
-                                target/generated-sources/antlr4/fr/jordanmartin/datagenerator/definition
-                            </outputDirectory>
                             <visitor>true</visitor>
                             <listener>false</listener>
                         </configuration>
