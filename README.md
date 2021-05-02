@@ -3,6 +3,137 @@
 
 Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
+- [Utilisation CLI](#utilisation-cli)
+  - [Usage](#usage)
+  - [Fichier de définition YAML](#fichier-de-dfinition-yaml)
+- [Générateurs](#générateurs)
+  - [`Constant(<valeur>)`](#constantvaleur)
+  - [`RandomUUID()`](#randomuuid)
+  - [`RandomInt(int min, int max)`](#randomintint-min-int-max)
+  - [`SequenceFromList(Object element1, Object element2, ...)`](#sequencefromlistobject-element1-object-element2-)
+  - [`RandomDouble(double min, double max)`](#randomdoubledouble-min-double-max)
+  - [`Sample(String expression[, String locale])`](#samplestring-expression-string-locale)
+  - [`Round(<generateur>, <nombre_decimal>)`](#roundgenerateur-nombre_decimal)
+  - [`RandomDate("<date_min>", "<date_max>")`](#randomdatedate_min-date_max)
+  - [`CurrentDate()`](#currentdate)
+  - [`RandomFromRegex("<regex>"[, <elem_count>])`](#randomfromregexregex-elem_count)
+  - [`RandomFromList(<element1>, <element2>, ...)`](#randomfromlistelement1-element2-)
+  - [`IntAutoIncrement([<start>, <step>, <max>])`](#intautoincrementstart-step-max)
+  - [`Idempotent`](#idempotent)
+  - [`ListOf`](#listof)
+  - [`AsString`](#asstring)
+  - [`FormatDate`](#formatdate)
+  - [`ListByRepeat`](#listbyrepeat)
+  - [`Expression`](#expression)
+  - [`Reference`](#reference)
+  - [`FixedReference`](#fixedreference)
+  - [Composition de générateur](#composition-de-générateur)
+  - [Références et expressions](#références-et-expressions)
+- [Utilisation programmatique](#utilisation-programmatique)
+  - [Définition d'un générateur](#dfinition-dun-générateur)
+  - [Génération](#génération)
+  - [Formats de sortie](#formats-de-sortie)
+
+## Utilisation CLI
+
+### Usage
+```
+usage: generator
+-c,--count <arg>        Nombre d'objet à générer
+-d,--definition <arg>   Fichier de defintion
+-f,--format <arg>       Format de sortie : yaml, json, csv, sql, xml
+--gzip               Compresse la sortie en GZIP
+-o,--out <arg>          Fichier de sortie
+--pretty             Active le mode pretty pour la sortie JSON ou YAML
+--separator <arg>    Séparateur à utiliser pour le format CSV
+--stdout             Utilise la sortie standard
+--table-name <arg>   Nom de la table SQL à utilier pour les requêtes insert
+```
+
+### Fichier de définition YAML
+
+*Exemple: definition.yml*
+
+```yaml
+references:
+  firstname: Sample("Name.firstName")
+  lastname: Sample("Name.lastName")
+  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
+  id: RandomUUID()
+  item:
+    parent_id: $$id
+    horodatage: $gen_date
+    exp: $("${firstname} ${lastname}")
+
+template:
+  id: $$id
+  num: IntAutoIncrement()
+  random: RandomInt(100, 1000)
+  horodatage: $gen_date
+  items: ListByRepeat($item, 2)
+```
+
+*Résultat au format JSON*
+
+```json
+[
+  {
+    "id": "1d712947-6458-41e4-b152-46e458e642d0",
+    "num": 0,
+    "random": 443,
+    "horodatage": "2021-04-20 09:17:27.166",
+    "items": [
+      {
+        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Enzo Thomas"
+      },
+      {
+        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Arthur Pons"
+      }
+    ]
+  },
+  {
+    "id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
+    "num": 1,
+    "random": 143,
+    "horodatage": "2021-04-20 09:17:27.166",
+    "items": [
+      {
+        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Manon Martin"
+      },
+      {
+        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Nicolas Perrot"
+      }
+    ]
+  },
+  {
+    "id": "3546832d-9879-4cda-af73-96ebec106829",
+    "num": 2,
+    "random": 960,
+    "horodatage": "2021-04-20 09:17:27.166",
+    "items": [
+      {
+        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Chloé Mercier"
+      },
+      {
+        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
+        "horodatage": "2021-04-20 09:17:27.166",
+        "exp": "Maeva Ménard"
+      }
+    ]
+  }
+]
+```
+
 ## Générateurs
 
 ### `Constant(<valeur>)`
@@ -131,7 +262,13 @@ TODO
 
 TODO
 
-## Définition par programmation
+## Utilisation programmatique
+### Définition d'un générateur
+
+#### Par Héritage avec `ObjectBuilder`
+
+La définition peut se faire par héritage de la classe `ObjectBuilder`. 
+La classe `ObjectBuilder` contient des méthodes pour créer facilement un générateur :
 
 ```java
 public class SimpleObject extends ObjectBuilder {
@@ -144,18 +281,24 @@ public class SimpleObject extends ObjectBuilder {
         field("randomUUID", randomUUID());
         field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
         field("firstname", ctx -> faker.name().firstName());
-        field("lastname", ctx -> faker.name().lastName());
+        field("custom", ctx -> {
+            // votre générateur
+            return "custom_data"; 
+        });
         field("expression", expression("${firstname} ${lastname}"));
         field("reference", reference("randomInt"));
     }
 }
 ```
 
+### Génération
 ```java
 public class Test {
     public static void main(String[] args) throws IOException {
         SimpleObjectBuilder generator = new SimpleObjectBuilder();
-        new JsonWriter(true).writeMany(System.out, generator.getStream(2));
+        ObjectOuput.from(generator)
+                .toJson().setPretty(true)
+                .writeMany(System.out, 2);
     }
 }
 ```
@@ -173,7 +316,7 @@ public class Test {
     "randomUUID": "73b7a52b-1394-4eba-8249-6ab2d90c4616",
     "randomFromRegex": "PHJV99665",
     "firstname": "Valentin",
-    "lastname": "Bertrand",
+    "custom": "custom_data",
     "expression": "Valentin Bertrand",
     "reference": 5
   },
@@ -186,103 +329,29 @@ public class Test {
     "randomUUID": "34d6ad81-a599-4ab3-92e2-4e553e0f64f7",
     "randomFromRegex": "PWAT45684",
     "firstname": "Clément",
-    "lastname": "Pierre",
+    "custom": "custom_data",
     "expression": "Clément Pierre",
     "reference": 2
   }
 ]
 ```
 
-## Définition par fichier YAML
+#### Par instanciation de `ObjectProvider`
 
-*Exemple: definition.yml*
+Il est également possible de déclarer dynamiquement un générateur en créant une instance de `ObjectProvider` :
 
-```yaml
-references:
-  firstname: Sample("Name.firstName")
-  lastname: Sample("Name.lastName")
-  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
-  id: RandomUUID()
-  item:
-    parent_id: $$id
-    horodatage: $gen_date
-    exp: $("${firstname} ${lastname}")
-
-template:
-  id: $$id
-  num: IntAutoIncrement()
-  random: RandomInt(100, 1000)
-  horodatage: $gen_date
-  items: ListByRepeat($item, 2)
+```java
+ObjectProvider provider = new ObjectProvider()
+      .field("id", new IntAutoIncrement())
+      .field("name" () -> "Alice");
 ```
 
-*Résultat au format JSON*
-
-```json
-[
-  {
-    "id": "1d712947-6458-41e4-b152-46e458e642d0",
-    "num": 0,
-    "random": 443,
-    "horodatage": "2021-04-20 09:17:27.166",
-    "items": [
-      {
-        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Enzo Thomas"
-      },
-      {
-        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Arthur Pons"
-      }
-    ]
-  },
-  {
-    "id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
-    "num": 1,
-    "random": 143,
-    "horodatage": "2021-04-20 09:17:27.166",
-    "items": [
-      {
-        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Manon Martin"
-      },
-      {
-        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Nicolas Perrot"
-      }
-    ]
-  },
-  {
-    "id": "3546832d-9879-4cda-af73-96ebec106829",
-    "num": 2,
-    "random": 960,
-    "horodatage": "2021-04-20 09:17:27.166",
-    "items": [
-      {
-        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Chloé Mercier"
-      },
-      {
-        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Maeva Ménard"
-      }
-    ]
-  }
-]
-```
-
-## Génération
+### Formats de sortie
 
 *Exemple*
 
 ```java
-ObjectProvider provider=new ObjectProvider()
+ObjectProvider provider = new ObjectProvider()
         .field("id", new IntAutoIncrement())
         .field("name", new Sample("Name.firstName"));
 ```
