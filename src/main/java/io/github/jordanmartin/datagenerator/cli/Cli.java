@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.cli;
 
 import io.github.jordanmartin.datagenerator.definition.YamlDefinitionParser;
+import io.github.jordanmartin.datagenerator.output.CsvOutput;
 import io.github.jordanmartin.datagenerator.output.ObjectOuput;
 import io.github.jordanmartin.datagenerator.output.ObjectWriterOuput;
 import io.github.jordanmartin.datagenerator.output.SqlOutput;
@@ -17,6 +18,7 @@ public class Cli {
     private final Options options;
     private CommandLine cmd;
 
+    private final String SEPARATOR = "separator";
     private final String XML_TABLE_NAME = "table-name";
     private final String PRETTY = "pretty";
     private final String DEFINITION = "d";
@@ -60,6 +62,11 @@ public class Cli {
                 .desc("Nom de la table SQL à utilier pour les requêtes insert")
                 .hasArg(true)
                 .build());
+        options.addOption(Option.builder().longOpt(SEPARATOR)
+                .type(String.class)
+                .desc("Séparateur à utiliser pour le format CSV")
+                .hasArg(true)
+                .build());
         options.addOption(Option.builder().longOpt(PRETTY)
                 .desc("Active le mode pretty pour la sortie JSON ou YAML")
                 .hasArg(false)
@@ -90,7 +97,7 @@ public class Cli {
                 writer.writeMany(out, count);
             }
         } catch (Exception e) {
-            System.err.println(e.getClass() + " :" + e.getMessage());
+            System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage());
             printHelp();
         }
     }
@@ -122,7 +129,11 @@ public class Cli {
                 return ObjectOuput.from(provider)
                         .toYaml().setPretty(pretty);
             case "csv":
-                return ObjectOuput.from(provider).toCsv();
+                CsvOutput csvOutput = ObjectOuput.from(provider).toCsv();
+                if (cmd.hasOption(SEPARATOR)) {
+                    csvOutput.setSeparator(cmd.getOptionValue(SEPARATOR));
+                }
+                return csvOutput;
             case "json":
                 return ObjectOuput.from(provider).toJson()
                         .setPretty(pretty);
