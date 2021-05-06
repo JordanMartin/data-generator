@@ -57,7 +57,7 @@ usage: java -jar data-generator-x.y.z.jar
 
 *Exemple*
 ```bash
-java -jar data-generator-1.0.0-alpha.jar --definition test.yml --count 10  --format json --pretty --stdout
+java -jar data-generator-1.0.0-alpha.jar --definition def.yml --count 10 --format json --pretty --stdout
 ```
 
 ### Fichier de définition YAML
