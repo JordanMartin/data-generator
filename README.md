@@ -57,7 +57,66 @@ usage: java -jar data-generator-x.y.z.jar
 
 ### Fichier de définition YAML
 
-*Exemple: definition.yml*
+La syntaxe du fichier de définition est la suviante : 
+
+```yaml
+references:
+  <ref1>: <declaration_generateur>
+  <ref2>: <declaration_generateur>
+  ...
+
+template:
+  <champ1>: <declaration_generation>
+  <champ2>: <declaration_generation>
+```
+
+La partie `references` permet de déclarer un générateur et de l'utiliser dans la déclaration d'un autre champ. 3 syntaxes sont disponibles : 
+- `$<ref>`: Utilise le générateur `ref` pour générer une valeur
+- `$$<ref>`: Utilise le générateur `ref` de façon fixe. Lors de la génération d'un objet. Le généraeur `ref` sera alors appelé une et une fois par objet  pour générer une valeur 
+- `$("expression avec reference ${<ref>}")`: Retourne une chaine de caractère en substituant ${<ref>} la valeur généré par `ref`.
+
+*Exemple avec references: definition.yml*
+```yaml
+references:
+  num: RandomInt(0, 10)
+template:
+  ref: $num
+  ref2: $num
+  ref_fixe: $$num
+  ref_fixe2: $$num
+  expression: $("Numéro: ${num}")
+```
+
+*Resultat pour 3 objets générés*
+```json
+[
+  {
+    "ref": 1,
+    "ref2": 5,
+    "ref_fixe": 8,
+    "ref_fixe2": 8,
+    "expression": "Numéro: 4"
+   },
+   {
+    "ref": 7,
+    "ref2": 1,
+    "ref_fixe": 3,
+    "ref_fixe2": 3,
+    "expression": "Numéro: 4"
+   },
+   {
+    "ref": 4,
+    "ref2": 3,
+    "ref_fixe": 2,
+    "ref_fixe2": 2,
+    "expression": "Numéro: 8"
+   }
+]
+```
+
+> Cette syntaxe, permet également de faire référence à un champ définit dans la partie `template`.
+
+*Exemple complet: definition.yml*
 
 ```yaml
 references:
