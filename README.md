@@ -55,6 +55,11 @@ usage: java -jar data-generator-x.y.z.jar
 --table-name <arg>   Nom de la table SQL à utilier pour les requêtes insert
 ```
 
+*Exemple*
+```bash
+java -jar data-generator-1.0.0-alpha.jar --definition test.yml --count 10  --format json --pretty --stdout
+```
+
 ### Fichier de définition YAML
 
 La syntaxe du fichier de définition est la suviante : 
