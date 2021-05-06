@@ -37,9 +37,13 @@ Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
 ## Utilisation CLI
 
+- La dernière version compilée est [disponible ici](https://github.com/JordanMartin/data-generator/releases/latest)
+- Requière Java >= 11.
+
 ### Usage
+
 ```
-usage: generator
+usage: java -jar data-generator-x.y.z.jar
 -c,--count <arg>        Nombre d'objet à générer
 -d,--definition <arg>   Fichier de defintion
 -f,--format <arg>       Format de sortie : yaml, json, csv, sql, xml
