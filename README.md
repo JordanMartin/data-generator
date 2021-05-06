@@ -1,6 +1,7 @@
 # Data generator
 [![Compile & Unit tests](https://github.com/JordanMartin/data-generator/actions/workflows/maven.yml/badge.svg)](https://github.com/JordanMartin/data-generator/actions/workflows/maven.yml)
-
+[![](https://img.shields.io/github/v/release/JordanMartin/data-generator?sort=semver&style=flat&label=Latest%20release&logo=github&color=green)](https://github.com/JordanMartin/data-generator/releases/latest)
+    
 Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
 - [Utilisation CLI](#utilisation-cli)
