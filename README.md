@@ -38,7 +38,7 @@ Générateur de données à partir de valeurs aléatoires ou personnalisées.
 ## Utilisation CLI
 
 - La dernière version compilée est [disponible ici](https://github.com/JordanMartin/data-generator/releases/latest)
-- Requière Java >= 11.
+- Requière Java >= 11
 
 ### Usage
 
