@@ -6,7 +6,7 @@ Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
 - [Utilisation CLI](#utilisation-cli)
   - [Usage](#usage)
-  - [Fichier de définition YAML](#fichier-de-dfinition-yaml)
+  - [Fichier de définition YAML](#fichier-de-définition-yaml)
 - [Générateurs](#générateurs)
   - [`Constant(<valeur>)`](#constantvaleur)
   - [`RandomUUID()`](#randomuuid)
