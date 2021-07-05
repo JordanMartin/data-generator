@@ -16,7 +16,7 @@ public class PojoOutput<T> {
      * Le générateur d'objet
      */
     protected final ObjectProvider provider;
-    private Class<T> targetClass;
+    private final Class<T> targetClass;
 
     protected PojoOutput(ObjectProvider provider, Class<T> targetClass) {
         this.provider = provider;

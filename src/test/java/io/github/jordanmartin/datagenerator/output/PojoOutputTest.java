@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class PojoOutputTest {
 
     @Data
@@ -37,7 +39,12 @@ public class PojoOutputTest {
                 .field("lastname", ctx -> "Lastname")
                 .field("address", addressProvider);
 
-        List<Person> p = new PojoOutput<>(personProvider, Person.class).getMany(10);
-        System.out.println(p);
+        List<Person> people = new PojoOutput<>(personProvider, Person.class).getMany(2);
+        Person p1 = people.get(0);
+        Person p2 = people.get(1);
+        assertEquals(0, p1.getId());
+        assertEquals("Lyon", p1.getAddress().getCity());
+        assertEquals(1, p2.getId());
+        assertEquals("rue Victor Hugo", p2.getAddress().getStreetName());
     }
 }
