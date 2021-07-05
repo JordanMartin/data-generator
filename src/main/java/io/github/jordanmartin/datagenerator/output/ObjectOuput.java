@@ -41,6 +41,10 @@ public class ObjectOuput {
         return new SqlOutput(provider);
     }
 
+    public <T> PojoOutput<T> toPojo(Class<T> targetClazz) {
+        return new PojoOutput<>(provider, targetClazz);
+    }
+
     /**
      * Retourne une instance de l'ObjectOutput avec le générateur spécifié
      *
