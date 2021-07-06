@@ -28,6 +28,7 @@ public class ProviderRegistry {
         registerProvider(Constant.class);
         registerProvider(CurrentDate.class);
         registerProvider(RandomDate.class);
+        registerProvider(RandomBoolean.class);
         registerProvider(RandomFromList.class);
         registerProvider(RandomFromRegex.class);
         registerProvider(RandomInt.class);
