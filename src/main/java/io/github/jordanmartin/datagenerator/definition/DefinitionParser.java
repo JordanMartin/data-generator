@@ -48,7 +48,7 @@ public abstract class DefinitionParser {
                     return true;
                 })
                 .findFirst().orElseThrow(() ->
-                        new DefinitionException("Les paramètres du générateur \"" + providerName + "\" sont incorrectes"));
+                        new DefinitionException("Les paramètres du générateur \"" + providerName + "\" sont incorrects"));
 
         return constructor.newInstance(providerParams);
     }

@@ -6,6 +6,7 @@ import io.github.jordanmartin.datagenerator.provider.object.FixedReference;
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import io.github.jordanmartin.datagenerator.provider.object.Reference;
 import io.github.jordanmartin.datagenerator.provider.transform.ListOf;
+import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -47,7 +48,7 @@ public class YamlDefinitionParser extends DefinitionParser {
     private ObjectProvider parseDefinition(Definition definition) {
         ObjectProvider rootProvider = new ObjectProvider();
 
-        if (definition.getTemplate() == null || definition.getTemplate().isEmpty()) {
+        if (definition == null || definition.getTemplate() == null || definition.getTemplate().isEmpty()) {
             throw new DefinitionException("La définition doit déclarer \"template\" avec au moins un champ");
         }
 
@@ -116,18 +117,26 @@ public class YamlDefinitionParser extends DefinitionParser {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ProviderDefintionParser parser = new ProviderDefintionParser(tokens);
         parser.removeErrorListeners();
-        parser.addErrorListener(new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new DefinitionException("\"" + fieldName + ": " + providerDefinition + "\" at position " + charPositionInLine + " => " + msg);
-            }
-        });
+        lexer.removeErrorListeners();
+        parser.addErrorListener(new DefinitionErrorListener(fieldName, providerDefinition));
+        lexer.addErrorListener(new DefinitionErrorListener(fieldName, providerDefinition));
         DefinitionVisitor visitor = new DefinitionVisitor();
         return (ValueProvider<?>) visitor.visitDefinition(parser.definition());
     }
 
+    @AllArgsConstructor
+    private static class DefinitionErrorListener extends BaseErrorListener {
+        private final String fieldName;
+        private final String providerDefinition;
+
+        @Override
+        public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+            throw new DefinitionException("\"" + fieldName + ": " + providerDefinition + "\" at position " + charPositionInLine + " => " + msg);
+        }
+    }
+
     /**
-     * Visiteur pour créer le générateur à partie du fichier de définition
+     * Visiteur pour créer le générateur à partir du fichier de définition
      */
     private class DefinitionVisitor extends ProviderDefintionBaseVisitor<Object> {
         @Override
@@ -233,7 +242,7 @@ public class YamlDefinitionParser extends DefinitionParser {
         }
 
         private Void notSupportedDefinition(ParserRuleContext ctx) throws UnsupportedOperationException {
-            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémenté");
+            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémentée");
         }
     }
 }
