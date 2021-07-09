@@ -91,6 +91,14 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new RandomInt(min, max);
     }
 
+    protected RandomBoolean randomBoolean() {
+        return new RandomBoolean();
+    }
+
+    protected RandomBoolean randomBoolean(double percentageOfTrue) {
+        return new RandomBoolean(percentageOfTrue);
+    }
+
     protected RandomUUID randomUUID() {
         return new RandomUUID();
     }

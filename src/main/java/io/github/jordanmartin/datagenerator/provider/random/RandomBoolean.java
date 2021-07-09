@@ -7,32 +7,38 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
  */
 public class RandomBoolean implements StatelessValueProvider<Boolean> {
 
-    private final double threshold;
+    public static final double AS_MANY_TRUE_AS_FALSE_PERCENTAGE = 0.5;
+    public static final int ONLY_FALSE_PERCENTAGE = 0;
+    public static final int ONLY_TRUE_PERCENTAGE = 1;
+
+    private final double precentageOfTrue;
 
     /**
-     * @param threshold Ratio de génération d'une valeur {@code true} entre 0 et 1.
-     *                  Ex: 0.5: autant de true que de false
-     *                  Ex: 0.25: 25% de true, 75% de true
+     * Génère un booléen en fonction du pourcentage précisé
+     *
+     * @param percentageOfTrue Ratio de génération d'une valeur {@code true} entre 0 et 1.
+     *                         Ex: 0.5: autant de true que de false
+     *                         Ex: 0.25: 25% de true, 75% de true
      */
-    public RandomBoolean(double threshold) {
-        this.threshold = threshold;
+    public RandomBoolean(double percentageOfTrue) {
+        this.precentageOfTrue = percentageOfTrue;
     }
 
     /**
      * Génère autant de valeur true que de valeur false
      */
     public RandomBoolean() {
-        this(0.5);
+        this(AS_MANY_TRUE_AS_FALSE_PERCENTAGE);
     }
 
     @Override
     public Boolean getOne() {
-        if (threshold <= 0) {
+        if (precentageOfTrue <= ONLY_FALSE_PERCENTAGE) {
             return false;
-        } else if (threshold >= 1) {
+        } else if (precentageOfTrue >= ONLY_TRUE_PERCENTAGE) {
             return true;
         }
 
-        return Math.random() < threshold;
+        return Math.random() < precentageOfTrue;
     }
 }
