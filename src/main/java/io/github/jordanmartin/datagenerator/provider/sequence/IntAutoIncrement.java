@@ -10,12 +10,12 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
 public class IntAutoIncrement implements StatelessValueProvider<Integer> {
 
     /**
-     * Première minmum
+     * Valeur initiale
      */
     private final int start;
 
     /**
-     * Incrément
+     * Incrément à chaque génération
      */
     private final int step;
 
@@ -46,13 +46,27 @@ public class IntAutoIncrement implements StatelessValueProvider<Integer> {
     @Override
     public Integer getOne() {
         int currentValue = nextValue;
-        if (step < 0 && this.nextValue + step < this.max) {
-            this.nextValue = this.start;
-        } else if (step > 0 && this.nextValue + step > this.max) {
+        if (shouldNextValueSetToStart()) {
             this.nextValue = this.start;
         } else {
             this.nextValue = this.nextValue + step;
         }
         return currentValue;
+    }
+
+    private boolean shouldNextValueSetToStart() {
+        return isNextValueGreaterThatMaximum() || isNextValueLessThanMinimum();
+    }
+
+    private boolean isNextValueGreaterThatMaximum() {
+        return isPositiveStep() && this.nextValue + step > this.max;
+    }
+
+    private boolean isPositiveStep() {
+        return step > 0;
+    }
+
+    private boolean isNextValueLessThanMinimum() {
+        return !isPositiveStep() && this.nextValue + step < this.max;
     }
 }

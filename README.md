@@ -5,35 +5,41 @@
 Générateur de données à partir de valeurs aléatoires ou personnalisées.
 
 - [Utilisation CLI](#utilisation-cli)
-  - [Usage](#usage)
-  - [Fichier de définition YAML](#fichier-de-définition-yaml)
-- [Générateurs](#générateurs)
-  - [`Constant(<valeur>)`](#constantvaleur)
-  - [`RandomUUID()`](#randomuuid)
-  - [`RandomInt(int min, int max)`](#randomintint-min-int-max)
-  - [`SequenceFromList(Object element1, Object element2, ...)`](#sequencefromlistobject-element1-object-element2-)
-  - [`RandomDouble(double min, double max)`](#randomdoubledouble-min-double-max)
-  - [`Sample(String expression[, String locale])`](#samplestring-expression-string-locale)
-  - [`Round(<generateur>, <nombre_decimal>)`](#roundgenerateur-nombre_decimal)
-  - [`RandomDate("<date_min>", "<date_max>")`](#randomdatedate_min-date_max)
-  - [`CurrentDate()`](#currentdate)
-  - [`RandomFromRegex("<regex>"[, <elem_count>])`](#randomfromregexregex-elem_count)
-  - [`RandomFromList(<element1>, <element2>, ...)`](#randomfromlistelement1-element2-)
-  - [`IntAutoIncrement([<start>, <step>, <max>])`](#intautoincrementstart-step-max)
-  - [`Idempotent`](#idempotent)
-  - [`ListOf`](#listof)
-  - [`AsString`](#asstring)
-  - [`FormatDate`](#formatdate)
-  - [`ListByRepeat`](#listbyrepeat)
-  - [`Expression`](#expression)
-  - [`Reference`](#reference)
-  - [`FixedReference`](#fixedreference)
-  - [Composition de générateur](#composition-de-générateur)
-  - [Références et expressions](#références-et-expressions)
+  * [Usage](#usage)
+  * [Fichier de définition YAML](#fichier-de-d-finition-yaml)
+- [Générateurs](#g-n-rateurs)
+  * [`Constant(<valeur>)`](#-constant--valeur---)
+  * [`RandomUUID()`](#-randomuuid---)
+  * [`RandomBoolean(double percentageOfTrue)`](#-randomboolean-double-percentageoftrue--)
+  * [`RandomInt(int min, int max)`](#-randomint-int-min--int-max--)
+  * [`SequenceFromList(Object element1, Object element2, ...)`](#-sequencefromlist-object-element1--object-element2----)
+  * [`RandomDouble(double min, double max)`](#-randomdouble-double-min--double-max--)
+  * [`Sample(String expression[, String locale])`](#-sample-string-expression---string-locale---)
+  * [`Round(<generateur>, <nombre_decimal>, <mode_arrondi>)`](#-round--generateur----nombre-decimal----mode-arrondi---)
+  * [`RandomDate("<date_min>", "<date_max>")`](#-randomdate---date-min------date-max----)
+  * [`CurrentDate()`](#-currentdate---)
+  * [`RandomFromRegex("<regex>"[, <elem_count>])`](#-randomfromregex---regex------elem-count----)
+  * [`RandomFromList(<element1>, <element2>, ...)`](#-randomfromlist--element1----element2-----)
+  * [`IntAutoIncrement([<start>, <step>, <max>])`](#-intautoincrement---start----step----max----)
+  * [`Idempotent`](#-idempotent-)
+  * [`ListOf`](#-listof-)
+  * [`AsString`](#-asstring-)
+  * [`FormatDate`](#-formatdate-)
+  * [`ListByRepeat`](#-listbyrepeat-)
+  * [`Expression`](#-expression-)
+  * [`Reference`](#-reference-)
+  * [`FixedReference`](#-fixedreference-)
+  * [Composition de générateur](#composition-de-g-n-rateur)
+  * [Références et expressions](#r-f-rences-et-expressions)
 - [Utilisation programmatique](#utilisation-programmatique)
-  - [Définition d'un générateur](#dfinition-dun-générateur)
-  - [Génération](#génération)
-  - [Formats de sortie](#formats-de-sortie)
+  * [Définition d'un générateur](#d-finition-d-un-g-n-rateur)
+    + [Par Héritage avec `ObjectBuilder`](#par-h-ritage-avec--objectbuilder-)
+  * [Génération](#g-n-ration)
+    + [Par instanciation de `ObjectProvider`](#par-instanciation-de--objectprovider-)
+  * [Formats de sortie](#formats-de-sortie)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with
+markdown-toc</a></i></small>
 
 ## Utilisation CLI
 
@@ -132,7 +138,7 @@ references:
   item:
     parent_id: $$id
     horodatage: $gen_date
-    exp: $("${firstname} ${lastname}")
+    expression: $("${firstname} ${lastname}")
 
 template:
   id: $$id
@@ -140,6 +146,12 @@ template:
   random: RandomInt(100, 1000)
   horodatage: $gen_date
   items: ListByRepeat($item, 2)
+  active: RandomBoolean()
+  type: RandomFromList(["A", "B", "C"])
+  group: RandomFromList([ItemWeight("A", 10), ItemWeight("B", 90)])
+  array:
+    - Round(RandomDouble(0, 10), 2)
+    - RandomInt(10, 100)
 ```
 
 *Résultat au format JSON*
@@ -147,57 +159,78 @@ template:
 ```json
 [
   {
-    "id": "1d712947-6458-41e4-b152-46e458e642d0",
+    "id": "5642e11c-d0fb-44f3-a5ad-2eb36b08071a",
     "num": 0,
-    "random": 443,
-    "horodatage": "2021-04-20 09:17:27.166",
+    "random": 963,
+    "horodatage": "2021-07-09 02:59:55.310",
     "items": [
       {
-        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Enzo Thomas"
+        "parent_id": "5642e11c-d0fb-44f3-a5ad-2eb36b08071a",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Louna Lemaire"
       },
       {
-        "parent_id": "1d712947-6458-41e4-b152-46e458e642d0",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Arthur Pons"
+        "parent_id": "5642e11c-d0fb-44f3-a5ad-2eb36b08071a",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Lola Da silva"
       }
+    ],
+    "active": true,
+    "type": "C",
+    "group": "B",
+    "array": [
+      8.3,
+      18
     ]
   },
   {
-    "id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
+    "id": "02b03213-b67f-4afe-8824-a3d961cf4bdc",
     "num": 1,
-    "random": 143,
-    "horodatage": "2021-04-20 09:17:27.166",
+    "random": 341,
+    "horodatage": "2021-07-09 02:59:55.310",
     "items": [
       {
-        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Manon Martin"
+        "parent_id": "02b03213-b67f-4afe-8824-a3d961cf4bdc",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Maëlys Mercier"
       },
       {
-        "parent_id": "11e52ffb-48e7-4b54-997a-7395344d0ba5",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Nicolas Perrot"
+        "parent_id": "02b03213-b67f-4afe-8824-a3d961cf4bdc",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Kylian Robin"
       }
+    ],
+    "active": false,
+    "type": "B",
+    "group": "B",
+    "array": [
+      6.63,
+      23
     ]
   },
   {
-    "id": "3546832d-9879-4cda-af73-96ebec106829",
+    "id": "3bb6133a-7114-4bdb-88d0-5144aef94401",
     "num": 2,
-    "random": 960,
-    "horodatage": "2021-04-20 09:17:27.166",
+    "random": 430,
+    "horodatage": "2021-07-09 02:59:55.310",
     "items": [
       {
-        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Chloé Mercier"
+        "parent_id": "3bb6133a-7114-4bdb-88d0-5144aef94401",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Romane Olivier"
       },
       {
-        "parent_id": "3546832d-9879-4cda-af73-96ebec106829",
-        "horodatage": "2021-04-20 09:17:27.166",
-        "exp": "Maeva Ménard"
+        "parent_id": "3bb6133a-7114-4bdb-88d0-5144aef94401",
+        "horodatage": "2021-07-09 02:59:55.310",
+        "expression": "Yanis Lefèvre"
       }
+    ],
+    "active": false,
+    "type": "C",
+    "group": "B",
+    "array": [
+      7.31,
+      54
     ]
   }
 ]
@@ -216,6 +249,17 @@ Génère un UUID
 **Exemple** :
 
 - `RandomUUID()` => `"fd768fbf-6e86-4e46-a654-12b5e8106d19"`
+
+### `RandomBoolean(double percentageOfTrue)`
+
+Retourne un booléen aléatoire. Si le paramètre `percentageOfTrue` n'est pas précisé il y aura autant de `true` que
+de `false`
+
+- `percentageOfTrue`: décimale entre 0 et 1 représentant le pourcentage de valeur `true` généré.
+  - Exemples:
+  - 0 => que des `false`
+  - 0.4 => 40% de `true`
+  - 1 => que des `true`
 
 ### `RandomInt(int min, int max)`
 
@@ -252,9 +296,17 @@ Génère une fausse donnée selon une expression.
 - `Sample("Internet.emailAddress")` => "victor.david@hotmail.fr"
 - `Sample("#{Name.fullName} (#{Address.cityName})")` => "Mme Lina Royer (Paris)"
 
-### `Round(<generateur>, <nombre_decimal>)`
+### `Round(<generateur>, <nombre_decimal>, <mode_arrondi>)`
 
-TODO
+Arrondi un nombre décimal
+
+- `<generateur>`: Un généréteur de nombre décimale. Ex: `RandomDouble()`
+- `<nombre_decimal>`: Nombre de décimale à garder après la virgule
+- `<mode_arrondi> (facultatif: défaut = "UP") `: "UP", "DOWN", "CEILING", "FLOOR", "HALF_UP", "HALF_DOWN", "HALF_EVEN"
+
+**Exemple**:
+
+- `Round(Constant(1.123), 2, "UP")` => 1.13
 
 ### `RandomDate("<date_min>", "<date_max>")`
 
@@ -285,51 +337,65 @@ Retourne une valeur aléatoire basée sur une regex. Le second paramètre option
 
 ### `RandomFromList(<element1>, <element2>, ...)`
 
-TODO
+Retourne une valeur aléatoire parmis la liste d'élément. Si l'élément est un `ItemWeight`, alors le point permet de
+moduler le taux d'apparition d'un élément.
+
+**Exemple**:
+
+- `RandomFromList(["A", "B", "C"])` : Retourne A, B ou C équitablement
+- `RandomFromList([ItemWeight("A", 10), ItemWeight("B", 70), ItemWeight("C", 20)])` : Retounre 10% de A, 70% de B et 20%
+  de C
 
 ### `IntAutoIncrement([<start>, <step>, <max>])`
 
-TODO
+Retourne un nombre entier incrémenté à chaque génération
 
-### `Idempotent`
+- `<start>`: Valeur initiale
+- `<step>`: Quantité incrémenté à chaque génération
+- `<max>`: Valeur maximum. Si la valeur courante dépasse le max, l'increment retourne à `<start>`
 
-TODO
+### `Idempotent(<generateur>)`
+
+Permet de renvoyer toujours la même valeur.
+**Exemple**:
+
+- `Idempotent(FormatDate(RandomDate(), "yyy-MM-dd"))`: Génère une date random et retourne toujours la même date
 
 ### `ListOf`
 
-TODO
+todo: A commenter
 
 ### `AsString`
 
-TODO
+todo: A commenter
 
 ### `FormatDate`
 
-TODO
+todo: A commenter
 
 ### `ListByRepeat`
 
-TODO
+todo: A commenter
 
 ### `Expression`
 
-TODO
+todo: A commenter
 
 ### `Reference`
 
-TODO
+todo: A commenter
 
 ### `FixedReference`
 
-TODO
+todo: A commenter
 
 ### Composition de générateur
 
-TODO
+todo: A commenter
 
 ### Références et expressions
 
-TODO
+todo: A commenter
 
 ## Utilisation programmatique
 ### Définition d'un générateur

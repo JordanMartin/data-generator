@@ -14,7 +14,7 @@ public class RandomDouble implements DoubleProvider, StatelessValueProvider<Doub
     private final double min;
     private final double max;
 
-    public RandomDouble(int min, int max) {
+    public RandomDouble(double min, double max) {
         if (min > max) {
             throw new ValueProviderException(this, "La valeur minimum doit être <= à la valeur maximum");
         }
@@ -22,8 +22,20 @@ public class RandomDouble implements DoubleProvider, StatelessValueProvider<Doub
         this.max = max;
     }
 
-    public RandomDouble(int max) {
+    public RandomDouble(int min, int max) {
+        this((double) min, (double) max);
+    }
+
+    public RandomDouble(double max) {
         this(0, max);
+    }
+
+    public RandomDouble(int max) {
+        this(0, (double) max);
+    }
+
+    public RandomDouble() {
+        this(0, Double.MAX_VALUE);
     }
 
     @Override

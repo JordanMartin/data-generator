@@ -26,15 +26,15 @@ public class Round implements DoubleProvider {
         this(provider, precision, RoundingMode.valueOf(roundingMode.toUpperCase()));
     }
 
+    public Round(ValueProvider<Double> provider, int precision) {
+        this(provider, precision, RoundingMode.UP);
+    }
+
     @Override
     public Double getOneWithContext(IObjectProviderContext ctx) {
         Double value = evaluateProviderWithContext(provider, ctx);
         return BigDecimal.valueOf(value)
                 .setScale(precision, roundingMode)
                 .doubleValue();
-    }
-
-    public Round(ValueProvider<Double> provider, int precision) {
-        this(provider, precision, RoundingMode.UP);
     }
 }

@@ -23,6 +23,10 @@ public class RandomInt implements IntegerProvider, StatelessValueProvider<Intege
         this.max = max;
     }
 
+    public RandomInt() {
+        this(0, Integer.MAX_VALUE - 1);
+    }
+
     public RandomInt(int max) {
         this(0, max);
     }

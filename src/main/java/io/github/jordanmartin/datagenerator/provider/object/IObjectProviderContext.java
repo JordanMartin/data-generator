@@ -29,11 +29,6 @@ public interface IObjectProviderContext {
      */
     <T> T getRefValue(String refName, Class<T> clazz);
 
-    /**
-     * @param refName Nom de la référence
-     * @param clazz   Classe représentant le type de la référence
-     * @param <T>     Type de la référence
-     */
     default Object getRefValue(String name) {
         return getRefValue(name, Object.class);
     }

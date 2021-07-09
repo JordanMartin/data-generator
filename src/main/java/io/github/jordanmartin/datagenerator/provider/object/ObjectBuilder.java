@@ -39,7 +39,7 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new RandomDate(min, max);
     }
 
-    protected FormatDate format(ValueProvider<Date> dateProvider, String format) {
+    protected FormatDate formatDate(ValueProvider<Date> dateProvider, String format) {
         return new FormatDate(dateProvider, format);
     }
 
