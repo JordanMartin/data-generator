@@ -11,7 +11,7 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
     public static final int ONLY_FALSE_PERCENTAGE = 0;
     public static final int ONLY_TRUE_PERCENTAGE = 1;
 
-    private final double precentageOfTrue;
+    private final double percentage;
 
     /**
      * Génère un booléen en fonction du pourcentage précisé
@@ -21,7 +21,7 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
      *                         Ex: 0.25: 25% de true, 75% de true
      */
     public RandomBoolean(double percentageOfTrue) {
-        this.precentageOfTrue = percentageOfTrue;
+        this.percentage = percentageOfTrue;
     }
 
     /**
@@ -33,12 +33,12 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
 
     @Override
     public Boolean getOne() {
-        if (precentageOfTrue <= ONLY_FALSE_PERCENTAGE) {
+        if (percentage <= ONLY_FALSE_PERCENTAGE) {
             return false;
-        } else if (precentageOfTrue >= ONLY_TRUE_PERCENTAGE) {
+        } else if (percentage >= ONLY_TRUE_PERCENTAGE) {
             return true;
         }
 
-        return Math.random() < precentageOfTrue;
+        return Math.random() < percentage;
     }
 }
