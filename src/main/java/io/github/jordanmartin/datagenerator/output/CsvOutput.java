@@ -5,6 +5,7 @@ import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class CsvOutput extends ObjectWriterOuput {
     }
 
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         String fields = object.values().stream().map(Object::toString).collect(Collectors.joining(";"));
         writer.write(String.join(";", object.keySet()));
         writer.write('\n');
@@ -44,7 +45,7 @@ public class CsvOutput extends ObjectWriterOuput {
     }
 
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         AtomicBoolean headerLine = new AtomicBoolean(false);
         stream.forEach(object -> {
             try {

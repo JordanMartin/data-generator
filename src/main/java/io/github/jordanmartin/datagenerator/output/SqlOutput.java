@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -36,7 +37,7 @@ public class SqlOutput extends ObjectWriterOuput {
     }
 
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         writeInsertIntoPart(writer, object);
         writer.write(" VALUES");
         writeValue(writer, object);
@@ -45,7 +46,7 @@ public class SqlOutput extends ObjectWriterOuput {
     }
 
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         stream.forEach(object -> {
             try {
                 writeInsertIntoPart(writer, object);

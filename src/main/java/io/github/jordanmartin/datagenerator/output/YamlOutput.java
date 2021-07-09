@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class YamlOutput extends ObjectWriterOuput {
     private void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         Yaml yaml = newYaml();
         List<Map<String, ?>> list = stream.collect(Collectors.toList());
-        yaml.dump(list, new OutputStreamWriter(out));
+        yaml.dump(list, new OutputStreamWriter(out, StandardCharsets.UTF_8));
         out.flush();
     }
 
