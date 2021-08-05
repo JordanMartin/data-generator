@@ -25,28 +25,32 @@ public class Expression implements ValueProvider<String> {
     @Override
     public String getOneWithContext(IObjectProviderContext ctx) {
         // Recherche les variables de la forme "${nom}"
-        Pattern pattern = Pattern.compile("\\$\\{([a-zA-Z0-9_-]+)\\}");
+        Pattern pattern = Pattern.compile("(\\$?\\$)\\{([a-zA-Z0-9_-]+)\\}");
         Matcher matcher = pattern.matcher(expression);
         String result = expression;
 
         // Pour chaque variable
         while (matcher.find()) {
-            String ref = matcher.group(1);
+            String refType = matcher.group(1);
+            boolean isFixedRef = "$$".equals(refType);
+            String ref = matcher.group(2);
 
-            // Récupère la valeur associé dans les champs existant de l'objet
+            // Récupère la valeur associé dans les champs existants de l'objet
             Object objectField = ctx.getFieldValue(ref);
             if (objectField == null) {
-                // Sinon les génrateurs de references
-                objectField = ctx.getRefValue(ref);
+                // Sinon via les générateurs de references
+                objectField = isFixedRef
+                        ? ctx.getFixedRefValue(ref)
+                        : ctx.getRefValue(ref);
             }
 
             if (objectField == null) {
-                throw new ValueProviderException(this, "La référence \"${" + ref + "}\" n'existe pas");
+                throw new ValueProviderException(this, "La référence \"" + refType + "{" + ref + "}\" n'existe pas");
             }
 
             // Remplace la variable par sa valeur dans l'expression
             String value = String.valueOf(objectField);
-            result = result.replace("${" + ref + "}", value);
+            result = result.replace(refType + "{" + ref + "}", value);
         }
 
         return result;
