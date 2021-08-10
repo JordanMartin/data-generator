@@ -431,7 +431,7 @@ public class SimpleObject extends ObjectBuilder {
 public class Test {
     public static void main(String[] args) throws IOException {
         SimpleObjectBuilder generator = new SimpleObjectBuilder();
-        ObjectOuput.from(generator)
+        ObjectOutput.from(generator)
                 .toJson().setPretty(true)
                 .writeMany(System.out, 2);
     }
@@ -494,7 +494,7 @@ ObjectProvider provider = new ObjectProvider()
 **JSON**
 
 ```java
-ObjectOuput.from(provider)
+ObjectOutput.from(provider)
         .toJson().setPretty(true)
         .writeMany(System.out, 2);
 ```
@@ -512,7 +512,7 @@ ObjectOuput.from(provider)
 **XML**
 
 ```java
-ObjectOuput.from(provider)
+ObjectOutput.from(provider)
         .toXml().setPretty(true)
         .writeMany(System.out, 2);
 ```
@@ -534,7 +534,7 @@ ObjectOuput.from(provider)
 **CSV**
 
 ```java     
-ObjectOuput.from(provider)
+ObjectOutput.from(provider)
         .toCsv()
         .writeMany(System.out, 2);
 ```
@@ -548,7 +548,7 @@ id;name
 **SQL**
 
 ```java
-ObjectOuput.from(provider)
+ObjectOutput.from(provider)
         .toSQL()
         .writeMany(System.out, 2);
 ```
@@ -561,7 +561,7 @@ INSERT INTO object(id,name) VALUE(2,'Noa');
 **YAML**
 
 ```java
-ObjectOuput.from(provider)
+ObjectOutput.from(provider)
         .toYaml().setPretty(true)
         .writeMany(System.out, 2);
 ```

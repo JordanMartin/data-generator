@@ -7,26 +7,26 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-class ObjectOuputTest {
+class ObjectOutputTest {
     @Test
     void toJson() throws IOException {
         ObjectProvider provider = new ObjectProvider()
                 .field("id", new IntAutoIncrement())
                 .field("name", new Sample("Name.firstName"));
 
-        ObjectOuput.from(provider)
+        ObjectOutput.from(provider)
                 .toJson().setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOuput.from(provider)
+        ObjectOutput.from(provider)
                 .toCsv()
                 .writeMany(System.out, 2);
-        ObjectOuput.from(provider)
+        ObjectOutput.from(provider)
                 .toXml().setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOuput.from(provider)
+        ObjectOutput.from(provider)
                 .toYaml().setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOuput.from(provider)
+        ObjectOutput.from(provider)
                 .toSQL()
                 .writeMany(System.out, 2);
     }

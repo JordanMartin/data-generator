@@ -5,7 +5,7 @@ import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 /**
  * Classe de base pour les formats de sortie des générateurs
  */
-public class ObjectOuput {
+public class ObjectOutput {
 
     /**
      * Le générateur d'objet
@@ -17,7 +17,7 @@ public class ObjectOuput {
      *
      * @param provider Le générateur d'objet
      */
-    protected ObjectOuput(ObjectProvider provider) {
+    protected ObjectOutput(ObjectProvider provider) {
         this.provider = provider;
     }
 
@@ -50,8 +50,8 @@ public class ObjectOuput {
      *
      * @param provider Le générateur d'objet
      */
-    public static ObjectOuput from(ObjectProvider provider) {
-        return new ObjectOuput(provider);
+    public static ObjectOutput from(ObjectProvider provider) {
+        return new ObjectOutput(provider);
     }
 }
 

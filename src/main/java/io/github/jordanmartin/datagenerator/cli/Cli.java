@@ -2,13 +2,15 @@ package io.github.jordanmartin.datagenerator.cli;
 
 import io.github.jordanmartin.datagenerator.definition.YamlDefinitionParser;
 import io.github.jordanmartin.datagenerator.output.CsvOutput;
-import io.github.jordanmartin.datagenerator.output.ObjectOuput;
+import io.github.jordanmartin.datagenerator.output.ObjectOutput;
 import io.github.jordanmartin.datagenerator.output.ObjectWriterOuput;
 import io.github.jordanmartin.datagenerator.output.SqlOutput;
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import org.apache.commons.cli.*;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.zip.GZIPOutputStream;
@@ -126,25 +128,25 @@ public class Cli {
         boolean pretty = cmd.hasOption(PRETTY);
         switch (cmd.getOptionValue(FORMAT).toLowerCase()) {
             case "yaml":
-                return ObjectOuput.from(provider)
+                return ObjectOutput.from(provider)
                         .toYaml().setPretty(pretty);
             case "csv":
-                CsvOutput csvOutput = ObjectOuput.from(provider).toCsv();
+                CsvOutput csvOutput = ObjectOutput.from(provider).toCsv();
                 if (cmd.hasOption(SEPARATOR)) {
                     csvOutput.setSeparator(cmd.getOptionValue(SEPARATOR));
                 }
                 return csvOutput;
             case "json":
-                return ObjectOuput.from(provider).toJson()
+                return ObjectOutput.from(provider).toJson()
                         .setPretty(pretty);
             case "sql":
-                SqlOutput sqlOutput = ObjectOuput.from(provider).toSQL();
+                SqlOutput sqlOutput = ObjectOutput.from(provider).toSQL();
                 if (cmd.hasOption(XML_TABLE_NAME)) {
                     sqlOutput.setTableName(cmd.getOptionValue(XML_TABLE_NAME));
                 }
                 return sqlOutput;
             case "xml":
-                return ObjectOuput.from(provider).toXml()
+                return ObjectOutput.from(provider).toXml()
                         .setPretty(true);
             default:
                 throw new IllegalArgumentException("Ce format n'existe pas");
