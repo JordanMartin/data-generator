@@ -29,6 +29,10 @@ public class ObjectOutput {
         return new XmlOutput(provider);
     }
 
+    public TemplateOutput toTemplate(String template) {
+        return new TemplateOutput(provider, template);
+    }
+
     public YamlOutput toYaml() {
         return new YamlOutput(provider);
     }
