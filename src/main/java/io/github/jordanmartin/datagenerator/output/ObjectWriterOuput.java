@@ -5,6 +5,7 @@ import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Classe abstraite pour l'écriture d'objet à partir d'un générateur dans un OutputStream
@@ -51,7 +52,7 @@ public abstract class ObjectWriterOuput {
     public String manyToString(int count) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             writeMany(baos, count);
-            return baos.toString();
+            return baos.toString(StandardCharsets.UTF_8);
         }
     }
 
@@ -64,7 +65,7 @@ public abstract class ObjectWriterOuput {
     public String oneToString() throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             writeOne(baos);
-            return baos.toString();
+            return baos.toString(StandardCharsets.UTF_8);
         }
     }
 }

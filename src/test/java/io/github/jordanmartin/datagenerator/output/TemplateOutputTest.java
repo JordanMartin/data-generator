@@ -14,16 +14,17 @@ class TemplateOutputTest {
     void simpleTemplate() throws IOException {
         ObjectProvider provider = new ObjectProvider()
                 .field("id", new IntAutoIncrement())
-                .field("source", (ctx) -> "template");
+                .field("source", (ctx) -> "template")
+                .field("utf8", (ctx) -> "éllo");
 
         String template = "#foreach($d in $list)" +
-                "id=$d.id, source=$d.source\n" +
+                "id=$d.id, source=$d.source, utf8=$d.utf8\n" +
                 "#end";
 
         String result = ObjectOutput.from(provider).toTemplate(template)
                 .manyToString(2);
 
-        assertEquals("id=0, source=template\nid=1, source=template\n", result);
+        assertEquals("id=0, source=template, utf8=éllo\nid=1, source=template, utf8=éllo\n", result);
 
     }
 }

@@ -8,9 +8,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Génère un document à partir d'un template velocity
+ */
 public class TemplateOutput extends ObjectWriterOuput {
 
     private final String template;
@@ -26,7 +30,7 @@ public class TemplateOutput extends ObjectWriterOuput {
         VelocityContext velocityContext = new VelocityContext(context);
 
         StringReader reader = new StringReader(template);
-        OutputStreamWriter writer = new OutputStreamWriter(out);
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         try (reader; writer) {
             Velocity.evaluate(velocityContext, writer, "Velocity String Template Evaluation", reader);
         }
