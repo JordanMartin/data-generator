@@ -2,7 +2,7 @@ package io.github.jordanmartin.datagenerator.output;
 
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,11 +28,17 @@ public class TemplateOutput extends ObjectWriterOuput {
     public void writeMany(OutputStream out, int count) throws IOException {
         Map<String, Object> context = new HashMap<>(Map.of("list", provider.getList(count)));
         VelocityContext velocityContext = new VelocityContext(context);
+        VelocityEngine velocity = new VelocityEngine();
+        velocity.setProperty("runtime.strict_mode.enable", "true");
+        velocity.init();
 
         StringReader reader = new StringReader(template);
         OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-        try (reader; writer) {
-            Velocity.evaluate(velocityContext, writer, "Velocity String Template Evaluation", reader);
+        try {
+            velocity.evaluate(velocityContext, writer, "Velocity String Template Evaluation", reader);
+            writer.flush();
+        } catch (Exception e) {
+            throw new OutputException(e);
         }
     }
 }
