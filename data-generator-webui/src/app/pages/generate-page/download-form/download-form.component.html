@@ -2,10 +2,12 @@
 
   <input type="hidden" name="definition" [value]="data.definition"/>
   <input type="hidden" name="gzip" [value]="gzip"/>
-  <input type="hidden" name="output.pretty" [value]="data.pretty" />
-  <input type="hidden" name="output.template" [value]="data.template" />
-  <input type="hidden" name="output.format" [value]="data.format" />
-  <input type="hidden" name="output.object_name" [value]="data.object_name" />
+  <input type="hidden" name="output.pretty" [value]="data.config.pretty"/>
+  <input type="hidden" name="output.template" [value]="data.config.template"/>
+  <input type="hidden" name="output.format" [value]="data.config.format"/>
+  <input type="hidden" name="output.object_name" [value]="data.config.object_name"/>
+  <input type="hidden" name="output.table_name" [value]="data.config.table_name"/>
+  <input type="hidden" name="output.separator" [value]="data.config.separator"/>
 
   <mat-form-field appearance="fill">
     <mat-label>Number of objects</mat-label>

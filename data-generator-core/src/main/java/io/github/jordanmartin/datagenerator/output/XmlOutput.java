@@ -12,6 +12,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -71,16 +72,25 @@ public class XmlOutput extends ObjectWriterOuput {
     }
 
     @SuppressWarnings("unchecked")
-    private void appendChild(Document doc, Element root, Map<String, ?> object) {
-        for (Map.Entry<String, ?> entry : object.entrySet()) {
-            Object value = entry.getValue();
-            Element element = doc.createElement(entry.getKey());
-            if (value instanceof Map) {
-                appendChild(doc, element, (Map<String, ?>) value);
-            } else {
-                element.appendChild(doc.createTextNode(String.valueOf(value)));
+    private void appendChild(Document doc, Element root, Object object) {
+        if (object instanceof Map) {
+            for (Map.Entry<String, ?> entry : ((Map<String, ?>) object).entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (key.startsWith("@")) {
+                    root.setAttribute(key.substring(1), String.valueOf(value));
+                } else {
+                    Element element = doc.createElement(key);
+                    appendChild(doc, element, value);
+                    root.appendChild(element);
+                }
             }
-            root.appendChild(element);
+        } else if (object instanceof Iterable) {
+            for (Object o : ((List<?>) object)) {
+                appendChild(doc, root, o);
+            }
+        } else {
+            root.appendChild(doc.createTextNode(String.valueOf(object)));
         }
     }
 

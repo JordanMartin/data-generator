@@ -118,12 +118,16 @@ public class ProviderController {
                                  @FormParam("definition") String definition,
                                  @FormParam("output.template") String outputTemplate,
                                  @FormParam("output.pretty") String outputPretty,
-                                 @FormParam("output.object_name") String objectName) {
+                                 @FormParam("output.object_name") String objectName,
+                                 @FormParam("output.table_name") String tableName,
+                                 @FormParam("output.separator") String separator) {
 
         Map<String, String> outputConfig = new HashMap<>();
         outputConfig.put("pretty", outputPretty);
         outputConfig.put("template", outputTemplate);
         outputConfig.put("object_name", objectName);
+        outputConfig.put("table_name", tableName);
+        outputConfig.put("separator", separator);
 
         ProviderConf providerConf = ProviderConf.from("live", definition, format, outputConfig);
         StreamingOutput streamingOutput = out -> providerConf.getOutput().writeMany(out, count);
@@ -142,12 +146,16 @@ public class ProviderController {
                              @FormParam("definition") String definition,
                              @FormParam("output.template") String outputTemplate,
                              @FormParam("output.pretty") String outputPretty,
-                             @FormParam("output.object_name") String objectName) {
+                             @FormParam("output.object_name") String objectName,
+                             @FormParam("output.table_name") String tableName,
+                             @FormParam("output.separator") String separator) {
 
         Map<String, String> outputConfig = new HashMap<>();
         outputConfig.put("pretty", outputPretty);
         outputConfig.put("template", outputTemplate);
         outputConfig.put("object_name", objectName);
+        outputConfig.put("table_name", tableName);
+        outputConfig.put("separator", separator);
 
         ProviderConf providerConf = ProviderConf.from("live", definition, format, outputConfig);
         StreamingOutput streamingOutput = out -> {

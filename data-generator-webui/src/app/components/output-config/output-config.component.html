@@ -1,1 +1,59 @@
-<p>output-config works!</p>
+<div class="ouput-configuration">
+  <div class="param">
+    <span class="param-name">Number of objects</span>
+    <input class="param-field object-count" #count type="number"
+           [value]="this.config.count" (change)="updateParam('count', count.value)">
+
+    <span class="warning-big-results"><mat-icon>warning</mat-icon> Utilisez le téléchargement pour générer une grande quantité de données</span>
+  </div>
+  <div class="param">
+    <span class="param-name">Output format</span>
+    <mat-button-toggle-group #format="matButtonToggleGroup" [value]="this.config.format"
+                             (change)="updateParam('format', format.value)">
+      <mat-button-toggle *ngFor="let f of this.available_formats" [value]="f">
+        {{f}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(this.config.format)">
+    <mat-slide-toggle [checked]="this.config.pretty"
+                      (change)="updateParam('pretty', $event.checked)">
+      <span class="param-name">Pretty format</span>
+    </mat-slide-toggle>
+  </div>
+
+  <div class="param" *ngIf="this.config.format=='xml'">
+    <span class="param-name">Object name</span>
+    <input class="param-field object-name" #objectName type="text"
+           [value]="this.config.object_name" (keyup)="updateParam('object_name', objectName.value)">
+  </div>
+
+  <div class="param" *ngIf="this.config.format=='sql'">
+    <span class="param-name">Table name</span>
+    <input class="param-field object-name" #tableName type="text"
+           [value]="this.config.table_name" (keyup)="updateParam('table_name', tableName.value)">
+  </div>
+
+  <div class="param" *ngIf="this.config.format=='csv'">
+    <span class="param-name">Separator</span>
+    <mat-button-toggle-group #basicSeparator="matButtonToggleGroup" [value]="this.config.separator"
+                             (change)="updateParam('separator', basicSeparator.value)">
+      <mat-button-toggle *ngFor="let sep of csv_default_separator" [value]="sep" (click)="customSep.value = ''">
+        {{sep}}
+      </mat-button-toggle>
+      <mat-button-toggle [value]="customSep.value">
+        <input placeholder="Custom separator" #customSep class="custom-separator" type="text" value=""
+               (click)="customSep.focus()"
+               (keyup)="updateParam('separator', customSep.value)">
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="editor-container" *ngIf="this.config.format == 'template'">
+    <h2>Template</h2>
+    <app-template-editor
+      [initialValue]="this.config.template"
+      (onChange)="updateParam('template', $event)"></app-template-editor>
+  </div>
+</div>

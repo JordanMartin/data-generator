@@ -16,6 +16,7 @@ import java.util.stream.Stream;
  */
 public class CsvOutput extends ObjectWriterOuput {
 
+    private static final String DEFAULT_SEPARATOR = ";";
     /**
      * Séparateur CSV
      */
@@ -27,12 +28,12 @@ public class CsvOutput extends ObjectWriterOuput {
      * @param provider Le générateur d'objet
      */
     public CsvOutput(ObjectProvider provider) {
-        this(provider, ";");
+        this(provider, DEFAULT_SEPARATOR);
     }
 
     public CsvOutput(ObjectProvider provider, String separator) {
         super(provider);
-        this.separator = separator;
+        setSeparator(separator);
     }
 
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
@@ -76,7 +77,10 @@ public class CsvOutput extends ObjectWriterOuput {
 
 
     public CsvOutput setSeparator(String separator) {
-        this.separator = separator;
+        this.separator = separator == null
+                ? DEFAULT_SEPARATOR
+                : separator;
+        this.separator = this.separator.replace("<tab>", "\t");
         return this;
     }
 }

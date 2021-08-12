@@ -1,0 +1,32 @@
+.param-field {
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  height: 40px;
+  padding: 0 15px;
+}
+
+.object-count {
+  text-align: center;
+  width: 130px;
+  font-size: 17px;
+}
+
+.object-name {
+  width: 130px;
+}
+
+.param {
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.param-name {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.custom-separator {
+  border: solid 1px #ccc;
+  position: relative;
+  height: 24px;
+}

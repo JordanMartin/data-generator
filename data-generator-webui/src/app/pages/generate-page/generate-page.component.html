@@ -30,43 +30,7 @@
   <div class="spacer" style="clear: both;"></div>
 </div>
 
-<h3>Output configuration</h3>
-<div class="ouput-configuration">
-  <div class="param">
-    <span class="param-name"># objects</span>
-    <input class="object-count" #count type="number"
-           [value]="output_count" (change)="updateCount(count.value)">
-  </div>
-  <div class="param">
-    <span class="param-name">Format</span>
-    <mat-button-toggle-group #format="matButtonToggleGroup" [value]="output_format"
-                             (change)="updateFormat(format.value)">
-      <mat-button-toggle *ngFor="let f of defaults.available_formats" [value]="f">
-        {{f}}
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-  </div>
-
-  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(output_format)">
-    <mat-slide-toggle [checked]="output_pretty"
-                      (change)="changeOutputPretty($event.checked)">
-      <span class="param-name">Pretty format</span>
-    </mat-slide-toggle>
-  </div>
-
-  <div class="param" *ngIf="['xml', 'sql'].includes(output_format)">
-    <span class="param-name">Object name</span>
-    <input class="object-count" #objectName type="text"
-           [value]="output_object_name" (keyup)="updateObjectName(objectName.value)">
-  </div>
-
-  <div class="editor-container" *ngIf="output_format == 'template'">
-    <h2>Template</h2>
-    <app-template-editor
-      [initialValue]="defaults.initial_template"
-      (onChange)="updateTemplate($event)"></app-template-editor>
-  </div>
-</div>
+<app-output-config (onChange)="updateOutputConfig($event)"></app-output-config>
 
 <h2>Documentation</h2>
 <app-generator-doc></app-generator-doc>

@@ -34,11 +34,11 @@ public class ProviderConf {
                 providerConf.setContentType("text/yaml");
                 break;
             case "sql":
-                providerConf.setOutput(output.toSQL().setTableName(objectName));
+                providerConf.setOutput(output.toSQL().setTableName(outputConfig.get("table_name")));
                 providerConf.setContentType("text/sql");
                 break;
             case "csv":
-                providerConf.setOutput(output.toCsv());
+                providerConf.setOutput(output.toCsv().setSeparator(outputConfig.get("separator")));
                 providerConf.setContentType("text/csv");
                 break;
             case "xml":
