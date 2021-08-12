@@ -1,11 +1,7 @@
-# Data generator
-[![Compile & Unit tests](https://github.com/JordanMartin/data-generator/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/JordanMartin/data-generator/actions/workflows/unit-tests.yml)
-[![](https://img.shields.io/github/v/release/JordanMartin/data-generator?sort=semver&style=flat&label=Latest%20release&logo=github&color=green)](https://github.com/JordanMartin/data-generator/releases/latest)
-    
-Générateur de données à partir de valeurs aléatoires ou personnalisées.
+# data-generator-core
 
-- [Utilisation CLI](#utilisation-cli)
-  * [Usage](#usage)
+> Module core contenant l'ensemble des générateurs et formats de sortie
+
   * [Fichier de définition YAML](#fichier-de-d-finition-yaml)
 - [Générateurs](#g-n-rateurs)
   * [`Constant(<valeur>)`](#-constant--valeur---)
@@ -21,7 +17,7 @@ Générateur de données à partir de valeurs aléatoires ou personnalisées.
   * [`RandomFromRegex("<regex>"[, <elem_count>])`](#-randomfromregex---regex------elem-count----)
   * [`RandomFromList(<element1>, <element2>, ...)`](#-randomfromlist--element1----element2-----)
   * [`IntAutoIncrement([<start>, <step>, <max>])`](#-intautoincrement---start----step----max----)
-  * [`Idempotent`](#-idempotent-)
+  * [`Idempotent(<generateur>)`](#-idempotent--generateur---)
   * [`ListOf`](#-listof-)
   * [`AsString`](#-asstring-)
   * [`FormatDate`](#-formatdate-)
@@ -38,33 +34,8 @@ Générateur de données à partir de valeurs aléatoires ou personnalisées.
     + [Par instanciation de `ObjectProvider`](#par-instanciation-de--objectprovider-)
   * [Formats de sortie](#formats-de-sortie)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with
-markdown-toc</a></i></small>
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
-## Utilisation CLI
-
-- La dernière version compilée est [disponible ici](https://github.com/JordanMartin/data-generator/releases/latest)
-- Requière Java >= 11
-
-### Usage
-
-```
-usage: java -jar data-generator-x.y.z.jar
--c,--count <arg>        Nombre d'objet à générer
--d,--definition <arg>   Fichier de defintion
--f,--format <arg>       Format de sortie : yaml, json, csv, sql, xml
---gzip               Compresse la sortie en GZIP
--o,--out <arg>          Fichier de sortie
---pretty             Active le mode pretty pour la sortie JSON ou YAML
---separator <arg>    Séparateur à utiliser pour le format CSV
---stdout             Utilise la sortie standard
---table-name <arg>   Nom de la table SQL à utilier pour les requêtes insert
-```
-
-*Exemple*
-```bash
-java -jar data-generator-1.0.0-alpha.jar --definition def.yml --count 10 --format json --pretty --stdout
-```
 
 ### Fichier de définition YAML
 
