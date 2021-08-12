@@ -1,0 +1,14 @@
+<ul *ngFor="let field of definition.fields">
+  <li>{{field.name}}: {{field.definition}}</li>
+</ul>
+
+<mat-form-field appearance="fill" class="definition-container">
+  <mat-label>Name</mat-label>
+  <input matInput type="text" #name />
+</mat-form-field>
+<mat-form-field appearance="fill" class="definition-container">
+  <mat-label>Definition</mat-label>
+  <input matInput type="text" #def />
+</mat-form-field>
+
+<button mat-button (click)="addField(name.value, def.value)">Add field</button>

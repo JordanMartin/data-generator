@@ -1,0 +1,25 @@
+<mat-accordion>
+  <div *ngFor="let generator of generators" class="generator">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{generator.name}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{generator.description}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="args" *ngIf="!generator.args?.length">
+        <span class="arg-no-args">Pas d'arguments</span>
+      </div>
+      <div class="args" *ngFor="let arg of generator.args">
+        <div class="arg">
+          <span class="arg-name">{{arg.name}}</span>:
+          <span class="arg-type">{{arg.type}}</span>
+          <span class="arg-description">{{arg.description}}</span>
+          <span class="arg-optional" *ngIf="arg.optional">(optionnelle)</span>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</mat-accordion>

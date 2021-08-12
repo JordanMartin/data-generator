@@ -1,0 +1,63 @@
+.editor-container {
+}
+
+.half-pane {
+  display: inline-block;
+  width: 50%;
+
+  h2 {
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+
+app-definition-editor {
+  display: inline-block;
+  border: solid 1px #ccc;
+  width: calc(100% - 2px);
+}
+
+app-data-preview {
+  display: inline-block;
+  border: solid 1px #ccc;
+  border-left: none;
+  width: calc(100% - 1px);
+}
+
+app-template-editor {
+  display: inline-block;
+  width: calc(100% - 2px);
+  border: solid 1px #ccc;
+}
+
+.object-count {
+  height: 43px;
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  width: 150px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.ouput-configuration {
+  .param {
+    display: inline-block;
+    margin: 0 15px;
+  }
+
+  .param-name {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}
+
+.loader {
+  margin-bottom: 5px;
+  height: 5px;
+}
+
+@media (max-width: 900px) {
+  .half-pane {
+    width: 100%;
+  }
+}

@@ -1,0 +1,28 @@
+.generator {
+
+}
+
+.args {
+  margin: 5px 0;
+
+  .arg-name {
+    font-weight: bold;
+  }
+
+  .arg-description {
+    padding-left: 10px;
+  }
+
+  .arg-type {
+    font-style: italic;
+    padding-left: 10px;
+  }
+
+  .arg-optional {
+    font-style: italic;
+    padding-left: 10px;
+  }
+  .arg-no-args {
+    font-style: italic;
+  }
+}
