@@ -5,10 +5,8 @@ import { GeneratePageComponent } from './pages/generate-page/generate-page.compo
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/generate',
-    pathMatch: 'full'
-  },
-  { path: 'generate', component: GeneratePageComponent }
+    component: GeneratePageComponent
+  }
 ];
 
 @NgModule({
