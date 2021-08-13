@@ -7,12 +7,12 @@
     <parent>
         <groupId>io.github.jordanmartin.datagenerator</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.5.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>cli</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -38,6 +38,7 @@
     </dependencies>
 
     <build>
+        <finalName>data-generator-cli-${project.version}</finalName>
         <plugins>
             <!-- Tests unitaires -->
             <plugin>
