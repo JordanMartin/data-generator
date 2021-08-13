@@ -76,6 +76,11 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>4.9.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -29,7 +29,6 @@
         <quarkus.package.type>uber-jar</quarkus.package.type>
     </properties>
 
-
     <dependencyManagement>
         <dependencies>
             <dependency>
