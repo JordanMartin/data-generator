@@ -10,7 +10,10 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Génère un document à partir d'un template velocity
@@ -25,8 +28,9 @@ public class TemplateOutput extends ObjectWriterOuput {
     }
 
     @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        Map<String, Object> context = new HashMap<>(Map.of("list", provider.getList(count)));
+    public void writeMany(OutputStream out, Stream<Map<String, ?>> objects) throws IOException {
+        List<Map<String, ?>> list = objects.collect(Collectors.toList());
+        Map<String, Object> context = new HashMap<>(Map.of("list", list));
         VelocityContext velocityContext = new VelocityContext(context);
         VelocityEngine velocity = new VelocityEngine();
         velocity.setProperty("runtime.strict_mode.enable", "true");
@@ -40,5 +44,10 @@ public class TemplateOutput extends ObjectWriterOuput {
         } catch (Exception e) {
             throw new OutputException(e);
         }
+    }
+
+    @Override
+    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+        return this;
     }
 }

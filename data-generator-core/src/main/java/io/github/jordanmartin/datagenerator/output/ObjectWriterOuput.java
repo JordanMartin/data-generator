@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Classe abstraite pour l'écriture d'objet à partir d'un générateur dans un OutputStream
@@ -16,6 +18,7 @@ public abstract class ObjectWriterOuput {
      * Le générateur d'objet
      */
     protected final ObjectProvider provider;
+    private IOutputConfig outputConfig;
 
     protected ObjectWriterOuput(ObjectProvider provider) {
         this.provider = provider;
@@ -29,7 +32,7 @@ public abstract class ObjectWriterOuput {
      * @throws IOException En cas d'erreur d'écriture
      */
     public void writeOne(OutputStream out) throws IOException {
-        writeMany(out, 1);
+        writeOne(out, provider.getOne());
     }
 
     /**
@@ -40,7 +43,9 @@ public abstract class ObjectWriterOuput {
      * @param count Nombre d'élément à ecrire
      * @throws IOException En cas d'erreur d'écriture
      */
-    public abstract void writeMany(OutputStream out, int count) throws IOException;
+    public void writeMany(OutputStream out, int count) throws IOException {
+        writeMany(out, provider.getStream(count));
+    }
 
     /**
      * Génère {@code count} éléments et les retournes sous forme de String
@@ -64,8 +69,16 @@ public abstract class ObjectWriterOuput {
      */
     public String oneToString() throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            writeOne(baos);
+            writeOne(baos, provider.getOne());
             return baos.toString(StandardCharsets.UTF_8);
         }
     }
+
+    public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
+        writeMany(out, Stream.of(object));
+    }
+
+    public abstract void writeMany(OutputStream out, Stream<Map<String, ?>> objects) throws IOException;
+
+    public abstract ObjectWriterOuput setConfig(IOutputConfig outputConfig);
 }

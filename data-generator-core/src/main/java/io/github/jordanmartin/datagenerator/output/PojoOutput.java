@@ -34,6 +34,6 @@ public class PojoOutput<T> {
     }
 
     public T getOne() {
-        return getStream(1).findFirst().get();
+        return getStream(1).findFirst().orElseThrow(IllegalStateException::new);
     }
 }

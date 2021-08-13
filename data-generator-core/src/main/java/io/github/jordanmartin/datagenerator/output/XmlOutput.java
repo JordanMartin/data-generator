@@ -10,7 +10,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
  */
 public class XmlOutput extends ObjectWriterOuput {
 
-    private static final String DEFAULT_OBJECT_NAME = "object";
+    private static final String DEFAULT_OBJECT_NAME = "my_object";
 
     private boolean pretty;
     private String objectName;
@@ -30,8 +29,8 @@ public class XmlOutput extends ObjectWriterOuput {
         this(provider, DEFAULT_OBJECT_NAME, false);
     }
 
-    public XmlOutput setPretty(boolean pretty) {
-        this.pretty = pretty;
+    public XmlOutput setPretty(Boolean pretty) {
+        this.pretty = pretty != null && pretty;
         return this;
     }
 
@@ -41,6 +40,7 @@ public class XmlOutput extends ObjectWriterOuput {
         setPretty(pretty);
     }
 
+    @Override
     public void writeOne(OutputStream out, Map<String, ?> object) throws OutputException {
         Document doc = newDocument();
         Transformer transformer = newTransformer();
@@ -54,7 +54,8 @@ public class XmlOutput extends ObjectWriterOuput {
         }
     }
 
-    private void writeMany(OutputStream out, Stream<Map<String, ?>> stream) {
+    @Override
+    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) {
         Document doc = newDocument();
         Transformer transformer = newTransformer();
         Element root = doc.createElement("data");
@@ -69,6 +70,13 @@ public class XmlOutput extends ObjectWriterOuput {
         } catch (TransformerException e) {
             throw new OutputException(e);
         }
+    }
+
+    @Override
+    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+        setPretty(outputConfig.getOutputPretty());
+        setObjectName(outputConfig.getObjectName());
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -92,16 +100,6 @@ public class XmlOutput extends ObjectWriterOuput {
         } else {
             root.appendChild(doc.createTextNode(String.valueOf(object)));
         }
-    }
-
-    @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        writeMany(out, provider.getStream(count));
-    }
-
-    @Override
-    public void writeOne(OutputStream out) throws IOException {
-        writeOne(out, provider.getOne());
     }
 
     private Document newDocument() {

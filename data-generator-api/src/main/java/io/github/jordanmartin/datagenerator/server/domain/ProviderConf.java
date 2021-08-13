@@ -7,59 +7,63 @@ import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
-
 @Getter
 @Setter
 public class ProviderConf {
     private String name;
-    private String template;
-    private String format;
+    private String definition;
     private ObjectProvider provider;
     private ObjectWriterOuput output;
     private String contentType;
+    private OutputConfig outputConfig;
 
-    public static ProviderConf from(String name, String template, String format, Map<String, String> outputConfig) {
+    public static ProviderConf from(String name, String definition, OutputConfig outputConfig) {
+        String format = outputConfig.getFormat();
         ProviderConf providerConf = new ProviderConf();
-        YamlDefinitionParser parser = new YamlDefinitionParser(template);
+        YamlDefinitionParser parser = new YamlDefinitionParser(definition);
         ObjectProvider provider = parser.parse();
         ObjectOutput output = ObjectOutput.from(provider);
 
-        boolean pretty = "true".equals(outputConfig.get("pretty"));
-        String objectName = outputConfig.get("object_name");
-
         switch (format) {
             case "yaml":
-                providerConf.setOutput(output.toYaml().setPretty(pretty));
+                providerConf.setOutput(output.toYaml().setConfig(outputConfig));
                 providerConf.setContentType("text/yaml");
                 break;
             case "sql":
-                providerConf.setOutput(output.toSQL().setTableName(outputConfig.get("table_name")));
+                providerConf.setOutput(output.toSQL().setConfig(outputConfig));
                 providerConf.setContentType("text/sql");
                 break;
             case "csv":
-                providerConf.setOutput(output.toCsv().setSeparator(outputConfig.get("separator")));
+                providerConf.setOutput(output.toCsv().setConfig(outputConfig));
                 providerConf.setContentType("text/csv");
                 break;
             case "xml":
-                providerConf.setOutput(output.toXml().setPretty(pretty).setObjectName(objectName));
+                providerConf.setOutput(output.toXml().setConfig(outputConfig));
                 providerConf.setContentType("text/xml");
                 break;
             case "template":
-                providerConf.setOutput(output.toTemplate(outputConfig.get("template")));
+                providerConf.setOutput(output.toTemplate(outputConfig.getOutputTemplate()).setConfig(outputConfig));
                 providerConf.setContentType("text/plain");
                 break;
             default:
-                providerConf.setOutput(output.toJson().setPretty(pretty));
+                providerConf.setOutput(output.toJson().setConfig(outputConfig));
                 providerConf.setContentType("application/json");
                 break;
         }
-        
+
         providerConf.setProvider(provider);
-        providerConf.setTemplate(template);
-        providerConf.setFormat(format);
+        providerConf.setDefinition(definition);
+        providerConf.setOutputConfig(outputConfig);
         providerConf.setName(name);
 
         return providerConf;
+    }
+
+    public static ProviderConf from(String definition, OutputConfig outputConfig) {
+        return from(null, definition, outputConfig);
+    }
+
+    public OutputConfig getOutputConfig() {
+        return outputConfig;
     }
 }

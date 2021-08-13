@@ -28,15 +28,17 @@ public class YamlOutput extends ObjectWriterOuput {
     }
 
     @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        writeMany(out, provider.getStream(count));
-    }
-
-    private void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
+    public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         Yaml yaml = newYaml();
         List<Map<String, ?>> list = stream.collect(Collectors.toList());
         yaml.dump(list, new OutputStreamWriter(out, StandardCharsets.UTF_8));
         out.flush();
+    }
+
+    @Override
+    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+        setPretty(outputConfig.getOutputPretty());
+        return this;
     }
 
     private Yaml newYaml() {
@@ -49,8 +51,8 @@ public class YamlOutput extends ObjectWriterOuput {
         return new Yaml(options);
     }
 
-    public YamlOutput setPretty(boolean pretty) {
-        this.pretty = pretty;
+    public YamlOutput setPretty(Boolean pretty) {
+        this.pretty = pretty != null && pretty;
         return this;
     }
 }

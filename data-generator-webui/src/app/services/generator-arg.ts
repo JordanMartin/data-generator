@@ -1,4 +1,4 @@
-import { ArgType } from './arg-type';
+import {ArgType} from './arg-type';
 
 export class GeneratorArg {
   name: string;
@@ -12,5 +12,6 @@ export class GeneratorArg {
     this.description = description;
     this.type = type;
     this.optional = optional;
+    this.defaultValue = defaultValue;
   }
 }

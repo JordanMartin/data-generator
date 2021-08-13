@@ -36,6 +36,7 @@ public class CsvOutput extends ObjectWriterOuput {
         setSeparator(separator);
     }
 
+    @Override
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         String fields = object.values().stream().map(Object::toString).collect(Collectors.joining(";"));
@@ -45,6 +46,7 @@ public class CsvOutput extends ObjectWriterOuput {
         writer.flush();
     }
 
+    @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         AtomicBoolean headerLine = new AtomicBoolean(false);
@@ -67,14 +69,9 @@ public class CsvOutput extends ObjectWriterOuput {
     }
 
     @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        if (count == 1) {
-            writeOne(out, provider.getOne());
-        } else {
-            writeMany(out, provider.getStream(count));
-        }
+    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+        return setSeparator(outputConfig.getSeparator());
     }
-
 
     public CsvOutput setSeparator(String separator) {
         this.separator = separator == null

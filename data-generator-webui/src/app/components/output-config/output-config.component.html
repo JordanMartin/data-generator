@@ -1,43 +1,45 @@
 <div class="ouput-configuration">
   <div class="param">
-    <span class="param-name">Number of objects</span>
+    <span class="warning-big-results" *ngIf="config.count > count_max_warning">
+      <mat-icon>info</mat-icon>
+      Utilisez le téléchargement pour générer une grande quantité de données pour ne pas ralentir votre navigateur
+    </span>
+    <span class="param-name">Nombre d'objet</span>
     <input class="param-field object-count" #count type="number"
-           [value]="this.config.count" (change)="updateParam('count', count.value)">
-
-    <span class="warning-big-results"><mat-icon>warning</mat-icon> Utilisez le téléchargement pour générer une grande quantité de données</span>
+           [value]="config.count" (change)="updateParam('count', count.value)">
   </div>
   <div class="param">
-    <span class="param-name">Output format</span>
-    <mat-button-toggle-group #format="matButtonToggleGroup" [value]="this.config.format"
+    <span class="param-name">Formattage de sortie</span>
+    <mat-button-toggle-group #format="matButtonToggleGroup" [value]="config.format"
                              (change)="updateParam('format', format.value)">
-      <mat-button-toggle *ngFor="let f of this.available_formats" [value]="f">
+      <mat-button-toggle *ngFor="let f of available_formats" [value]="f">
         {{f}}
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
 
-  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(this.config.format)">
-    <mat-slide-toggle [checked]="this.config.pretty"
-                      (change)="updateParam('pretty', $event.checked)">
-      <span class="param-name">Pretty format</span>
+  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(config.format)">
+    <mat-slide-toggle [checked]="!config.pretty"
+                      (change)="updateParam('pretty', !$event.checked)">
+      <span class="param-name">Minifier</span>
     </mat-slide-toggle>
   </div>
 
-  <div class="param" *ngIf="this.config.format=='xml'">
-    <span class="param-name">Object name</span>
+  <div class="param" *ngIf="config.format=='xml'">
+    <span class="param-name">Nom balise XML</span>
     <input class="param-field object-name" #objectName type="text"
-           [value]="this.config.object_name" (keyup)="updateParam('object_name', objectName.value)">
+           [value]="config.object_name" (keyup)="updateParam('object_name', objectName.value)">
   </div>
 
-  <div class="param" *ngIf="this.config.format=='sql'">
-    <span class="param-name">Table name</span>
+  <div class="param" *ngIf="config.format=='sql'">
+    <span class="param-name">Nom de la table</span>
     <input class="param-field object-name" #tableName type="text"
-           [value]="this.config.table_name" (keyup)="updateParam('table_name', tableName.value)">
+           [value]="config.table_name" (keyup)="updateParam('table_name', tableName.value)">
   </div>
 
-  <div class="param" *ngIf="this.config.format=='csv'">
-    <span class="param-name">Separator</span>
-    <mat-button-toggle-group #basicSeparator="matButtonToggleGroup" [value]="this.config.separator"
+  <div class="param" *ngIf="config.format=='csv'">
+    <span class="param-name">Séparateur</span>
+    <mat-button-toggle-group #basicSeparator="matButtonToggleGroup" [value]="config.separator"
                              (change)="updateParam('separator', basicSeparator.value)">
       <mat-button-toggle *ngFor="let sep of csv_default_separator" [value]="sep" (click)="customSep.value = ''">
         {{sep}}
@@ -50,10 +52,10 @@
     </mat-button-toggle-group>
   </div>
 
-  <div class="editor-container" *ngIf="this.config.format == 'template'">
+  <div class="editor-container" *ngIf="config.format == 'template'">
     <h2>Template</h2>
     <app-template-editor
-      [initialValue]="this.config.template"
+      [initialValue]="config.template"
       (onChange)="updateParam('template', $event)"></app-template-editor>
   </div>
 </div>

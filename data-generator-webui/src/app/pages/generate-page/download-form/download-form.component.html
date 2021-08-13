@@ -1,27 +1,48 @@
 <form ngNoForm method="POST" action="/api/provider/download">
 
-  <input type="hidden" name="definition" [value]="data.definition"/>
-  <input type="hidden" name="gzip" [value]="gzip"/>
-  <input type="hidden" name="output.pretty" [value]="data.config.pretty"/>
-  <input type="hidden" name="output.template" [value]="data.config.template"/>
-  <input type="hidden" name="output.format" [value]="data.config.format"/>
-  <input type="hidden" name="output.object_name" [value]="data.config.object_name"/>
-  <input type="hidden" name="output.table_name" [value]="data.config.table_name"/>
-  <input type="hidden" name="output.separator" [value]="data.config.separator"/>
+  <input type="hidden" name="definition" [value]="definition"/>
+  <input type="hidden" name="output.gzip" [value]="config.gzip"/>
+  <input type="hidden" name="output.single_file" [value]="config.single_file"/>
+  <input type="hidden" name="output.pretty" [value]="config.pretty"/>
+  <input type="hidden" name="output.template" [value]="config.template"/>
+  <input type="hidden" name="output.format" [value]="config.format"/>
+  <input type="hidden" name="output.object_name" [value]="config.object_name"/>
+  <input type="hidden" name="output.table_name" [value]="config.table_name"/>
+  <input type="hidden" name="output.separator" [value]="config.separator"/>
+  <input type="hidden" name="output.filename_template" [value]="config.filename_template"/>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Number of objects</mat-label>
-    <input matInput name="count" type="number" [(ngModel)]="count"/>
+  <mat-form-field appearance="fill" class="field count">
+    <mat-label>Nombre d'objet à générer</mat-label>
+    <input matInput name="output.count" type="number" [(ngModel)]="config.count"/>
   </mat-form-field>
 
-  <mat-slide-toggle [checked]="gzip" (change)="gzip = $event.checked">
-    Gzip output
+  <mat-slide-toggle class="field" *ngIf="!config.single_file" [(ngModel)]="config.gzip">
+    Compresser le fichier en GZIP
   </mat-slide-toggle>
 
-  <div style="margin: 10px 0">
-    <button type="submit" mat-flat-button color="primary" (click)="download()" style="width: 100%">
-      <mat-icon>download</mat-icon>Download
-    </button>
+  <mat-slide-toggle *ngIf="!config.gzip" [(ngModel)]="config.single_file" class="field">
+    Zip avec {{config.count}} fichiers (un par objet)
+  </mat-slide-toggle>
+
+  <div *ngIf="config.single_file">
+    <mat-form-field appearance="fill" class="field">
+      <mat-label>Nomenclature des fichiers</mat-label>
+      <input matInput [(ngModel)]="config.filename_template" class="template-filename" required>
+    </mat-form-field>
+    <ul class="template-filename-hint">
+      <li>#num = numéro du fichier (0 à {{config.count - 1}})</li>
+      <li>#uuid = identifiant unique (ex: da421811-da52-48ce-befd-a49c36d99439)</li>
+      <li>${{ '{' }}nom{{ '}' }} = valeur du champ "nom" de l'objet généré</li>
+    </ul>
   </div>
+
+  <button class="field" type="submit" mat-flat-button color="primary" (click)="download()">
+    <mat-icon>download</mat-icon>
+    Télécharger
+    <span *ngIf="config.single_file">le zip contenant {{config.count}} fichiers</span>
+    <span *ngIf="config.gzip">les {{config.count}} objets dans un fichier .{{config.format}}.gz</span>
+    <span *ngIf="!config.gzip && !config.single_file">les {{config.count}}
+      objets dans un fichier .{{config.format}}</span>
+  </button>
 </form>
 

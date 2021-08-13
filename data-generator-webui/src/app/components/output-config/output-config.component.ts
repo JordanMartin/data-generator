@@ -8,7 +8,11 @@ import {OutputConfig} from "./output-config";
 })
 export class OutputConfigComponent implements OnInit {
 
-  @Output() onChange = new EventEmitter<OutputConfig>();
+  @Output() onChange = new EventEmitter<{ update_now: boolean, config: OutputConfig }>();
+
+  available_formats = ['json', 'yaml', 'xml', 'sql', 'csv', 'template'];
+  csv_default_separator = ['<tab>', ';', ','];
+  count_max_warning = 1000;
 
   default_config: OutputConfig = {
     count: 5,
@@ -17,6 +21,9 @@ export class OutputConfigComponent implements OnInit {
     object_name: 'my_object',
     table_name: 'my_table',
     separator: ';',
+    gzip: false,
+    single_file: false,
+    filename_template: '',
     template: ['##',
       '## Documentation of velocity template here : https://velocity.apache.org/engine/devel/user-guide.html',
       '##',
@@ -36,25 +43,26 @@ export class OutputConfigComponent implements OnInit {
       '---------',
       '#end'].join('\n'),
   };
-
   config: OutputConfig = {...this.default_config}
-  available_formats = ['json', 'yaml', 'xml', 'sql', 'csv', 'template'];
-  csv_default_separator = ['<tab>', ';', ','];
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.sendConfig();
+    this.onChange.next({
+      update_now: true,
+      config: this.config
+    });
   }
 
   updateParam(param: string, value: any) {
     // @ts-ignore
     this.config[param] = value;
-    this.sendConfig();
-  }
+    const update_now = !['template', 'object_name', 'table_name', 'separator'].includes(param);
 
-  private sendConfig() {
-    this.onChange.next(this.config);
+    this.onChange.next({
+      update_now,
+      config: this.config
+    });
   }
 }

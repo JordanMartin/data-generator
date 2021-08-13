@@ -11,7 +11,6 @@ import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatGridListModule} from '@angular/material/grid-list';
-import {ObjectDefinitionComponent} from './components/definition/object-definition.component';
 import {GeneratorDocComponent} from './components/generator-doc/generator-doc.component';
 import {MatListModule} from '@angular/material/list';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -26,14 +25,13 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDialogModule} from "@angular/material/dialog";
 import {DownloadForm} from "./pages/generate-page/download-form/download-form.component";
 import {TemplateEditorComponent} from "./components/template-editor/template-editor.component";
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { OutputConfigComponent } from './components/output-config/output-config.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {OutputConfigComponent} from './components/output-config/output-config.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ObjectDefinitionComponent,
     GeneratorDocComponent,
     DefinitionEditorComponent,
     GeneratePageComponent,

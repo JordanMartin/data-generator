@@ -28,29 +28,21 @@ public class SqlOutput extends ObjectWriterOuput {
     }
 
     @Override
-    public void writeMany(OutputStream out, int count) throws IOException {
-        writeMany(out, provider.getStream(count));
-    }
-
-    @Override
-    public void writeOne(OutputStream out) throws IOException {
-        writeOne(out, provider.getOne());
-    }
-
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-        writeInsertIntoPart(writer, object);
+        writeInsertInto(writer, object);
         writer.write(" VALUES");
         writeValue(writer, object);
         writer.append(";");
         writer.flush();
     }
 
+    @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         stream.forEach(object -> {
             try {
-                writeInsertIntoPart(writer, object);
+                writeInsertInto(writer, object);
                 writer.write(" VALUE");
                 writeValue(writer, object);
                 writer.append(";");
@@ -62,7 +54,13 @@ public class SqlOutput extends ObjectWriterOuput {
         writer.flush();
     }
 
-    private void writeInsertIntoPart(Writer writer, Map<String, ?> object) throws IOException {
+    @Override
+    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+        setTableName(outputConfig.getTableName());
+        return this;
+    }
+
+    private void writeInsertInto(Writer writer, Map<String, ?> object) throws IOException {
         String columns = String.join(",", object.keySet());
         writer
                 .append("INSERT INTO ").append(tableName)

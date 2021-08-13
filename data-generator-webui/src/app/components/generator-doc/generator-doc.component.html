@@ -17,7 +17,8 @@
           <span class="arg-name">{{arg.name}}</span>:
           <span class="arg-type">{{arg.type}}</span>
           <span class="arg-description">{{arg.description}}</span>
-          <span class="arg-optional" *ngIf="arg.optional">(optionnelle)</span>
+          <span class="arg-optional" *ngIf="arg.optional">optionnelle</span>
+          <span class="arg-default" *ngIf="arg.defaultValue">défaut: {{arg.defaultValue}}</span>
         </div>
       </div>
     </mat-expansion-panel>

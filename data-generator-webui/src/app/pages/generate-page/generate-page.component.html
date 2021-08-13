@@ -6,19 +6,19 @@
                            (onChange)="updateDefinition($event)"></app-definition-editor>
   </div>
   <div class="half-pane">
-    <h2>Results</h2>
+    <h2>Sortie</h2>
     <mat-slide-toggle [checked]="auto_generate" (change)="changeAutoGenerate($event.checked)">
-      Auto generate
+      Actualisation auto
     </mat-slide-toggle>
 
     <button mat-button (click)="generate()">
       <mat-icon>cached</mat-icon>
-      Generate
+      Actualiser
     </button>
 
     <button mat-button (click)="download()">
       <mat-icon>download</mat-icon>
-      Download...
+      Télécharger
     </button>
 
     <div class="loader">
@@ -32,6 +32,6 @@
 
 <app-output-config (onChange)="updateOutputConfig($event)"></app-output-config>
 
-<h2>Documentation</h2>
+<h2>Liste des générateurs</h2>
 <app-generator-doc></app-generator-doc>
 

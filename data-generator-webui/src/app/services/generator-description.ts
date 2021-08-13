@@ -1,4 +1,4 @@
-import { GeneratorArg } from './generator-arg';
+import {GeneratorArg} from './generator-arg';
 
 export class GeneratorDescription {
 
@@ -6,7 +6,7 @@ export class GeneratorDescription {
   description!: string;
   args: GeneratorArg[] = [];
 
-  constructor(name: string, description: string, args: GeneratorArg[]) {
+  constructor(name: string, description: string, args: GeneratorArg[] = []) {
     this.name = name;
     this.description = description;
     this.args = args;

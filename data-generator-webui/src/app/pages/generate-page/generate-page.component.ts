@@ -31,6 +31,31 @@ export class GeneratePageComponent implements OnInit {
     ].join('\n  ')
   }
 
+  // TODO initial template
+//   references:
+//     firstname: Sample("Name.firstName")
+//   lastname: Sample("Name.lastName")
+//   gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
+//   id: RandomUUID()
+//   item:
+//     parent_id: $$id
+//   horodatage: $gen_date
+//   name: $("${firstname} $${lastname}")
+//
+//   template:
+//     id: $$id
+//   name: $("${firstname} $${lastname}")
+//   num: IntAutoIncrement()
+//   random: RandomInt(100, 1000)
+//   horodatage: $gen_date
+//   childs: ListByRepeat($item, 2)
+//   active: RandomBoolean()
+//   type: RandomFromList(["A", "B", "C"])
+//   group: RandomFromList([ItemWeight("A", 10), ItemWeight("B", 90)])
+//   array:
+// - Round(RandomDouble(0, 10), 2)
+// - RandomInt(10, 100)
+
   constructor(private api: DataGeneratorApiService, private dialog: MatDialog) {
   }
 
@@ -80,8 +105,8 @@ export class GeneratePageComponent implements OnInit {
   }
 
   download() {
-    const dialogRef = this.dialog.open(DownloadForm, {
-      width: '250px',
+    this.dialog.open(DownloadForm, {
+      width: '500px',
       data: {
         definition: this.definition,
         config: this.output_config
@@ -89,10 +114,15 @@ export class GeneratePageComponent implements OnInit {
     });
   }
 
-  updateOutputConfig(config: OutputConfig) {
+  updateOutputConfig({update_now, config}: { update_now: boolean, config: OutputConfig }) {
     this.output_config = config;
+
     if (this.auto_generate) {
-      this.generate();
+      if (update_now) {
+        this.generate();
+      } else {
+        this.generateDebounce();
+      }
     }
   }
 }
