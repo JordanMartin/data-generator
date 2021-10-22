@@ -1,6 +1,6 @@
 <div class="editor-container">
   <div class="half-pane">
-    <h2>Definition</h2>
+    <h2>Définition</h2>
     <div class="loader"></div>
     <app-definition-editor [initialValue]="defaults.initial_definition"
                            (onChange)="updateDefinition($event)"></app-definition-editor>
@@ -32,6 +32,6 @@
 
 <app-output-config (onChange)="updateOutputConfig($event)"></app-output-config>
 
-<h2>Liste des générateurs</h2>
+<h2>Documentation</h2>
 <app-generator-doc></app-generator-doc>
 

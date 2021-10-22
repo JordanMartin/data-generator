@@ -53,6 +53,7 @@ public class ProviderRegistry {
     }
 
     public void registerProvider(Class<?> providerClass) {
+        providerClass.getAnnotation(Provider)
         registerProvider(providerClass.getSimpleName(), providerClass);
     }
 

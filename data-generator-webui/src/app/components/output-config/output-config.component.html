@@ -9,7 +9,7 @@
            [value]="config.count" (change)="updateParam('count', count.value)">
   </div>
   <div class="param">
-    <span class="param-name">Formattage de sortie</span>
+    <span class="param-name">Format de sortie</span>
     <mat-button-toggle-group #format="matButtonToggleGroup" [value]="config.format"
                              (change)="updateParam('format', format.value)">
       <mat-button-toggle *ngFor="let f of available_formats" [value]="f">

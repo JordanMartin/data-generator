@@ -17,5 +17,4 @@ export class GeneratorDocComponent implements OnInit {
     this.api.getAvailableGenerator()
       .subscribe(generators => this.generators = generators);
   }
-
 }
