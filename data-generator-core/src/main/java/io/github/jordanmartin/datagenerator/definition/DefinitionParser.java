@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public abstract class DefinitionParser {
 
-    private final ProviderRegistry defaultProvider = new ProviderRegistry();
+    private final ProviderRegistry defaultProvider = ProviderRegistry.getInstance();
 
     public abstract ObjectProvider parse();
 
@@ -17,7 +17,7 @@ public abstract class DefinitionParser {
         Class<?> classProvider = defaultProvider.get(providerName);
 
         if (classProvider == null) {
-            String providers = String.join(", ", defaultProvider.list());
+            String providers = String.join(", ", defaultProvider.listNames());
             throw new DefinitionException("Le générateur \"" + providerName + "\" n'existe pas\n" +
                     "Générateur disponibles: " + providers);
         }

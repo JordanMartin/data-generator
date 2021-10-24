@@ -1,7 +1,7 @@
 package io.github.jordanmartin.datagenerator.output;
 
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ class TemplateOutputTest {
     @Test
     void basic_template_should_works() throws IOException {
         ObjectProvider provider = new ObjectProvider()
-                .field("id", new IntAutoIncrement())
+                .field("id", new IntIncrement())
                 .field("source", (ctx) -> "template")
                 .field("utf8", (ctx) -> "éllo");
 

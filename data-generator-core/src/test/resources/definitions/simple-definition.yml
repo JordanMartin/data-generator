@@ -1,6 +1,6 @@
 references:
-  firstname: Sample("Name.firstName")
-  lastname: Sample("Name.lastName")
+  firstname: Faker("Name.firstName")
+  lastname: Faker("Name.lastName")
   gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
   id: RandomUUID()
   item:

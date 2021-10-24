@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import io.github.jordanmartin.datagenerator.provider.base.Constant;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.random.*;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import io.github.jordanmartin.datagenerator.provider.transform.FormatDate;
 import io.github.jordanmartin.datagenerator.provider.transform.ListByRepeat;
 import io.github.jordanmartin.datagenerator.provider.transform.ListOf;
@@ -67,12 +67,12 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new RandomFromRegex(regex);
     }
 
-    protected IntAutoIncrement increment(int start, int step, int max) {
-        return new IntAutoIncrement(start, step, max);
+    protected IntIncrement increment(int start, int step, int max) {
+        return new IntIncrement(start, step, max);
     }
 
-    protected IntAutoIncrement increment() {
-        return new IntAutoIncrement();
+    protected IntIncrement increment() {
+        return new IntIncrement();
     }
 
     protected <T> ListByRepeat<T> listByRepeat(ValueProvider<T> provider, int count) {
@@ -115,8 +115,8 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new FixedReference<>(ref);
     }
 
-    protected Sample sample(String expression) {
-        return new Sample(expression);
+    protected FakerExpression sample(String expression) {
+        return new FakerExpression(expression);
     }
 
 }

@@ -7,8 +7,6 @@ import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProviderDocParserTest {
@@ -17,37 +15,58 @@ class ProviderDocParserTest {
 
     @BeforeEach
     void setUp() {
-        doc = ProviderDocParser.getProviderDoc(Plus.class);
+        doc = ProviderDocParser.parse(Plus.class).orElseThrow();
     }
 
     @Test
-    void shouldGetProviderDoc() {
+    void should_get_provider_doc() {
         assertEquals("Un test", doc.getDescription());
-        assertEquals("Plus", doc.getKey());
+        assertEquals("Plus", doc.getName());
     }
 
     @Test
-    void shouldGetConstructorDoc() {
+    void should_get_3_constructors() {
         assertEquals(3, doc.getConstructors().size());
+    }
 
-        ProviderCtorDoc ctor1 = doc.getConstructors().get(0);
-        assertEquals(0, ctor1.getArgs().size());
-
+    @Test
+    void should_get_second_constructors() {
         ProviderCtorDoc ctor2 = doc.getConstructors().get(1);
         assertEquals(1, ctor2.getArgs().size());
-
-        ProviderCtorDoc ctor3 = doc.getConstructors().get(2);
-        assertEquals(2, ctor3.getArgs().size());
     }
 
     @Test
-    void badClassShouldFail() {
+    void sould_get_first_constructors() {
+        ProviderCtorDoc ctor1 = doc.getConstructors().get(0);
+        assertEquals(0, ctor1.getArgs().size());
+    }
+
+    @Test
+    void should_fail_with_not_annotated_class() {
         assertThrows(IllegalArgumentException.class, () -> {
-            ProviderDocParser.getProviderDoc(Object.class);
+            ProviderDocParser.parse(Object.class);
         });
     }
 
-    @Provider(key = "Plus", description = "Un test")
+    @Test
+    void should_get_fird_constructors() {
+        ProviderCtorDoc ctor3 = doc.getConstructors().get(2);
+        assertEquals(2, ctor3.getArgs().size());
+
+        ProviderArgDoc ctor3Arg1 = ctor3.getArgs().get(0);
+        assertEquals("A", ctor3Arg1.getName());
+        assertEquals("Valeur A", ctor3Arg1.getDescription());
+        assertEquals("integer", ctor3Arg1.getType());
+        assertArrayEquals(new String[]{}, ctor3Arg1.getExamples());
+
+        ProviderArgDoc ctor3Arg2 = ctor3.getArgs().get(1);
+        assertEquals("B", ctor3Arg2.getName());
+        assertEquals("Valeur B", ctor3Arg2.getDescription());
+        assertEquals("integer", ctor3Arg2.getType());
+        assertArrayEquals(new String[]{"1"}, ctor3Arg2.getExamples());
+    }
+
+    @Provider(name = "Plus", description = "Un test")
     private static class Plus implements StatelessValueProvider<Integer> {
         int a;
         int b;
@@ -57,7 +76,7 @@ class ProviderDocParserTest {
 
         @ProviderCtor("Additionne deux nombre")
         public Plus(@ProviderArg(name = "A", description = "Valeur A") int a,
-                    @ProviderArg(name = "B", description = "Valeur B") int b) {
+                    @ProviderArg(name = "B", description = "Valeur B", examples = "1") int b) {
             this.a = a;
             this.b = b;
         }

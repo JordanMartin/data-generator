@@ -1,34 +1,29 @@
-package io.github.jordanmartin.datagenerator.server.controller.provider;
+package io.github.jordanmartin.datagenerator.server.controller;
 
 import io.github.jordanmartin.datagenerator.definition.DefinitionException;
 import io.github.jordanmartin.datagenerator.server.domain.OutputConfig;
 import io.github.jordanmartin.datagenerator.server.domain.ProviderConf;
+import io.github.jordanmartin.datagenerator.server.domain.ProviderConfDto;
 import io.github.jordanmartin.datagenerator.server.repository.ProviderRepository;
+import io.github.jordanmartin.datagenerator.server.service.ProviderDownloadUtil;
 import io.github.jordanmartin.datagenerator.server.utils.SleepUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Path("/api/provider")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProviderController {
 
     private final ProviderRepository providerRepository;
-    private final Pattern FILENAME_TEMPLATE_VAR_PATTERN = Pattern.compile("\\$\\{(.+)}");
 
     public ProviderController(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
@@ -144,84 +139,11 @@ public class ProviderController {
         ProviderConf providerConf = ProviderConf.from(definition, outputConfig);
 
         if (outputConfig.getSingleFile()) {
-            return zipOneObjectPerFile(providerConf);
+            return ProviderDownloadUtil.zipOneObjectPerFile(providerConf);
         } else if (outputConfig.getGzip()) {
-            return gzipObjects(providerConf);
+            return ProviderDownloadUtil.gzipObjects(providerConf);
         } else {
-            return singleFile(providerConf);
+            return ProviderDownloadUtil.singleFile(providerConf);
         }
-    }
-
-    private Response singleFile(ProviderConf providerConf) {
-        OutputConfig outputConfig = providerConf.getOutputConfig();
-        int count = outputConfig.getCount();
-        StreamingOutput streamingOutput = out -> providerConf.getOutput().writeMany(out, count);
-        String filename = getFilename(outputConfig);
-        return Response
-                .ok(streamingOutput)
-                .header(HttpHeaders.CONTENT_TYPE, providerConf.getContentType())
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
-                .build();
-    }
-
-    private Response gzipObjects(ProviderConf providerConf) {
-        int count = providerConf.getOutputConfig().getCount();
-        String filename = getFilename(providerConf.getOutputConfig()) + ".gz";
-        StreamingOutput streamingOutput = out -> {
-            try (OutputStream gzipOut = new GZIPOutputStream(out)) {
-                providerConf.getOutput().writeMany(gzipOut, count);
-            }
-        };
-
-        return Response
-                .ok(streamingOutput)
-                .header(HttpHeaders.CONTENT_TYPE, "application/gzip")
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
-                .build();
-    }
-
-    private Response zipOneObjectPerFile(ProviderConf providerConf) {
-        OutputConfig outputConfig = providerConf.getOutputConfig();
-        int count = outputConfig.getCount();
-        StreamingOutput streamingOutput = out -> {
-            try (ZipOutputStream zos = new ZipOutputStream(out)) {
-                for (int i = 0; i < count; i++) {
-                    Map<String, ?> object = providerConf.getProvider().getOne();
-                    String entryName = getEntryFilename(outputConfig, object, i);
-                    zos.putNextEntry(new ZipEntry(entryName));
-                    providerConf.getOutput().writeOne(zos, object);
-                    zos.closeEntry();
-                }
-            }
-        };
-        String filename = getFilename(outputConfig) + ".zip";
-        return Response
-                .ok(streamingOutput)
-                .header(HttpHeaders.CONTENT_TYPE, "application/zip")
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
-                .build();
-    }
-
-    private String getFilename(OutputConfig outputConfig) {
-        String date = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-        return String.format("%d__%s.%s",
-                outputConfig.getCount(),
-                date,
-                outputConfig.getFormat()
-        );
-
-    }
-
-    private String getEntryFilename(OutputConfig outputConfig, Map<String, ?> object, int index) {
-        String filename = Optional.ofNullable(outputConfig.getTemplateFilename()).orElse("#uuid")
-                .replace("#num", Integer.toString(index))
-                .replace("#uuid", UUID.randomUUID().toString());
-
-        Matcher matcher = FILENAME_TEMPLATE_VAR_PATTERN.matcher(filename);
-        while (matcher.find()) {
-            String fieldName = matcher.group(1);
-            filename = filename.replace("${" + fieldName + "}", String.valueOf(object.get(fieldName)));
-        }
-        return filename;
     }
 }

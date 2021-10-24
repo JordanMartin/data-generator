@@ -11,5 +11,7 @@ import lombok.Setter;
 @Setter
 public class ProviderArgDoc {
     String name;
+    String type;
     String description;
+    String[] examples;
 }

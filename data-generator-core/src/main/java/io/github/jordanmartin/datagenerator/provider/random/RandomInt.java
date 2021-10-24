@@ -3,18 +3,26 @@ package io.github.jordanmartin.datagenerator.provider.random;
 import io.github.jordanmartin.datagenerator.provider.core.IntegerProvider;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
+import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 import java.util.Random;
 
 /**
  * Génère un entier aléatoire
  */
+@Provider(
+        name = "RandomInt",
+        description = "Retourne un entier aléatoire",
+        examples = {"RandomInt()", "RandomInt(10)", "RandomInt(10, 10)"}
+)
 public class RandomInt implements IntegerProvider, StatelessValueProvider<Integer> {
 
     private final Random random = new Random();
     private final int min;
     private final int max;
 
+    @ProviderCtor("Entier entre min et max")
     public RandomInt(int min, int max) {
         if (min > max) {
             throw new ValueProviderException(this, "La valeur minimum doit être <= à la valeur maximum");
@@ -23,10 +31,12 @@ public class RandomInt implements IntegerProvider, StatelessValueProvider<Intege
         this.max = max;
     }
 
+    @ProviderCtor("Entier entre 0 et Integer.MAX_VALUE - 1")
     public RandomInt() {
         this(0, Integer.MAX_VALUE - 1);
     }
 
+    @ProviderCtor("Entier entre 0 et max")
     public RandomInt(int max) {
         this(0, max);
     }

@@ -10,7 +10,7 @@
   * [`RandomInt(int min, int max)`](#-randomint-int-min--int-max--)
   * [`SequenceFromList(Object element1, Object element2, ...)`](#-sequencefromlist-object-element1--object-element2----)
   * [`RandomDouble(double min, double max)`](#-randomdouble-double-min--double-max--)
-  * [`Sample(String expression[, String locale])`](#-sample-string-expression---string-locale---)
+  * [`Sample(String expression[, String locale])`](#-fakerExpression-string-expression---string-locale---)
   * [`Round(<generateur>, <nombre_decimal>, <mode_arrondi>)`](#-round--generateur----nombre-decimal----mode-arrondi---)
   * [`RandomDate("<date_min>", "<date_max>")`](#-randomdate---date-min------date-max----)
   * [`CurrentDate()`](#-currentdate---)

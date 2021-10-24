@@ -9,6 +9,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({PARAMETER})
 public @interface ProviderArg {
-    String name();
-    String description();
+    String name() default "";
+
+    String description() default "";
+
+    String[] examples() default {};
 }

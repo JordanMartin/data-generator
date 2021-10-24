@@ -1,11 +1,11 @@
-package io.github.jordanmartin.datagenerator.server.controller.provider;
+package io.github.jordanmartin.datagenerator.server.domain;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-class ProviderConfDto {
+public class ProviderConfDto {
     private String href;
     private String name;
     private String template;

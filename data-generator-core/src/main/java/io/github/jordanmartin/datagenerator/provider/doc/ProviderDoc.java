@@ -9,7 +9,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ProviderDoc {
-    String key;
+    String name;
     String description;
     List<ProviderCtorDoc> constructors = new ArrayList<>();
+    String[] examples;
 }

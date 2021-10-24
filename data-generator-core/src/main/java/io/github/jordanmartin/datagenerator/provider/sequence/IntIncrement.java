@@ -10,8 +10,8 @@ import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor
  * Génère un entier incrémenté à chaque appel.
  * Lorsque la maximum est atteint on revient à la première valeur
  */
-@Provider(key = "Increment", description = "Incrémente la valeur ")
-public class IntAutoIncrement implements StatelessValueProvider<Integer> {
+@Provider(name = "Increment", description = "Retourne une valeur entière incrémentée")
+public class IntIncrement implements StatelessValueProvider<Integer> {
 
     /**
      * Valeur initiale
@@ -37,15 +37,15 @@ public class IntAutoIncrement implements StatelessValueProvider<Integer> {
      * AutoIncrement start=0, step=1, max={@link Integer.MAX_VALUE}
      */
     @ProviderCtor("Incrémente la valeur pour chaque objet (start=0, step=1, max=Integer.MAX_VALUE)")
-    public IntAutoIncrement() {
+    public IntIncrement() {
         this(0, 1, Integer.MAX_VALUE);
     }
 
     @ProviderCtor("Incrémente la valeur pour chaque objet")
-    public IntAutoIncrement(
-            @ProviderArg(name = "start", description = "Valeur de départ") int start,
-            @ProviderArg(name = "step", description = "Quantité à incrémenter") int step,
-            @ProviderArg(name = "max", description = "Valeur maximum") int max
+    public IntIncrement(
+            @ProviderArg(description = "Valeur de départ") int start,
+            @ProviderArg(description = "Quantité à incrémenter") int step,
+            @ProviderArg(description = "Valeur maximum") int max
     ) {
         this.start = start;
         this.step = step;

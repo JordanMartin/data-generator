@@ -2,8 +2,8 @@ package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.base.Constant;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
+import io.github.jordanmartin.datagenerator.provider.random.FakerExpression;
 import io.github.jordanmartin.datagenerator.provider.random.RandomInt;
-import io.github.jordanmartin.datagenerator.provider.random.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -157,8 +157,8 @@ class ObjectProviderTest {
     void sampleField() {
         ObjectProvider provider = new ObjectProvider()
                 .field("a", () -> "a")
-                .field("firstname", new Sample("Name.firstName"))
-                .field("lastname", new Sample("#{Name.lastName}"));
+                .field("firstname", new FakerExpression("Name.firstName"))
+                .field("lastname", new FakerExpression("#{Name.lastName}"));
 
         Map<String, ?> object = provider.getOne();
         assertEquals(3, provider.getOne().size());
