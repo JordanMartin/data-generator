@@ -1,8 +1,8 @@
 package io.github.jordanmartin.datagenerator.provider.sequence;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,8 +13,14 @@ import java.util.List;
  *
  * @param <T> Le type des valeurs
  */
-@Provider(name = "Sequence", description = "Retourne successivement et dans l'ordre tous les éléments de la liste. " +
-        "Retourne au début de la liste quand tous les éléments ont été parcourus")
+@Provider(
+        name = "Sequence",
+        description = "Retourne successivement et dans l'ordre tous les éléments de la liste. " +
+                "Retourne au début de la liste quand tous les éléments ont été parcourus",
+        examples = {
+                "Sequence([\"a\", \"b\", \"c\"]) => \"a\" puis \"b\" puis \"c\" puis \"a\" ..."
+        }
+)
 public class SequenceFromList<T> implements StatelessValueProvider<T> {
 
     private final List<T> items;

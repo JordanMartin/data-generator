@@ -1,9 +1,9 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderArg;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +14,8 @@ import java.util.Date;
 @Provider(
         name = "FormatDate",
         description = "Formatte une date",
-        examples = {"FormatDate(CurrentDate(), \"yyyy-MM-dd HH:mm:ss.SSS\")"}
+        examples = {"FormatDate(CurrentDate(), \"yyyy-MM-dd HH:mm:ss.SSS\")"},
+        returns = String.class
 )
 public class FormatDate extends TransformerProvider<Date, String> {
 

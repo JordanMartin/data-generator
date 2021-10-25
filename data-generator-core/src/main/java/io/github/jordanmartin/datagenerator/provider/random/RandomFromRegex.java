@@ -2,9 +2,9 @@ package io.github.jordanmartin.datagenerator.provider.random;
 
 import com.mifmif.common.regex.Generex;
 import com.mifmif.common.regex.util.Iterator;
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

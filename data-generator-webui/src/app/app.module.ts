@@ -28,6 +28,7 @@ import {TemplateEditorComponent} from "./components/template-editor/template-edi
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {OutputConfigComponent} from './components/output-config/output-config.component';
+import {SimplifyJavaTypePipe} from "./components/generator-doc/simplify-java-type.pipe";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {OutputConfigComponent} from './components/output-config/output-config.co
     DataPreviewComponent,
     DownloadForm,
     TemplateEditorComponent,
-    OutputConfigComponent
+    OutputConfigComponent,
+    SimplifyJavaTypePipe
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,17 @@
 package io.github.jordanmartin.datagenerator.provider.random;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 
 /**
  * Génère un booléen aléatoire
  */
+@Provider(
+        name = "Boolean",
+        description = "Retourne un booléen aléatoire"
+)
 public class RandomBoolean implements StatelessValueProvider<Boolean> {
 
     public static final double AS_MANY_TRUE_AS_FALSE_PERCENTAGE = 0.5;
@@ -20,13 +27,18 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
      *                         Ex: 0.5: autant de true que de false
      *                         Ex: 0.25: 25% de true, 75% de true
      */
-    public RandomBoolean(double percentageOfTrue) {
+    @ProviderCtor("Change la probabilité de retourner true")
+    public RandomBoolean(
+            @ProviderArg(description = "Probabilité de retourner true (entre 0 et 1)")
+                    double percentageOfTrue
+    ) {
         this.percentage = percentageOfTrue;
     }
 
     /**
      * Génère autant de valeur true que de valeur false
      */
+    @ProviderCtor("Probabilité de 50% de retourner true")
     public RandomBoolean() {
         this(AS_MANY_TRUE_AS_FALSE_PERCENTAGE);
     }

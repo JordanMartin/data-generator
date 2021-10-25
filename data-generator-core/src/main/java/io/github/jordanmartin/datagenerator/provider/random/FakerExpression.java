@@ -1,11 +1,11 @@
 package io.github.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderArg;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 import java.util.Locale;
 

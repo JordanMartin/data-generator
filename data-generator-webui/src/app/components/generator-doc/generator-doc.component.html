@@ -3,7 +3,11 @@
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{generator.name}}
+          <div class="gen-title">
+            <span class="gen-name">{{generator.name}}</span>
+            🠖
+            <span class="gen-type">{{generator.type | simplifyJavaType}}</span>
+          </div>
         </mat-panel-title>
         <mat-panel-description>
           {{generator.description}}
@@ -26,7 +30,7 @@
             <li class="arg" *ngFor="let arg of ctor.args">
             <span class="arg-head">
               <span class="arg-name">{{arg.name}}</span>
-              <span class="arg-type">{{arg.type}}</span>
+              <span class="arg-type">{{arg.type | simplifyJavaType}}</span>
             </span>
               <span class="arg-description">{{arg.description}}</span>
               <span class="arg-examples" *ngIf="arg.examples?.length">

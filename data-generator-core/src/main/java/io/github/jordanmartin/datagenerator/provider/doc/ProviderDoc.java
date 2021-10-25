@@ -11,6 +11,7 @@ import java.util.List;
 public class ProviderDoc {
     String name;
     String description;
+    String type;
     List<ProviderCtorDoc> constructors = new ArrayList<>();
     String[] examples;
 }

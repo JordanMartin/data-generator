@@ -2,7 +2,7 @@ package io.github.jordanmartin.datagenerator.provider.core;
 
 import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderContext;
 import io.github.jordanmartin.datagenerator.provider.transform.Idempotent;
-import io.github.jordanmartin.datagenerator.provider.transform.ListByRepeat;
+import io.github.jordanmartin.datagenerator.provider.transform.Repeat;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,12 +52,12 @@ public interface ValueProvider<T> {
         return new Idempotent<>(this);
     }
 
-    default ListByRepeat<T> repeat(int count) {
-        return new ListByRepeat<>(this, count);
+    default Repeat<T> repeat(int count) {
+        return new Repeat<>(this, count);
     }
 
-    default ListByRepeat<T> repeat(ValueProvider<Integer> count) {
-        return new ListByRepeat<>(this, count);
+    default Repeat<T> repeat(ValueProvider<Integer> count) {
+        return new Repeat<>(this, count);
     }
 
     T getOneWithContext(IObjectProviderContext ctx);

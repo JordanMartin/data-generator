@@ -1,11 +1,25 @@
 $exemple-color: #009688;
+$font-familiy: consolas, monospace !important;
+$type-color: #0088ff;
 
 .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
   flex-grow: initial;
 }
 
 .generator-doc {
-  font-family: consolas, monospace !important;
+  font-family: $font-familiy;
+}
+
+.gen-title {
+  font-family: $font-familiy;
+
+  .gen-name {
+
+  }
+
+  .gen-type {
+    color: $type-color;
+  }
 }
 
 .gen-examples {
@@ -44,7 +58,7 @@ $exemple-color: #009688;
   }
 
   .arg-type {
-    color: #4caf50;
+    color: $type-color;
     padding-left: 1em;
   }
 

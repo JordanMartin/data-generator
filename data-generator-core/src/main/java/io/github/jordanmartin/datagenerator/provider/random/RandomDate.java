@@ -1,6 +1,9 @@
 package io.github.jordanmartin.datagenerator.provider.random;
 
 import com.github.javafaker.Faker;
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
 
@@ -15,6 +18,14 @@ import java.util.Date;
 /**
  * Génère une date aléatoire dans un interval donnée
  */
+@Provider(
+        name = "Date",
+        description = "Retourne une date aléatoire",
+        examples = {
+                "Date() => 1616446668993",
+                "FormatDate(Date(), \"yyyy-MM-dd\") => 2021-03-22"
+        }
+)
 public class RandomDate implements StatelessValueProvider<Date> {
 
     private final Faker faker = new Faker();
@@ -24,17 +35,26 @@ public class RandomDate implements StatelessValueProvider<Date> {
     /**
      * Par défaut, une date random entre l'année dernière et l'année prochaine courante
      */
+    @ProviderCtor("Date aléatoire entre J-365 et J+365 (J = date du jour)")
     public RandomDate() {
         from = Date.from(Instant.now().minus(365, ChronoUnit.DAYS));
         to = Date.from(Instant.now().plus(365, ChronoUnit.DAYS));
     }
 
-    public RandomDate(Date from, Date to) {
+    @ProviderCtor("Date aléatoire entre deux dates")
+    public RandomDate(
+            @ProviderArg(description = "Borne inférieur") Date from,
+            @ProviderArg(description = "Borne supérieur") Date to
+    ) {
         this.from = from;
         this.to = to;
     }
 
-    public RandomDate(String from, String to) {
+    @ProviderCtor("Date aléatoire entre deux dates")
+    public RandomDate(
+            @ProviderArg(description = "Borne inférieur (yyyy-MM-dd)") String from,
+            @ProviderArg(description = "Borne supérieur (yyyy-MM-dd)") String to
+    ) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.from = sdf.parse(from);

@@ -1,10 +1,10 @@
 package io.github.jordanmartin.datagenerator.provider.random;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.IntegerProvider;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 import java.util.Random;
 
@@ -12,9 +12,9 @@ import java.util.Random;
  * Génère un entier aléatoire
  */
 @Provider(
-        name = "RandomInt",
+        name = "Integer",
         description = "Retourne un entier aléatoire",
-        examples = {"RandomInt()", "RandomInt(10)", "RandomInt(10, 10)"}
+        examples = {"Integer()", "Integer(10)", "Integer(10, 10)"}
 )
 public class RandomInt implements IntegerProvider, StatelessValueProvider<Integer> {
 

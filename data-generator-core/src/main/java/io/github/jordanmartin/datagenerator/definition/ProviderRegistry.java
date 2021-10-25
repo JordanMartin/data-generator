@@ -1,9 +1,9 @@
 package io.github.jordanmartin.datagenerator.definition;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.doc.ProviderDoc;
-import io.github.jordanmartin.datagenerator.provider.doc.ProviderDocParser;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.doc.ProviderDocumentationParser;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
@@ -40,49 +40,18 @@ public class ProviderRegistry {
                 .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
                 .forEach(this::registerProvider);
         log.info("{} générateurs enregistrés : {}", providers.size(), providers.entrySet());
-
-//        registerProvider(Constant.class);
-//        registerProvider(CurrentDate.class);
-//        registerProvider(RandomDate.class);
-//        registerProvider(RandomBoolean.class);
-//        registerProvider(RandomFromList.class);
-//        registerProvider(RandomFromRegex.class);
-//        registerProvider(RandomInt.class);
-//        registerProvider(RandomDouble.class);
-//        registerProvider(Round.class);
-//        registerProvider(RandomUUID.class);
-//        registerProvider(IntAutoIncrement.class);
-//        registerProvider(SequenceFromList.class);
-//        registerProvider(AsString.class);
-//        registerProvider(FormatDate.class);
-//        registerProvider(Idempotent.class);
-//        registerProvider(ListOf.class);
-//        registerProvider(ListByRepeat.class);
-//        registerProvider(Sample.class);
-//
-//        // FIXME
-//        registerProvider("ItemWeight", RandomFromList.ItemWeight.class);
-//
-//        registerProvider(Expression.class);
-//        registerProvider(Reference.class);
-//        registerProvider(FixedReference.class);
     }
 
     @SuppressWarnings("unchecked")
     private void registerProvider(Class<?> providerClass) {
-        if (!ValueProvider.class.isAssignableFrom(providerClass)) {
-            log.warn("Le generateur {} est ignoré car il n'implémente pas {}", providerClass, ValueProvider.class);
-            return;
-        }
-
-        ProviderDoc providerDoc = ProviderDocParser.parse(providerClass).orElse(null);
+        ProviderDoc providerDoc = ProviderDocumentationParser.parse(providerClass).orElse(null);
         if (providerDoc == null) {
             return;
         }
 
         Optional.ofNullable(providers.get(providerDoc.getName()))
                 .ifPresentOrElse(existingProviderClass -> {
-                    log.warn("Le generateur {} est ignoré car le générateur {} enregistré sous le même nom : {}",
+                    log.warn("Le generateur {} est ignoré car le générateur {} est déjà enregistré sous le même nom : {}",
                             providerClass, existingProviderClass, providerDoc.getName());
                 }, () -> {
                     providers.put(providerDoc.getName(), (Class<? extends ValueProvider<?>>) providerClass);

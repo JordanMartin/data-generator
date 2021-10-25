@@ -1,5 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.base.Constant;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderContext;
@@ -14,7 +16,15 @@ import java.util.stream.Stream;
  *
  * @param <T> Le type de la donnée de la liste
  */
-public class ListByRepeat<T> implements ValueProvider<List<T>> {
+@Provider(
+        name = "Repeat",
+        description = "Répète une valeur",
+        examples = {
+                "Repeat(Faker(\"Name.firstName\"), Integer(0, 3)) => [ \"Zoe\", \"Sacha\", \"Rayan\" ] ou [ \"Benjamin\", \"Laura\" ]",
+                "Repeat(UUID(), 2) => [ \"d9443c7c-81c9-4188-869f-f9145a298837\", \"578b2d27-f7ca-4da0-9849-22fc5b7e31fe\" ]"
+        }
+)
+public class Repeat<T> implements ValueProvider<List<T>> {
 
     /**
      * Le générateur qui alimentera la liste
@@ -26,12 +36,14 @@ public class ListByRepeat<T> implements ValueProvider<List<T>> {
      **/
     private final ValueProvider<Integer> countProvider;
 
-    public ListByRepeat(ValueProvider<T> valueProvider, ValueProvider<Integer> countProvider) {
+    @ProviderCtor
+    public Repeat(ValueProvider<T> valueProvider, ValueProvider<Integer> countProvider) {
         this.countProvider = countProvider;
         this.valueProvider = valueProvider;
     }
 
-    public ListByRepeat(ValueProvider<T> valueProvier, int count) {
+    @ProviderCtor
+    public Repeat(ValueProvider<T> valueProvier, int count) {
         this(valueProvier, new Constant<>(count));
     }
 

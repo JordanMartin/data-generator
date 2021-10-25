@@ -1,9 +1,9 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderArg;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 /**
  * Converti une valeur en String
@@ -11,7 +11,8 @@ import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor
 @Provider(
         name = "AsString",
         description = "Transforme le résultat d'un générateur chaine de caractère",
-        examples = {"AsString(RandomInt())", "AsString(RandomDouble())"}
+        examples = {"AsString(Integer()) => \"5\"", "AsString(Double(0, 10)) => \"6.19938784958678\""},
+        returns = String.class
 )
 public class AsString<I> extends TransformerProvider<I, String> {
 

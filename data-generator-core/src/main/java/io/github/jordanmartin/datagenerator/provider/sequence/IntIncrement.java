@@ -1,10 +1,10 @@
 package io.github.jordanmartin.datagenerator.provider.sequence;
 
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderArg;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 
 /**
  * Génère un entier incrémenté à chaque appel.
@@ -34,7 +34,7 @@ public class IntIncrement implements StatelessValueProvider<Integer> {
     private int nextValue;
 
     /**
-     * AutoIncrement start=0, step=1, max={@link Integer.MAX_VALUE}
+     * AutoIncrement start=0, step=1, max={@link Integer#MAX_VALUE}
      */
     @ProviderCtor("Incrémente la valeur pour chaque objet (start=0, step=1, max=Integer.MAX_VALUE)")
     public IntIncrement() {

@@ -1,8 +1,8 @@
 package io.github.jordanmartin.datagenerator.provider.base;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderContext;
 
 /**

@@ -1,21 +1,21 @@
 package io.github.jordanmartin.datagenerator.provider.doc;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.Provider;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderArg;
-import io.github.jordanmartin.datagenerator.provider.doc.annotation.ProviderCtor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProviderDocParserTest {
+class ProviderDocumentationParserTest {
 
     private ProviderDoc doc;
 
     @BeforeEach
     void setUp() {
-        doc = ProviderDocParser.parse(Plus.class).orElseThrow();
+        doc = ProviderDocumentationParser.parse(Plus.class).orElseThrow();
     }
 
     @Test
@@ -44,7 +44,7 @@ class ProviderDocParserTest {
     @Test
     void should_fail_with_not_annotated_class() {
         assertThrows(IllegalArgumentException.class, () -> {
-            ProviderDocParser.parse(Object.class);
+            ProviderDocumentationParser.parse(Object.class);
         });
     }
 
@@ -56,13 +56,13 @@ class ProviderDocParserTest {
         ProviderArgDoc ctor3Arg1 = ctor3.getArgs().get(0);
         assertEquals("A", ctor3Arg1.getName());
         assertEquals("Valeur A", ctor3Arg1.getDescription());
-        assertEquals("integer", ctor3Arg1.getType());
+        assertEquals("int", ctor3Arg1.getType());
         assertArrayEquals(new String[]{}, ctor3Arg1.getExamples());
 
         ProviderArgDoc ctor3Arg2 = ctor3.getArgs().get(1);
         assertEquals("B", ctor3Arg2.getName());
         assertEquals("Valeur B", ctor3Arg2.getDescription());
-        assertEquals("integer", ctor3Arg2.getType());
+        assertEquals("int", ctor3Arg2.getType());
         assertArrayEquals(new String[]{"1"}, ctor3Arg2.getExamples());
     }
 

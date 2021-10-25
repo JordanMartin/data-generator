@@ -2,7 +2,7 @@ references:
   firstname: Faker("Name.firstName")
   lastname: Faker("Name.lastName")
   gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
-  id: RandomUUID()
+  id: UUID()
   item:
     parent_id: $$id
     horodatage: $gen_date
@@ -11,7 +11,7 @@ references:
 
 template:
   id: $$id
-  num: IntAutoIncrement()
-  random: RandomInt(100, 1000)
+  num: Increment()
+  random: Integer(100, 1000)
   horodatage: $gen_date
-  items: ListByRepeat($item, 2)
+  items: Repeat($item, 2)
