@@ -21,7 +21,7 @@ class XmlWriterTest {
                 .field("child", child);
 
         String result = new XmlOutput(provider).setObjectName("obj").oneToString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><obj><id>0</id><a>a</a><child><b>b</b><c>c</c></child></obj>";
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><obj><id>0</id><a>a</a><child><b>b</b><c>c</c></child></obj>";
         assertEquals(expected, result);
     }
 }

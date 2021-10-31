@@ -3,13 +3,18 @@ package io.github.jordanmartin.datagenerator.output;
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.introspector.Property;
+import org.yaml.snakeyaml.nodes.NodeTuple;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.BaseRepresenter;
+import org.yaml.snakeyaml.representer.Represent;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +28,11 @@ public class YamlOutput extends ObjectWriterOuput {
      */
     private boolean pretty = true;
 
+    /**
+     * Détermine si les valeurs null doivent être incluses
+     */
+    private boolean includeNull;
+
     public YamlOutput(ObjectProvider provider) {
         super(provider);
     }
@@ -30,14 +40,18 @@ public class YamlOutput extends ObjectWriterOuput {
     @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         Yaml yaml = newYaml();
-        List<Map<String, ?>> list = stream.collect(Collectors.toList());
-        yaml.dump(list, new OutputStreamWriter(out, StandardCharsets.UTF_8));
+        if (!includeNull) {
+            stream = stream.map(this::mapWithoutNull);
+        }
+        OutputStreamWriter writter = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+        stream.forEach(map -> yaml.dump(List.of(map), writter));
         out.flush();
     }
 
     @Override
     public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
         setPretty(outputConfig.getOutputPretty());
+        setIncludeNull(outputConfig.getIncludeNull());
         return this;
     }
 
@@ -54,5 +68,18 @@ public class YamlOutput extends ObjectWriterOuput {
     public YamlOutput setPretty(Boolean pretty) {
         this.pretty = pretty != null && pretty;
         return this;
+    }
+
+    public YamlOutput setIncludeNull(Boolean includeNull) {
+        if (includeNull != null) {
+            this.includeNull = includeNull;
+        }
+        return this;
+    }
+
+    public Map<String, ?> mapWithoutNull(Map<String, ?> map) {
+        Map<String, Object> copyMap = new LinkedHashMap<>(map);
+        copyMap.entrySet().removeIf(entry -> entry.getValue() == null);
+        return copyMap;
     }
 }

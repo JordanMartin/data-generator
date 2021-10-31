@@ -86,6 +86,11 @@
             <artifactId>generex</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

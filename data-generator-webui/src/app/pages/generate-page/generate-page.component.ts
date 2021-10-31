@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {DataGeneratorApiService} from '../../services/data-generator-api.service';
-import {Subject} from 'rxjs';
-import {debounceTime, map} from 'rxjs/operators';
-import {MatDialog} from "@angular/material/dialog";
-import {DownloadForm} from "./download-form/download-form.component";
-import {OutputConfig} from "../../components/output-config/output-config";
+import { Component, OnInit } from '@angular/core';
+import { DataGeneratorApiService } from '../../services/data-generator-api.service';
+import { Subject } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { DownloadForm } from './download-form/download-form.component';
+import { OutputConfig } from '../../components/output-config/output-config';
 
 @Component({
   selector: 'app-generate-page',
@@ -85,7 +85,7 @@ export class GeneratePageComponent implements OnInit {
     });
   }
 
-  updateOutputConfig({update_now, config}: { update_now: boolean, config: OutputConfig }) {
+  updateOutputConfig({ update_now, config }: { update_now: boolean, config: OutputConfig }) {
     this.output_config = config;
 
     if (this.auto_generate) {
@@ -120,25 +120,19 @@ export class GeneratePageComponent implements OnInit {
   lastOffset = 0;
 
   startResize(e: MouseEvent) {
-    console.log('start', e);
     this.drag = true;
     this.dragEvent = e;
   }
 
   stopResize(e: MouseEvent) {
-    if (!this.drag) {
-      return;
-    }
+    if (!this.drag) return;
     this.drag = false;
     this.resize(e);
     this.lastOffset -= (e.screenX - this.dragEvent.screenX);
-    console.log(this.leftPaneWidth, this.rightPaneWidth, this.lastOffset);
   }
 
   doResize(e: MouseEvent) {
-    if (!this.drag) {
-      return;
-    }
+    if (!this.drag) return;
     this.resize(e);
   }
 
@@ -146,6 +140,10 @@ export class GeneratePageComponent implements OnInit {
     let newSize = e.screenX - this.dragEvent.screenX - this.lastOffset;
     this.leftPaneWidth = 'calc(50% + ' + newSize + 'px)';
     this.rightPaneWidth = 'calc(50% - ' + (newSize + 2) + 'px)';
+  }
+
+  saveConfig() {
+    console.log('save config', this.output_config, this.currentDefinition);
   }
 }
 

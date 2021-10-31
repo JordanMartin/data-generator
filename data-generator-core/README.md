@@ -82,7 +82,7 @@ template:
 references:
   firstname: Faker("Name.firstName")
   lastname: Faker("Name.lastName")
-  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
+  gen_date: Idempotent(FormatDate(Now(), "yyyy-MM-dd HH:mm:ss.SSS"))
   id: UUID()
   item:
     parent_id: $$id

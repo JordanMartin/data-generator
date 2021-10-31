@@ -35,10 +35,9 @@ public class EnumProvider<T> implements ValueProvider<T> {
     private final List<Object> items;
 
     @SafeVarargs
-    @ProviderCtor("Chaque valeur à la même probabilité d'être sélectionner. Pour changer cette probabilité, utiliser l'objet Enum")
+    @ProviderCtor("Chaque valeur à la même probabilité d'être sélectionnée. Utilisez l'objet EnumWeight pour changer la probabilité d'apparition d'une valeur")
     public EnumProvider(
-            @ProviderArg(examples = {"\"A\"", "EnumWeight(\"A\", 10)"})
-                    T... items
+            @ProviderArg(examples = {"\"A\"", "EnumWeight(\"A\", 10)"}) T... items
     ) {
         this.items = Arrays.asList(items);
     }

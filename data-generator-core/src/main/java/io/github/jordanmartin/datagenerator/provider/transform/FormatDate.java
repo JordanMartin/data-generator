@@ -14,7 +14,7 @@ import java.util.Date;
 @Provider(
         name = "FormatDate",
         description = "Formatte une date",
-        examples = {"FormatDate(CurrentDate(), \"yyyy-MM-dd HH:mm:ss.SSS\")"},
+        examples = {"FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss.SSS\")"},
         returns = String.class,
         groupe = "date"
 )
@@ -31,7 +31,7 @@ public class FormatDate extends TransformerProvider<Date, String> {
             @ProviderArg(
                     name = "generateur",
                     description = "Un générateur retournant un type Date",
-                    examples = "CurrentDate()"
+                    examples = "Now()"
             ) ValueProvider<Date> dateProvider,
             @ProviderArg(
                     name = "format",

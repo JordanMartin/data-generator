@@ -25,6 +25,13 @@
     </mat-slide-toggle>
   </div>
 
+  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(config.format)">
+    <mat-slide-toggle [checked]="!config.include_null"
+                      (change)="updateParam('include_null', !$event.checked)">
+      <span class="param-name">Exclure les champs null</span>
+    </mat-slide-toggle>
+  </div>
+
   <div class="param" *ngIf="config.format=='xml'">
     <span class="param-name">Nom balise XML</span>
     <input class="param-field object-name" #objectName type="text"

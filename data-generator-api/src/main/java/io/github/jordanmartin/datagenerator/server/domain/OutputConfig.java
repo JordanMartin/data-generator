@@ -26,8 +26,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.count")
-    public void setCount(String Count) {
-        put("count", Count);
+    public void setCount(String count) {
+        put("count", count);
     }
 
     public Integer getCount() {
@@ -35,8 +35,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.gzip")
-    public void setGzip(String Gzip) {
-        put("gzip", Gzip);
+    public void setGzip(String gzip) {
+        put("gzip", gzip);
     }
 
     public Boolean getGzip() {
@@ -44,8 +44,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.single_file")
-    public void setSingleFile(String SingleFile) {
-        put("single_file", SingleFile);
+    public void setSingleFile(String singleFile) {
+        put("single_file", singleFile);
     }
 
     public Boolean getSingleFile() {
@@ -53,8 +53,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.template")
-    public void setOutputTemplate(String OutputTemplate) {
-        put("template", OutputTemplate);
+    public void setOutputTemplate(String outputTemplate) {
+        put("template", outputTemplate);
     }
 
     public String getOutputTemplate() {
@@ -62,8 +62,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.pretty")
-    public void setOutputPretty(String OutputPretty) {
-        put("pretty", OutputPretty);
+    public void setOutputPretty(String outputPretty) {
+        put("pretty", outputPretty);
     }
 
     public Boolean getOutputPretty() {
@@ -71,8 +71,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.object_name")
-    public void setObjectName(String ObjectName) {
-        put("object_name", ObjectName);
+    public void setObjectName(String objectName) {
+        put("object_name", objectName);
     }
 
     public String getObjectName() {
@@ -80,8 +80,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.table_name")
-    public void setTableName(String TableName) {
-        put("table_name", TableName);
+    public void setTableName(String tableName) {
+        put("table_name", tableName);
     }
 
     public String getTableName() {
@@ -89,8 +89,8 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.separator")
-    public void setSeparator(String Separator) {
-        put("separator", Separator);
+    public void setSeparator(String separator) {
+        put("separator", separator);
     }
 
     public String getSeparator() {
@@ -98,12 +98,22 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
     }
 
     @FormParam("output.filename_template")
-    public void setTemplateFilename(String TemplateFilename) {
-        put("filename_template", TemplateFilename);
+    public void setTemplateFilename(String templateFilename) {
+        put("filename_template", templateFilename);
     }
 
     public String getTemplateFilename() {
         return get("filename_template");
+    }
+
+    @FormParam("output.include_null")
+    public void setIncludeNull(String includeNull) {
+        put("include_null", includeNull);
+    }
+
+    @Override
+    public Boolean getIncludeNull() {
+        return getBoolean("include_null").orElse(null);
     }
 
     public Optional<Integer> getInt(String key) {

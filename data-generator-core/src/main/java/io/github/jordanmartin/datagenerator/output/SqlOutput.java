@@ -76,12 +76,8 @@ public class SqlOutput extends ObjectWriterOuput {
             } else {
                 writer.append(",");
             }
-            Object value = entry.getValue();
-            if (value instanceof Number || value instanceof Boolean) {
-                writer.append(String.valueOf(value));
-            } else {
-                writer.append("'").append(String.valueOf(value)).append("'");
-            }
+            String value = mapValue(entry.getValue());
+            writer.append(value);
         }
         writer.append(")");
     }
@@ -93,5 +89,15 @@ public class SqlOutput extends ObjectWriterOuput {
             this.tableName = tableName;
         }
         return this;
+    }
+
+    private String mapValue(Object value) {
+        if (value == null) {
+            return "NULL";
+        }
+        if (value instanceof Number || value instanceof Boolean) {
+            return String.valueOf(value);
+        }
+        return "'" + value + "'";
     }
 }
