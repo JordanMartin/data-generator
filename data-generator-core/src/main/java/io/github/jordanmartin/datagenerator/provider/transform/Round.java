@@ -18,7 +18,8 @@ import java.math.RoundingMode;
         description = "Arrondie une valeur décimale",
         examples = {
                 "Round(Double(10, 20), 2) => 17.22"
-        }
+        },
+        groupe = "nombre"
 )
 public class Round implements DoubleProvider {
 

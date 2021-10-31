@@ -16,7 +16,8 @@ import java.util.Random;
         description = "Retourne un nombre décimale aléatoire",
         examples = {
                 "Double(0, 10) => 5.494573180435739"
-        }
+        },
+        groupe = "nombre"
 )
 public class RandomDouble implements DoubleProvider, StatelessValueProvider<Double> {
     private final Random random = new Random();

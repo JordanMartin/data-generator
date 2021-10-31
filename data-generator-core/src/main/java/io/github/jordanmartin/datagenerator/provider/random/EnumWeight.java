@@ -14,7 +14,8 @@ import lombok.Setter;
                 "EnumWeight(\"A\", 10) => Valeur \"A\" avec un poids de 10",
                 "EnumWeight(Faker(\"Name.firstName\"), 10) => Un prénom aléatoire avec un poids de 10",
         },
-        returns = EnumWeight.class
+        returns = EnumWeight.class,
+        groupe = "enum"
 )
 public class EnumWeight {
     private Object item;

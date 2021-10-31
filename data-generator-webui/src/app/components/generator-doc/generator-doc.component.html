@@ -5,7 +5,7 @@
         <mat-panel-title>
           <div class="gen-title">
             <span class="gen-name">{{generator.name}}</span>
-            🠖
+            →
             <span class="gen-type">{{generator.type | simplifyJavaType}}</span>
           </div>
         </mat-panel-title>
@@ -24,7 +24,7 @@
           <span class="ctor-usage">{{ getCtorUsage(generator, ctor) }}</span>
           <span class="ctor-description">{{ctor.description}}</span>
           <ul class="args">
-            <li *ngIf="!ctor.args?.length">
+            <li class="arg" *ngIf="!ctor.args?.length">
               Sans arguments
             </li>
             <li class="arg" *ngFor="let arg of ctor.args">

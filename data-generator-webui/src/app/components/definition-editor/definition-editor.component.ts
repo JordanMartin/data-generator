@@ -14,7 +14,6 @@ export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   set value(value: string) {
-    console.log('changed', value);
     this._value = value;
     if (this.editor) {
       this.editor.setValue(value);

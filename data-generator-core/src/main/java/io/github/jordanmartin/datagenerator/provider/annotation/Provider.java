@@ -33,4 +33,8 @@ public @interface Provider {
      */
     Class[] returns() default {};
 
+    /**
+     * Nom pour le regroupement des générateurs
+     */
+    String groupe() default "";
 }

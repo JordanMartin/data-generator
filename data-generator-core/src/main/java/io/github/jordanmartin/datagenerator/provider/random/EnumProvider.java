@@ -26,7 +26,8 @@ import java.util.Random;
                 "Enum([\"A\", \"B\", \"C\"]) => retourne l'un des éléments avec la même probabilité",
                 "Enum([EnumWeight(\"A\", 50), EnumWeight(\"B\", 30), EnumWeight(\"C\", 20)]) =>" +
                         " retourne \"A\" avec un probabilité de 50%, \"B\": 30% ou \"C\": 20% "
-        }
+        },
+        groupe = "enum"
 )
 public class EnumProvider<T> implements ValueProvider<T> {
 

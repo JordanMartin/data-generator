@@ -15,7 +15,8 @@ import java.util.Date;
         name = "FormatDate",
         description = "Formatte une date",
         examples = {"FormatDate(CurrentDate(), \"yyyy-MM-dd HH:mm:ss.SSS\")"},
-        returns = String.class
+        returns = String.class,
+        groupe = "date"
 )
 public class FormatDate extends TransformerProvider<Date, String> {
 

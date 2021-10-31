@@ -14,4 +14,5 @@ public class ProviderDoc {
     String type;
     List<ProviderCtorDoc> constructors = new ArrayList<>();
     String[] examples;
+    String groupe;
 }

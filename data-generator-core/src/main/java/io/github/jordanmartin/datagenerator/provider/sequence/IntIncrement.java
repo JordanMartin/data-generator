@@ -10,7 +10,11 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
  * Génère un entier incrémenté à chaque appel.
  * Lorsque la maximum est atteint on revient à la première valeur
  */
-@Provider(name = "Increment", description = "Retourne une valeur entière incrémentée")
+@Provider(
+        name = "Increment",
+        description = "Retourne une valeur entière incrémentée",
+        groupe = "id"
+)
 public class IntIncrement implements StatelessValueProvider<Integer> {
 
     /**
