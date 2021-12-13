@@ -17,7 +17,6 @@
         <module>data-generator-webui</module>
         <module>data-generator-core</module>
         <module>data-generator-api</module>
-        <module>data-generator-cli</module>
     </modules>
 
     <licenses>
