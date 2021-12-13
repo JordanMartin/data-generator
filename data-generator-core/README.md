@@ -3,28 +3,6 @@
 > Module core contenant l'ensemble des générateurs et formats de sortie
 
   * [Fichier de définition YAML](#fichier-de-d-finition-yaml)
-- [Générateurs](#g-n-rateurs)
-  * [`Constant(<valeur>)`](#-constant--valeur---)
-  * [`RandomUUID()`](#-randomuuid---)
-  * [`RandomBoolean(double percentageOfTrue)`](#-randomboolean-double-percentageoftrue--)
-  * [`RandomInt(int min, int max)`](#-randomint-int-min--int-max--)
-  * [`SequenceFromList(Object element1, Object element2, ...)`](#-sequencefromlist-object-element1--object-element2----)
-  * [`RandomDouble(double min, double max)`](#-randomdouble-double-min--double-max--)
-  * [`Sample(String expression[, String locale])`](#-sample-string-expression---string-locale---)
-  * [`Round(<generateur>, <nombre_decimal>, <mode_arrondi>)`](#-round--generateur----nombre-decimal----mode-arrondi---)
-  * [`RandomDate("<date_min>", "<date_max>")`](#-randomdate---date-min------date-max----)
-  * [`CurrentDate()`](#-currentdate---)
-  * [`RandomFromRegex("<regex>"[, <elem_count>])`](#-randomfromregex---regex------elem-count----)
-  * [`RandomFromList(<element1>, <element2>, ...)`](#-randomfromlist--element1----element2-----)
-  * [`IntAutoIncrement([<start>, <step>, <max>])`](#-intautoincrement---start----step----max----)
-  * [`Idempotent(<generateur>)`](#-idempotent--generateur---)
-  * [`ListOf`](#-listof-)
-  * [`AsString`](#-asstring-)
-  * [`FormatDate`](#-formatdate-)
-  * [`ListByRepeat`](#-listbyrepeat-)
-  * [`Expression`](#-expression-)
-  * [`Reference`](#-reference-)
-  * [`FixedReference`](#-fixedreference-)
   * [Composition de générateur](#composition-de-g-n-rateur)
   * [Références et expressions](#r-f-rences-et-expressions)
 - [Utilisation programmatique](#utilisation-programmatique)
@@ -60,13 +38,13 @@ La partie `references` permet de déclarer un générateur et de l'utiliser dans
 *Exemple avec references: definition.yml*
 ```yaml
 references:
-  num: RandomInt(0, 10)
+  num: Integer(0, 10)
 template:
   ref: $num
   ref2: $num
   ref_fixe: $$num
   ref_fixe2: $$num
-  expression: $("Numéro: ${num}")
+  expression: '$("Numéro: ${num}")'
 ```
 
 *Resultat pour 3 objets générés*
@@ -102,10 +80,10 @@ template:
 
 ```yaml
 references:
-  firstname: Sample("Name.firstName")
-  lastname: Sample("Name.lastName")
-  gen_date: Idempotent(FormatDate(CurrentDate(), "yyyy-MM-dd HH:mm:ss.SSS"))
-  id: RandomUUID()
+  firstname: Faker("Name.firstName")
+  lastname: Faker("Name.lastName")
+  gen_date: Idempotent(FormatDate(Now(), "yyyy-MM-dd HH:mm:ss.SSS"))
+  id: UUID()
   item:
     parent_id: $$id
     horodatage: $gen_date
@@ -113,16 +91,16 @@ references:
 
 template:
   id: $$id
-  num: IntAutoIncrement()
-  random: RandomInt(100, 1000)
+  num: Increment()
+  random: Integer(100, 1000)
   horodatage: $gen_date
-  items: ListByRepeat($item, 2)
-  active: RandomBoolean()
-  type: RandomFromList(["A", "B", "C"])
-  group: RandomFromList([ItemWeight("A", 10), ItemWeight("B", 90)])
+  items: Repeat($item, 2)
+  active: Boolean()
+  type: Enum(["A", "B", "C"])
+  group: Enum([EnumWeight("A", 10), EnumWeight("B", 90)])
   array:
-    - Round(RandomDouble(0, 10), 2)
-    - RandomInt(10, 100)
+    - Round(Double(0, 10), 2)
+    - Integer(10, 100)
 ```
 
 *Résultat au format JSON*
@@ -209,156 +187,7 @@ template:
 
 ## Générateurs
 
-### `Constant(<valeur>)`
-
-Retourne toujours la même valeur
-
-### `RandomUUID()`
-
-Génère un UUID
-
-**Exemple** :
-
-- `RandomUUID()` => `"fd768fbf-6e86-4e46-a654-12b5e8106d19"`
-
-### `RandomBoolean(double percentageOfTrue)`
-
-Retourne un booléen aléatoire. Si le paramètre `percentageOfTrue` n'est pas précisé il y aura autant de `true` que
-de `false`
-
-- `percentageOfTrue`: décimale entre 0 et 1 représentant le pourcentage de valeur `true` généré.
-  - Exemples:
-  - 0 => que des `false`
-  - 0.4 => 40% de `true`
-  - 1 => que des `true`
-
-### `RandomInt(int min, int max)`
-
-Retourne un entier aléatoire dans un interval. Si les paramètres `min` et `max` ne sont pas spécifié, l'interval
-est `[0, Integer.MAX_VALUE]`
-
-### `SequenceFromList(Object element1, Object element2, ...)`
-
-Retourne séquentiellement les éléments spécifiés en paramètre.
-
-*Exemple* : `SequenceFromList("a", "b", "c")`
-
-*Résultat pour 5 générations successives*: `["a", "b", "c", "a", "b"]`
-
-### `RandomDouble(double min, double max)`
-
-Retourne un double aléatoire dans un interval. Si les paramètres `min` et `max` ne sont pas spécifié, l'interval
-est `[0, Double.MAX_VALUE]`
-
-### `Sample(String expression[, String locale])`
-
-Génère une fausse donnée selon une expression.
-
-- `String expression` : une expression au format [Faker](https://github.com/DiUS/java-faker). La liste des expression
-  est [disponible ici](FakerExpression.md) ou via [cette démo](https://java-faker.herokuapp.com/?locale=FR).
-  L'expression peut être composée avec la notation suivante.
-  `Sample("#{TYPE} #{TYPE}")`. *Exemple: `Sample("#{Name.firstName} #{Name.lastName}")`*
-- `String locale (optionnel)` : La locale a utilisé pour les données générés. *Exemple: "fr", "us", "it", "de", ...*
-
-**Exemple**:
-
-- `Sample("Name.fullName")` => "Mme Lina Royer"
-- `Sample("Name.firstName")` => "Paul"
-- `Sample("Internet.emailAddress")` => "victor.david@hotmail.fr"
-- `Sample("#{Name.fullName} (#{Address.cityName})")` => "Mme Lina Royer (Paris)"
-
-### `Round(<generateur>, <nombre_decimal>, <mode_arrondi>)`
-
-Arrondi un nombre décimal
-
-- `<generateur>`: Un généréteur de nombre décimale. Ex: `RandomDouble()`
-- `<nombre_decimal>`: Nombre de décimale à garder après la virgule
-- `<mode_arrondi> (facultatif: défaut = "UP") `: "UP", "DOWN", "CEILING", "FLOOR", "HALF_UP", "HALF_DOWN", "HALF_EVEN"
-
-**Exemple**:
-
-- `Round(Constant(1.123), 2, "UP")` => 1.13
-
-### `RandomDate("<date_min>", "<date_max>")`
-
-- `<date_min> (format: yyyy-MM-dd)` : Borne inférieur de la date générée
-- `<date_max> (format: yyyy-MM-dd)` : Borne supérieur de la date générée
-
-Génère une date aléatoire dans un interval.
-
-### `CurrentDate()`
-
-Retourne la date courante
-
-### `RandomFromRegex("<regex>"[, <elem_count>])`
-
-- `<regex>` : Une regex déterminant la valeur à générer
-- `<elem_count> (optionnel)` : Nombre de valeurs à générer à partir de la regex
-
-Retourne une valeur aléatoire basée sur une regex. Le second paramètre optionnel permet de calculer `<elem_count>`
-éléments à parti de la regex et de retourner un élément aléatoire parmis cette liste.
-
-**Exemple** :
-
-`RandomFromRegex("[A-Z]{2}-[0-9]{3}-[A-Z]{2}", 3)` permet de générer une donnée parmis la liste suivante
-
-```
-[ LD-730-KW,  IJ-100-MB,  VM-418-BM ]
-```
-
-### `RandomFromList(<element1>, <element2>, ...)`
-
-Retourne une valeur aléatoire parmis la liste d'élément. Si l'élément est un `ItemWeight`, alors le point permet de
-moduler le taux d'apparition d'un élément.
-
-**Exemple**:
-
-- `RandomFromList(["A", "B", "C"])` : Retourne A, B ou C équitablement
-- `RandomFromList([ItemWeight("A", 10), ItemWeight("B", 70), ItemWeight("C", 20)])` : Retounre 10% de A, 70% de B et 20%
-  de C
-
-### `IntAutoIncrement([<start>, <step>, <max>])`
-
-Retourne un nombre entier incrémenté à chaque génération
-
-- `<start>`: Valeur initiale
-- `<step>`: Quantité incrémenté à chaque génération
-- `<max>`: Valeur maximum. Si la valeur courante dépasse le max, l'increment retourne à `<start>`
-
-### `Idempotent(<generateur>)`
-
-Permet de renvoyer toujours la même valeur.
-**Exemple**:
-
-- `Idempotent(FormatDate(RandomDate(), "yyy-MM-dd"))`: Génère une date random et retourne toujours la même date
-
-### `ListOf`
-
-todo: A commenter
-
-### `AsString`
-
-todo: A commenter
-
-### `FormatDate`
-
-todo: A commenter
-
-### `ListByRepeat`
-
-todo: A commenter
-
-### `Expression`
-
-todo: A commenter
-
-### `Reference`
-
-todo: A commenter
-
-### `FixedReference`
-
-todo: A commenter
+TODO : renvoi vers webui
 
 ### Composition de générateur
 
@@ -378,22 +207,22 @@ La classe `ObjectBuilder` contient des méthodes pour créer facilement un gén�
 
 ```java
 public class SimpleObject extends ObjectBuilder {
-    @Override
-    public void configure() {
-        providerRef("randomInt", randomInt(0, 10));
+  @Override
+  public void configure() {
+    providerRef("randomInt", randomInt(0, 10));
 
-        field("randomFromListWithWeight", randomFromList(itemWeight("a", 1), itemWeight("b", 9)));
-        field("list", list(randomInt(0, 100), increment()));
-        field("randomUUID", randomUUID());
-        field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
-        field("firstname", ctx -> faker.name().firstName());
-        field("custom", ctx -> {
-            // votre générateur
-            return "custom_data"; 
-        });
-        field("expression", expression("${firstname} ${lastname}"));
-        field("reference", reference("randomInt"));
-    }
+    field("randomFromListWithWeight", randomFromList(enumWeight("a", 1), enumWeight("b", 9)));
+    field("list", list(randomInt(0, 100), increment()));
+    field("randomUUID", randomUUID());
+    field("randomFromRegex", randomFromRegex("P[A-Z]{3}[0-9]{5}", 5));
+    field("firstname", ctx -> faker.name().firstName());
+    field("custom", ctx -> {
+      // votre générateur
+      return "custom_data";
+    });
+    field("expression", expression("${firstname} ${lastname}"));
+    field("reference", reference("randomInt"));
+  }
 }
 ```
 

@@ -1,80 +1,77 @@
 package io.github.jordanmartin.datagenerator.definition;
 
-import io.github.jordanmartin.datagenerator.provider.base.Constant;
-import io.github.jordanmartin.datagenerator.provider.base.CurrentDate;
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
-import io.github.jordanmartin.datagenerator.provider.object.Expression;
-import io.github.jordanmartin.datagenerator.provider.object.FixedReference;
-import io.github.jordanmartin.datagenerator.provider.object.Reference;
-import io.github.jordanmartin.datagenerator.provider.random.*;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
-import io.github.jordanmartin.datagenerator.provider.sequence.SequenceFromList;
-import io.github.jordanmartin.datagenerator.provider.transform.*;
+import io.github.jordanmartin.datagenerator.provider.doc.ProviderDoc;
+import io.github.jordanmartin.datagenerator.provider.doc.ProviderDocumentationParser;
+import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-// FIXME: refacto à poursuivre
+@Slf4j
 public class ProviderRegistry {
 
-    protected final Map<String, Class<? extends ValueProvider<?>>> defaultProvider = new HashMap<>();
+    private static ProviderRegistry INSTANCE;
 
-    protected ProviderRegistry() {
+    final Map<String, Class<? extends ValueProvider<?>>> providers = new HashMap<>();
+    final Map<String, ProviderDoc> providersDoc = new HashMap<>();
+    private static final String PROVIDER_SEARCH_PACKAGE = "io.github.jordanmartin.datagenerator.provider";
+
+    private ProviderRegistry() {
         registerDefaultProviders();
     }
 
-    private void registerDefaultProviders() {
-        registerProvider(Constant.class);
-        registerProvider(CurrentDate.class);
-        registerProvider(RandomDate.class);
-        registerProvider(RandomBoolean.class);
-        registerProvider(RandomFromList.class);
-        registerProvider(RandomFromRegex.class);
-        registerProvider(RandomInt.class);
-        registerProvider(RandomDouble.class);
-        registerProvider(Round.class);
-        registerProvider(RandomUUID.class);
-        registerProvider(IntAutoIncrement.class);
-        registerProvider(SequenceFromList.class);
-        registerProvider(AsString.class);
-        registerProvider(FormatDate.class);
-        registerProvider(Idempotent.class);
-        registerProvider(ListOf.class);
-        registerProvider(ListByRepeat.class);
-        registerProvider(Sample.class);
-
-        // FIXME
-        registerProvider("ItemWeight", RandomFromList.ItemWeight.class);
-
-        registerProvider(Expression.class);
-        registerProvider(Reference.class);
-        registerProvider(FixedReference.class);
+    public static ProviderRegistry getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ProviderRegistry();
+        }
+        return INSTANCE;
     }
 
-    public void registerProvider(Class<?> providerClass) {
-        registerProvider(providerClass.getSimpleName(), providerClass);
+    private void registerDefaultProviders() {
+        log.info("Recherche des générateur dans le package : {}", PROVIDER_SEARCH_PACKAGE);
+        new Reflections(PROVIDER_SEARCH_PACKAGE)
+                .getTypesAnnotatedWith(Provider.class)
+                .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
+                .forEach(this::registerProvider);
+        log.info("{} générateurs enregistrés : {}", providers.size(), providers.entrySet());
     }
 
     @SuppressWarnings("unchecked")
-    public void registerProvider(String name, Class<?> providerClass) {
-        // FIXME
-//        if (!ValueProvider.class.isAssignableFrom(providerClass)) {
-//            throw new IllegalArgumentException("Le générateur \"" + providerClass + "\" doit implémenter " + ValueProvider.class);
-//        }
-//        Class<? implements ValueProvider<?>> existingProviderClass = defaultProvider.get(name);
-//        if (existingProviderClass != null) {
-//            throw new IllegalArgumentException("Le générateur \"" + existingProviderClass
-//                    + "\" et \"" + providerClass + "\" ne peuvent pas être enregistrés sous le même nom");
-//        }
-        defaultProvider.put(name, (Class<? extends ValueProvider<?>>) providerClass);
+    private void registerProvider(Class<?> providerClass) {
+        ProviderDoc providerDoc = ProviderDocumentationParser.parse(providerClass).orElse(null);
+        if (providerDoc == null) {
+            return;
+        }
+
+        Optional.ofNullable(providers.get(providerDoc.getName()))
+                .ifPresentOrElse(existingProviderClass -> {
+                    log.warn("Le generateur {} est ignoré car le générateur {} est déjà enregistré sous le même nom : {}",
+                            providerClass, existingProviderClass, providerDoc.getName());
+                }, () -> {
+                    providers.put(providerDoc.getName(), (Class<? extends ValueProvider<?>>) providerClass);
+                    providersDoc.put(providerDoc.getName(), providerDoc);
+                });
     }
 
     public Class<?> get(String providerName) {
-        return defaultProvider.get(providerName);
+        return providers.get(providerName);
     }
 
-    public Set<String> list() {
-        return defaultProvider.keySet();
+    public Set<String> listNames() {
+        return providers.keySet();
+    }
+
+    public Optional<ProviderDoc> getDoc(String providerName) {
+        return Optional.ofNullable(providersDoc.get(providerName));
+    }
+
+    public Map<String, ProviderDoc> getAllDoc() {
+        return providersDoc;
     }
 }

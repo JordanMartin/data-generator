@@ -58,7 +58,9 @@ public class CsvOutput extends ObjectWriterOuput {
                     writer.write('\n');
                     headerLine.set(true);
                 }
-                String fields = object.values().stream().map(Object::toString).collect(Collectors.joining(separator));
+                String fields = object.values().stream()
+                        .map(this::mapValue)
+                        .collect(Collectors.joining(separator));
                 writer.write(fields);
                 writer.write('\n');
             } catch (IOException e) {
@@ -66,6 +68,13 @@ public class CsvOutput extends ObjectWriterOuput {
             }
         });
         writer.flush();
+    }
+
+    private String mapValue(Object o) {
+        if (o == null) {
+            return "";
+        }
+        return o.toString();
     }
 
     @Override

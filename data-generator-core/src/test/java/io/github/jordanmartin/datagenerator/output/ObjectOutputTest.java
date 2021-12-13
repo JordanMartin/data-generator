@@ -1,8 +1,8 @@
 package io.github.jordanmartin.datagenerator.output;
 
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import io.github.jordanmartin.datagenerator.provider.random.Sample;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.random.FakerExpression;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +12,8 @@ class ObjectOutputTest {
     @Test
     void generation_should_not_fail() throws IOException {
         ObjectProvider provider = new ObjectProvider()
-                .field("id", new IntAutoIncrement())
-                .field("name", new Sample("Name.firstName"));
+                .field("id", new IntIncrement())
+                .field("name", new FakerExpression("Name.firstName"));
 
         ObjectOutput.from(provider)
                 .toJson().setPretty(true)

@@ -11,7 +11,16 @@ import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
 
   @Output() onChange = new EventEmitter<string>();
-  @Input() initialValue!: string;
+
+  @Input()
+  set value(value: string) {
+    this._value = value;
+    if (this.editor) {
+      this.editor.setValue(value);
+    }
+  }
+
+  private _value!: string;
 
   editorOptions: IStandaloneEditorConstructionOptions = {
     theme: 'vs-light',
@@ -22,6 +31,9 @@ export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
     automaticLayout: true,
     scrollBeyondLastLine: false,
     tabSize: 2,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false
+    }
   };
   private editor!: IStandaloneCodeEditor;
 
@@ -39,11 +51,13 @@ export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
   initMonaco() {
     const editorDiv = document.getElementById('definition-editor')!;
     this.editor = monaco.editor.create(editorDiv, this.editorOptions);
-    this.editor.setValue(this.initialValue || '');
+    this.editor.setValue(this._value || '');
     this.editor.getModel()!.onDidChangeContent((event) => {
       this.updateCode(this.editor.getValue());
     });
-    this.updateCode(this.editor.getValue());
+    if (this.editor.getValue()) {
+      this.updateCode(this.editor.getValue());
+    }
   }
 
   updateCode(code: string) {

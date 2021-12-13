@@ -21,7 +21,10 @@ export class DataPreviewComponent implements AfterViewInit, OnChanges, OnDestroy
     automaticLayout: true,
     readOnly: true,
     scrollBeyondLastLine: false,
-    tabSize: 2
+    tabSize: 2,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false
+    }
   };
 
   constructor(private _ngZone: NgZone) {

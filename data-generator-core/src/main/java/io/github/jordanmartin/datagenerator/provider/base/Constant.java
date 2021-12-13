@@ -1,5 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.base;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderContext;
 
@@ -8,11 +10,15 @@ import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderConte
  *
  * @param <T>
  */
+@Provider(name = "Constant", description = "Retourne toujours la même valeur")
 public class Constant<T> implements ValueProvider<T> {
 
     private final T value;
 
-    public Constant(T value) {
+    @ProviderCtor
+    public Constant(
+            T value
+    ) {
         this.value = value;
     }
 

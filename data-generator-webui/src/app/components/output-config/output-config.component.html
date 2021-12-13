@@ -9,7 +9,7 @@
            [value]="config.count" (change)="updateParam('count', count.value)">
   </div>
   <div class="param">
-    <span class="param-name">Formattage de sortie</span>
+    <span class="param-name">Format de sortie</span>
     <mat-button-toggle-group #format="matButtonToggleGroup" [value]="config.format"
                              (change)="updateParam('format', format.value)">
       <mat-button-toggle *ngFor="let f of available_formats" [value]="f">
@@ -22,6 +22,13 @@
     <mat-slide-toggle [checked]="!config.pretty"
                       (change)="updateParam('pretty', !$event.checked)">
       <span class="param-name">Minifier</span>
+    </mat-slide-toggle>
+  </div>
+
+  <div class="param" *ngIf="['json', 'yaml', 'xml'].includes(config.format)">
+    <mat-slide-toggle [checked]="!config.include_null"
+                      (change)="updateParam('include_null', !$event.checked)">
+      <span class="param-name">Exclure les champs null</span>
     </mat-slide-toggle>
   </div>
 

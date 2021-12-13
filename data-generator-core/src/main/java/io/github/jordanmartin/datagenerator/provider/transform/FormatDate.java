@@ -1,5 +1,8 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 
 import java.text.SimpleDateFormat;
@@ -8,6 +11,13 @@ import java.util.Date;
 /**
  * Formatte une date
  */
+@Provider(
+        name = "FormatDate",
+        description = "Formatte une date",
+        examples = {"FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss.SSS\")"},
+        returns = String.class,
+        groupe = "date"
+)
 public class FormatDate extends TransformerProvider<Date, String> {
 
     private final SimpleDateFormat sdf;
@@ -16,7 +26,19 @@ public class FormatDate extends TransformerProvider<Date, String> {
      * @param dateProvider Générateur de date
      * @param format       Format de la date {@link java.text.SimpleDateFormat}
      */
-    public FormatDate(ValueProvider<Date> dateProvider, String format) {
+    @ProviderCtor
+    public FormatDate(
+            @ProviderArg(
+                    name = "generateur",
+                    description = "Un générateur retournant un type Date",
+                    examples = "Now()"
+            ) ValueProvider<Date> dateProvider,
+            @ProviderArg(
+                    name = "format",
+                    description = "un format de date telle que définit par java.text.SimpleDateFormat",
+                    examples = {"yyyy-MM-dd HH:mm:ss.SSS"}
+            ) String format
+    ) {
         super(dateProvider);
         this.sdf = new SimpleDateFormat(format);
     }

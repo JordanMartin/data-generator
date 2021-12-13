@@ -1,5 +1,8 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.DoubleProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderContext;
@@ -10,6 +13,14 @@ import java.math.RoundingMode;
 /**
  * Générateur pour arrondir un nombre decimal
  */
+@Provider(
+        name = "Round",
+        description = "Arrondie une valeur décimale",
+        examples = {
+                "Round(Double(10, 20), 2) => 17.22"
+        },
+        groupe = "nombre"
+)
 public class Round implements DoubleProvider {
 
     private final int precision;
@@ -22,10 +33,19 @@ public class Round implements DoubleProvider {
         this.roundingMode = roundingMode;
     }
 
-    public Round(ValueProvider<Double> provider, int precision, String roundingMode) {
+    @ProviderCtor
+    public Round(
+            ValueProvider<Double> provider,
+            int precision,
+            @ProviderArg(
+                    description = "Type de l'arrondie",
+                    examples = {"UP", "DOWN", "CEILING", "FLOOR", "HALF_UP", "HALF_DOWN", "HALF_EVEN"}
+            ) String roundingMode
+    ) {
         this(provider, precision, RoundingMode.valueOf(roundingMode.toUpperCase()));
     }
 
+    @ProviderCtor("Arrondie à la décimale supérieur")
     public Round(ValueProvider<Double> provider, int precision) {
         this(provider, precision, RoundingMode.UP);
     }

@@ -1,7 +1,7 @@
 package io.github.jordanmartin.datagenerator.output;
 
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,7 @@ public class PojoOutputTest {
                 .field("city", ctx -> "Lyon");
 
         ObjectProvider personProvider = new ObjectProvider()
-                .field("id", new IntAutoIncrement())
+                .field("id", new IntIncrement())
                 .field("firstname", ctx -> "Firstname")
                 .field("lastname", ctx -> "Lastname")
                 .field("address", addressProvider);

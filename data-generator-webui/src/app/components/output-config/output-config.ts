@@ -1,4 +1,5 @@
 export interface OutputConfig {
+  include_null: boolean;
   filename_template: string;
   count: number;
   format: string;

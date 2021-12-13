@@ -1,6 +1,6 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ class ExpressionTest {
     @Test
     void testExpression() {
         ObjectProvider provider = new ObjectProvider()
-                .providerRef("ref", new IntAutoIncrement())
+                .providerRef("ref", new IntIncrement())
                 .field("a", new Expression("${ref}"))
                 .field("a'", new Expression("${ref}"))
                 .field("b", new Expression("$${ref}"))
@@ -34,7 +34,7 @@ class ExpressionTest {
     @Test
     void testComplexExpression() {
         ObjectProvider provider = new ObjectProvider()
-                .providerRef("id", new IntAutoIncrement())
+                .providerRef("id", new IntIncrement())
                 .providerRef("prefix", () -> ">")
                 .field("groupId", new Expression("group-$${id}"))
                 .field("expr", new Expression("${prefix}group-$${id}"));

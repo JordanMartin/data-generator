@@ -26,6 +26,9 @@ export class TemplateEditorComponent implements AfterViewInit, OnDestroy {
     automaticLayout: true,
     scrollBeyondLastLine: false,
     tabSize: 2,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false
+    }
   };
 
   constructor(private _ngZone: NgZone) {

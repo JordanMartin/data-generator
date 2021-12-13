@@ -1,5 +1,6 @@
 package io.github.jordanmartin.datagenerator.output;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,11 @@ public class JsonOutput extends ObjectWriterOuput {
      */
     private boolean pretty;
 
+    /**
+     * Détermine si les valeurs null doivent être incluses
+     */
+    private boolean includeNull;
+
     public JsonOutput(ObjectProvider provider) {
         this(provider, false);
     }
@@ -32,10 +38,11 @@ public class JsonOutput extends ObjectWriterOuput {
     @Override
     public void writeOne(OutputStream out, Map<String, ?> object) throws IOException {
         com.fasterxml.jackson.databind.ObjectWriter objectWriter;
+        ObjectMapper objectMapper = getObjectMapper();
         if (pretty) {
-            objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+            objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         } else {
-            objectWriter = new ObjectMapper().writer();
+            objectWriter = objectMapper.writer();
         }
         objectWriter = objectWriter.withoutFeatures(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
         objectWriter.writeValue(out, object);
@@ -46,8 +53,7 @@ public class JsonOutput extends ObjectWriterOuput {
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
         JsonGenerator jsonGenerator = new JsonFactory()
                 .createGenerator(out)
-                .setCodec(new ObjectMapper());
-
+                .setCodec(getObjectMapper());
         if (this.pretty) {
             jsonGenerator.useDefaultPrettyPrinter();
         }
@@ -64,6 +70,14 @@ public class JsonOutput extends ObjectWriterOuput {
         jsonGenerator.flush();
     }
 
+    private ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (!includeNull) {
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        }
+        return objectMapper;
+    }
+
     @Override
     public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
         setPretty(outputConfig.getOutputPretty());
@@ -75,6 +89,13 @@ public class JsonOutput extends ObjectWriterOuput {
      */
     public JsonOutput setPretty(Boolean pretty) {
         this.pretty = pretty != null && pretty;
+        return this;
+    }
+
+    public JsonOutput setIncludeNull(Boolean includeNull) {
+        if (includeNull != null) {
+            this.includeNull = includeNull;
+        }
         return this;
     }
 }

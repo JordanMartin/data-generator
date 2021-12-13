@@ -93,6 +93,9 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
         // Génère une valeur pour chaque champ
         for (Field field : fields) {
             Object value = ctx.evaluateProvider(field.provider);
+            if (value instanceof Optional<?>) {
+                value = ((Optional<?>) value).orElse(null);
+            }
             object.put(field.name, value);
         }
 
@@ -103,7 +106,6 @@ public class ObjectProvider implements ValueProvider<Map<String, ?>> {
             }
             return orderedObject;
         }
-
         return object;
     }
 

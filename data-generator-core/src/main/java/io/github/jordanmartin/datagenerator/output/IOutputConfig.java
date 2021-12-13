@@ -6,39 +6,43 @@ public interface IOutputConfig {
 
     String getFormat();
 
-    void setCount(String Count);
+    void setCount(String count);
 
     Integer getCount();
 
-    void setGzip(String Gzip);
+    void setGzip(String gzip);
 
     Boolean getGzip();
 
-    void setSingleFile(String SingleFile);
+    void setSingleFile(String singleFile);
 
     Boolean getSingleFile();
 
-    void setOutputTemplate(String OutputTemplate);
+    void setOutputTemplate(String outputTemplate);
 
     String getOutputTemplate();
 
-    void setOutputPretty(String OutputPretty);
+    void setOutputPretty(String outputPretty);
 
     Boolean getOutputPretty();
 
-    void setObjectName(String ObjectName);
+    void setObjectName(String objectName);
 
     String getObjectName();
 
-    void setTableName(String TableName);
+    void setTableName(String tableName);
 
     String getTableName();
 
-    void setSeparator(String Separator);
+    void setSeparator(String separator);
 
     String getSeparator();
 
-    void setTemplateFilename(String TemplateFilename);
+    void setTemplateFilename(String templateFilename);
 
     String getTemplateFilename();
+
+    void setIncludeNull(String includeNull);
+
+    Boolean getIncludeNull();
 }

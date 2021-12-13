@@ -4,10 +4,10 @@ import com.github.javafaker.Faker;
 import io.github.jordanmartin.datagenerator.provider.base.Constant;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.random.*;
-import io.github.jordanmartin.datagenerator.provider.sequence.IntAutoIncrement;
+import io.github.jordanmartin.datagenerator.provider.sequence.IntIncrement;
 import io.github.jordanmartin.datagenerator.provider.transform.FormatDate;
-import io.github.jordanmartin.datagenerator.provider.transform.ListByRepeat;
 import io.github.jordanmartin.datagenerator.provider.transform.ListOf;
+import io.github.jordanmartin.datagenerator.provider.transform.Repeat;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -43,20 +43,20 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new FormatDate(dateProvider, format);
     }
 
-    protected RandomFromList<Object> randomFromList(Object... list) {
-        return new RandomFromList<>(list);
+    protected EnumProvider<Object> randomFromList(Object... list) {
+        return new EnumProvider<>(list);
     }
 
-    protected RandomFromList<Object> randomFromList(RandomFromList.ItemWeight<?>... list) {
-        return new RandomFromList<>(list);
+    protected EnumProvider<Object> randomFromList(EnumWeight... list) {
+        return new EnumProvider<>(list);
     }
 
-    protected RandomFromList<Object> randomFromList(ValueProvider<?>... list) {
-        return new RandomFromList<>(list);
+    protected EnumProvider<Object> randomFromList(ValueProvider<?>... list) {
+        return new EnumProvider<>(list);
     }
 
-    protected RandomFromList.ItemWeight<Object> itemWeight(Object item, int weight) {
-        return new RandomFromList.ItemWeight<>(item, weight);
+    protected EnumWeight itemWeight(Object item, int weight) {
+        return new EnumWeight(item, weight);
     }
 
     protected RandomFromRegex randomFromRegex(String regex, int count) {
@@ -67,20 +67,20 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new RandomFromRegex(regex);
     }
 
-    protected IntAutoIncrement increment(int start, int step, int max) {
-        return new IntAutoIncrement(start, step, max);
+    protected IntIncrement increment(int start, int step, int max) {
+        return new IntIncrement(start, step, max);
     }
 
-    protected IntAutoIncrement increment() {
-        return new IntAutoIncrement();
+    protected IntIncrement increment() {
+        return new IntIncrement();
     }
 
-    protected <T> ListByRepeat<T> listByRepeat(ValueProvider<T> provider, int count) {
-        return new ListByRepeat<>(provider, count);
+    protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, int count) {
+        return new Repeat<>(provider, count);
     }
 
-    protected <T> ListByRepeat<T> listByRepeat(ValueProvider<T> provider, ValueProvider<Integer> count) {
-        return new ListByRepeat<>(provider, count);
+    protected <T> Repeat<T> listByRepeat(ValueProvider<T> provider, ValueProvider<Integer> count) {
+        return new Repeat<>(provider, count);
     }
 
     protected ListOf list(ValueProvider<?>... providers) {
@@ -115,8 +115,8 @@ public abstract class ObjectBuilder extends ObjectProvider {
         return new FixedReference<>(ref);
     }
 
-    protected Sample sample(String expression) {
-        return new Sample(expression);
+    protected FakerExpression sample(String expression) {
+        return new FakerExpression(expression);
     }
 
 }

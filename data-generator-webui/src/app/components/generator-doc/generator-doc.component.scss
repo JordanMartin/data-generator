@@ -1,34 +1,99 @@
-.generator {
+$exemple-color: #009688;
+$font-familiy: consolas, monospace !important;
+$type-color: #0088ff;
 
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+  flex-grow: initial;
+}
+
+.generator-doc {
+  font-family: $font-familiy;
+}
+
+.gen-title {
+  font-family: $font-familiy;
+  min-width: 300px;
+
+  .gen-name {
+    min-width: 150px;
+    display: inline-block;
+  }
+
+  .gen-type {
+    color: $type-color;
+    font-size: 0.85em;
+  }
+}
+
+.gen-examples {
+  border: solid 1px $exemple-color;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.ctor:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.ctor-usage {
+  font-weight: bold;
+}
+
+.ctor-description {
+  margin-left: 15px;
+  color: rgba(0, 0, 0, .54);
 }
 
 .args {
   margin: 5px 0;
 
+  .arg {
+    list-style-type: circle;
+  }
+
+  .arg-head {
+    min-width: 200px;
+    display: inline-block;
+  }
+
   .arg-name {
-    font-weight: bold;
+    min-width: 110px;
+    display: inline-block;
+  }
+
+  .arg-type {
+    color: $type-color;
+    padding-left: 1em;
   }
 
   .arg-description {
     padding-left: 10px;
   }
 
-  .arg-type {
-    font-style: italic;
-    padding-left: 10px;
+  .arg-examples {
+    padding-left: 210px;
+    font-size: 0.9em;
+    display: block;
+    color: $exemple-color;
+    margin-bottom: 20px;
+  }
+}
+
+.gen-examples {
+  padding-top: 30px;
+  position: relative;
+
+  .gen-example {
+
   }
 
-  .arg-optional {
-    font-style: italic;
-    padding-left: 10px;
-  }
-
-  .arg-default {
-    font-style: italic;
-    padding-left: 10px;
-  }
-
-  .arg-no-args {
-    font-style: italic;
+  .gen-exemple-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 30px;
+    background: $exemple-color;
+    font-size: 0.8em;
+    color: #fff;
   }
 }

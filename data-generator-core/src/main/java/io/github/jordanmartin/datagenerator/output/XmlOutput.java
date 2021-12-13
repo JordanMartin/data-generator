@@ -1,5 +1,6 @@
 package io.github.jordanmartin.datagenerator.output;
 
+import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import io.github.jordanmartin.datagenerator.provider.object.ObjectProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -7,10 +8,14 @@ import org.w3c.dom.Element;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -20,10 +25,12 @@ import java.util.stream.Stream;
  */
 public class XmlOutput extends ObjectWriterOuput {
 
+    public static final String ROOT_TAG_NAME = "data";
     private static final String DEFAULT_OBJECT_NAME = "my_object";
 
     private boolean pretty;
     private String objectName;
+    private boolean includeNull;
 
     public XmlOutput(ObjectProvider provider) {
         this(provider, DEFAULT_OBJECT_NAME, false);
@@ -42,32 +49,44 @@ public class XmlOutput extends ObjectWriterOuput {
 
     @Override
     public void writeOne(OutputStream out, Map<String, ?> object) throws OutputException {
-        Document doc = newDocument();
-        Transformer transformer = newTransformer();
-        Element root = doc.createElement(objectName);
-        doc.appendChild(root);
-        appendChild(doc, root, object);
-        try {
-            transformer.transform(new DOMSource(doc), new StreamResult(out));
-        } catch (TransformerException e) {
-            throw new OutputException(e);
-        }
+        writeXml(out, Stream.of(object), false);
     }
 
     @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) {
-        Document doc = newDocument();
-        Transformer transformer = newTransformer();
-        Element root = doc.createElement("data");
-        doc.appendChild(root);
-        stream.forEach(object -> {
-            Element element = doc.createElement(objectName);
-            appendChild(doc, element, object);
-            root.appendChild(element);
-        });
+        writeXml(out, stream, true);
+    }
+
+    private void writeXml(OutputStream out, Stream<Map<String, ?>> stream, boolean addRootTag) {
         try {
-            transformer.transform(new DOMSource(doc), new StreamResult(out));
-        } catch (TransformerException e) {
+            XMLStreamWriter writer = XMLOutputFactory.newInstance()
+                    .createXMLStreamWriter(out, "UTF-8");
+
+            if (pretty) {
+                writer = new IndentingXMLStreamWriter(writer);
+            }
+
+            writer.writeStartDocument("UTF-8", "1.0");
+            if (addRootTag) {
+                writer.writeStartElement(ROOT_TAG_NAME);
+            }
+
+            XMLStreamWriter finalWriter = writer;
+            stream.forEach(object -> {
+                try {
+                    finalWriter.writeStartElement(objectName);
+                    appendChild(finalWriter, object);
+                    finalWriter.writeEndElement();
+                } catch (XMLStreamException e) {
+                    throw new OutputException(e);
+                }
+            });
+
+            if (addRootTag) {
+                finalWriter.writeEndElement();
+            }
+            finalWriter.writeEndDocument();
+        } catch (XMLStreamException e) {
             throw new OutputException(e);
         }
     }
@@ -76,54 +95,35 @@ public class XmlOutput extends ObjectWriterOuput {
     public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
         setPretty(outputConfig.getOutputPretty());
         setObjectName(outputConfig.getObjectName());
+        setIncludeNull(outputConfig.getIncludeNull());
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    private void appendChild(Document doc, Element root, Object object) {
+    private void appendChild(XMLStreamWriter writer, Object object) throws XMLStreamException {
         if (object instanceof Map) {
             for (Map.Entry<String, ?> entry : ((Map<String, ?>) object).entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
+                if (!includeNull && value == null) {
+                    continue;
+                }
+
+                // Si le champ commence par "@", il est ajouté en tant qu'attribut
                 if (key.startsWith("@")) {
-                    root.setAttribute(key.substring(1), String.valueOf(value));
+                    writer.writeAttribute(key.substring(1), String.valueOf(value));
                 } else {
-                    Element element = doc.createElement(key);
-                    appendChild(doc, element, value);
-                    root.appendChild(element);
+                    writer.writeStartElement(key);
+                    appendChild(writer, value);
+                    writer.writeEndElement();
                 }
             }
         } else if (object instanceof Iterable) {
             for (Object o : ((List<?>) object)) {
-                appendChild(doc, root, o);
+                appendChild(writer, o);
             }
         } else {
-            root.appendChild(doc.createTextNode(String.valueOf(object)));
-        }
-    }
-
-    private Document newDocument() {
-        DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        df.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        try {
-            return df.newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException e) {
-            throw new OutputException(e);
-        }
-    }
-
-    private Transformer newTransformer() {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-
-        try {
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, pretty ? "yes" : "no");
-            return transformer;
-        } catch (TransformerConfigurationException e) {
-            throw new OutputException(e);
+            writer.writeCharacters(String.valueOf(object));
         }
     }
 
@@ -132,6 +132,13 @@ public class XmlOutput extends ObjectWriterOuput {
             this.objectName = DEFAULT_OBJECT_NAME;
         } else {
             this.objectName = objectName;
+        }
+        return this;
+    }
+
+    public XmlOutput setIncludeNull(Boolean includeNull) {
+        if (includeNull != null) {
+            this.includeNull = includeNull;
         }
         return this;
     }
