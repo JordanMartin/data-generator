@@ -1,5 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
 
@@ -11,6 +13,15 @@ import java.util.regex.Pattern;
  * Permet d'utiliser la valeur d'un champ ou générateur faire de la concaténation
  * Ex: "${firstname} ${lastname}"
  */
+@Provider(
+        name = "Expression",
+        description = "Construit une expression basée sur d'autre champ",
+        examples = {
+                "Expression(\"Full name: ${firstName} ${lastName}\") => \"Full name: John Doe\""
+        },
+        returns = String.class,
+        group = "reference"
+)
 public class Expression implements ValueProvider<String> {
 
     /**
@@ -18,6 +29,7 @@ public class Expression implements ValueProvider<String> {
      */
     private final String expression;
 
+    @ProviderCtor
     public Expression(String expression) {
         this.expression = expression;
     }
@@ -25,7 +37,7 @@ public class Expression implements ValueProvider<String> {
     @Override
     public String getOneWithContext(IObjectProviderContext ctx) {
         // Recherche les variables de la forme "${nom}"
-        Pattern pattern = Pattern.compile("(\\$?\\$)\\{([a-zA-Z0-9_-]+)\\}");
+        Pattern pattern = Pattern.compile("(\\$?\\$)\\{([a-zA-Z0-9_-]+)}");
         Matcher matcher = pattern.matcher(expression);
         String result = expression;
 

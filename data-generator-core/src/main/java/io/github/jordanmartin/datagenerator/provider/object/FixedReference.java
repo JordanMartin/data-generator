@@ -1,5 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
+import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
 
@@ -8,6 +10,15 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  *
  * @param <T> Le type de la valeur
  */
+@Provider(
+        name = "FixedReference",
+        description = "Référence un autre champ. S'il s'agit d'un champ de référence, la générateur associé ne sera appelé qu'une fois",
+        examples = {
+                "FixedReference(\"champ1\")"
+        },
+        returns = Object.class,
+        group = "reference"
+)
 public class FixedReference<T> implements ValueProvider<T> {
 
     /**
@@ -15,6 +26,7 @@ public class FixedReference<T> implements ValueProvider<T> {
      **/
     private final String refName;
 
+    @ProviderCtor
     public FixedReference(String refName) {
         this.refName = refName;
     }
