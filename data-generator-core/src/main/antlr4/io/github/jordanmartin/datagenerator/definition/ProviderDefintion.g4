@@ -5,12 +5,13 @@ definition: func | reference;
 func: func_name LPAREN func_params RPAREN;
 func_params: ( | func_param (COMMA func_param)*);
 func_name: Ident;
-func_param: func | string | number | list | reference;
+func_param: func | string | number | list | reference | booleanValue;
 number: Integer | Double;
+booleanValue: 'true' | 'false';
 string: StringLiteral;
 
 list: LBRACK ( | list_element (COMMA list_element)*) RBRACK;
-list_element:  func | string | number | reference;
+list_element:  func | string | number | reference | booleanValue;
 
 reference: fixedRef | standardRef | expression;
 fixedRef: DOLLAR DOLLAR Ident;

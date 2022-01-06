@@ -62,9 +62,14 @@ public abstract class DefinitionParser {
         } else if (from == int.class && to == Integer.class
                 || from == Integer.class && to == int.class) {
             return true;
-        } else {
-            return from == double.class && to == Double.class
-                    || from == Double.class && to == double.class;
+        } else if (from == double.class && to == Double.class
+                || from == Double.class && to == double.class) {
+            return true;
+        } else if (from == Boolean.class && to == boolean.class
+                || from == boolean.class && to == Boolean.class) {
+            return true;
         }
+
+        return false;
     }
 }

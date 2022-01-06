@@ -165,6 +165,8 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitList(ctx.list());
             } else if (ctx.reference() != null) {
                 return visitReference(ctx.reference());
+            } else if (ctx.booleanValue() != null) {
+                return visitBooleanValue(ctx.booleanValue());
             }
 
             // Ne devrait jamais arriver
@@ -186,6 +188,8 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitFunc(ctx.func());
             } else if (ctx.string() != null) {
                 return visitString(ctx.string());
+            } else if (ctx.booleanValue() != null) {
+                return visitBooleanValue(ctx.booleanValue());
             }
 
             // Ne devrait jamais arriver
@@ -207,6 +211,11 @@ public class YamlDefinitionParser extends DefinitionParser {
             }
             // Ne devrait jamais arriver
             return notSupportedDefinition(ctx);
+        }
+
+        @Override
+        public Object visitBooleanValue(ProviderDefintionParser.BooleanValueContext ctx) {
+            return Boolean.parseBoolean(ctx.getText());
         }
 
         @Override
