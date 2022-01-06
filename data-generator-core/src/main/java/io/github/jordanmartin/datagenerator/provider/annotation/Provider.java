@@ -36,5 +36,5 @@ public @interface Provider {
     /**
      * Nom pour le regroupement des générateurs
      */
-    String groupe() default "";
+    String group() default "";
 }

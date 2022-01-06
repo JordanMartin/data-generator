@@ -11,7 +11,7 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
 @Provider(
         name = "Boolean",
         description = "Retourne un booléen aléatoire",
-        groupe = "number"
+        group = "number"
 )
 public class RandomBoolean implements StatelessValueProvider<Boolean> {
 

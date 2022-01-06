@@ -17,7 +17,7 @@ import java.util.Random;
         examples = {
                 "Double(0, 10) => 5.494573180435739"
         },
-        groupe = "nombre"
+        group = "nombre"
 )
 public class RandomDouble implements DoubleProvider, StatelessValueProvider<Double> {
     private final Random random = new Random();

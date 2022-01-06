@@ -13,7 +13,7 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
 @Provider(
         name = "Increment",
         description = "Retourne une valeur entière incrémentée",
-        groupe = "id"
+        group = "id"
 )
 public class IntIncrement implements StatelessValueProvider<Integer> {
 

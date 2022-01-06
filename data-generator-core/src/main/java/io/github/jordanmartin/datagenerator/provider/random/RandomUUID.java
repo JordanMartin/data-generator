@@ -12,7 +12,7 @@ import java.util.UUID;
         name = "UUID",
         description = "Retourne un identifiant unique aléatoire",
         examples = "UUID() => dc16324a-9d7f-4454-ab82-92f6092a7918",
-        groupe = "id"
+        group = "id"
 )
 public class RandomUUID implements StatelessValueProvider<String> {
 

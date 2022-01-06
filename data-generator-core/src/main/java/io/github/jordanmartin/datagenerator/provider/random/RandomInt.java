@@ -15,7 +15,7 @@ import java.util.Random;
         name = "Integer",
         description = "Retourne un entier aléatoire",
         examples = {"Integer()", "Integer(10)", "Integer(10, 10)"},
-        groupe = "nombre"
+        group = "nombre"
 )
 public class RandomInt implements IntegerProvider, StatelessValueProvider<Integer> {
 

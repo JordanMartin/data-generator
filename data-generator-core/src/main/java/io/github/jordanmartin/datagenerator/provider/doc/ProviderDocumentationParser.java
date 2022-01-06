@@ -26,8 +26,8 @@ public class ProviderDocumentationParser {
         providerDoc.setDescription(providerAnnotation.description());
         providerDoc.setExamples(providerAnnotation.examples());
         providerDoc.setType(getReturnType(clazz));
-        if (!providerAnnotation.groupe().isBlank()) {
-            providerDoc.setGroupe(providerAnnotation.groupe());
+        if (!providerAnnotation.group().isBlank()) {
+            providerDoc.setGroupe(providerAnnotation.group());
         }
 
         if (!providerAnnotation.name().isBlank()) {

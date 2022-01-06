@@ -19,7 +19,7 @@ import java.math.RoundingMode;
         examples = {
                 "Round(Double(10, 20), 2) => 17.22"
         },
-        groupe = "nombre"
+        group = "nombre"
 )
 public class Round implements DoubleProvider {
 

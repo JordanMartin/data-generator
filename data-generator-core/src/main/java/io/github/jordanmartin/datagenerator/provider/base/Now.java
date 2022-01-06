@@ -8,7 +8,7 @@ import java.util.Date;
 @Provider(
         name = "Now",
         description = "Retourne la date courante",
-        groupe = "date"
+        group = "date"
 )
 public class Now implements StatelessValueProvider<Date> {
     @Override

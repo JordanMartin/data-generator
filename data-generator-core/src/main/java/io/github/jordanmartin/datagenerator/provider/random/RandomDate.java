@@ -27,7 +27,7 @@ import java.util.Date;
                 "Date(\"2020-01-01\", \"2020-12-31\") => \"2020-10-20T21:42:03.367Z\"",
                 "FormatDate(Date(), \"yyyy-MM-dd\") => 2021-03-22"
         },
-        groupe = "date"
+        group = "date"
 )
 public class RandomDate implements ValueProvider<Date> {
 
