@@ -3,6 +3,7 @@ package io.github.jordanmartin.datagenerator.provider.random;
 import com.mifmif.common.regex.Generex;
 import com.mifmif.common.regex.util.Iterator;
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +45,20 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
         this.generex = new Generex(regex);
     }
 
-    @ProviderCtor("Permet la mise en cache d'un nombre spécifié d'élément unique. " +
+    @ProviderCtor("Permet la mise en cache d'un nombre spécifié d'élément unique et aléatoire. " +
             "Ce générateur retourne ensuite aléatoirement une valeur depuis le cache.")
     public RandomFromRegex(String regex, int count) {
+        this(regex, count, false);
+    }
+
+    @ProviderCtor("Permet la mise en cache d'un nombre spécifié d'élément unique. " +
+            "Ce générateur retourne ensuite aléatoirement une valeur depuis le cache.")
+    public RandomFromRegex(
+            String regex,
+            int count,
+            @ProviderArg(description = "Si true: les données générées sont séquentielles. A favoriser pour nombre important car plus rapide") boolean sequential) {
         this(regex);
-        generateUniqueCache(count);
+        generateUniqueCache(count, sequential);
     }
 
     @Override
@@ -63,9 +73,34 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
 
     /**
      * Génère un cache de {@code count} éléments
+     *
+     * @param count      Nombre d'élément à générer
+     * @param sequential S'il doivent être séquentiels ou non
      */
-    private void generateUniqueCache(int count) {
+    private void generateUniqueCache(int count, boolean sequential) {
         this.cache = new ArrayList<>();
+        if (sequential) {
+            fillCacheWithSequential(count);
+        } else {
+            fillCacheWithNonSequential(count);
+        }
+    }
+
+    /**
+     * Alimente le cache avec des données aléatoires à partir de la regex.
+     * Méthode plus lente que la génération séquentielle
+     */
+    private void fillCacheWithNonSequential(int count) {
+        for (int i = 0; i < count; i++) {
+            this.cache.add(generex.random());
+        }
+    }
+
+    /**
+     * Alimente le cache avec des données séquentielles à partir de la regex.
+     * Méthode plus rapide que la génération aléatoire. A privilégier pour un grand nombre d'objet à mettre en cache
+     */
+    private void fillCacheWithSequential(int count) {
         Iterator it = generex.iterator();
         for (int i = 0; i < count && it.hasNext(); i++) {
             this.cache.add(it.next());
