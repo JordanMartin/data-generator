@@ -7,12 +7,12 @@
     <parent>
         <groupId>io.github.jordanmartin.datagenerator</groupId>
         <artifactId>parent</artifactId>
-        <version>1.7.1-SNAPSHOT</version>
+        <version>1.7.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>api</artifactId>
-    <version>1.7.1-SNAPSHOT</version>
+    <version>1.7.1</version>
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>io.github.jordanmartin.datagenerator</groupId>
             <artifactId>core</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
