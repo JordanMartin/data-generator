@@ -22,7 +22,13 @@ public abstract class ObjectBuilder extends ObjectProvider {
     protected Faker faker = new Faker(Locale.FRANCE);
 
     protected ObjectBuilder() {
-        this.configure();
+        this(true);
+    }
+
+    protected ObjectBuilder(boolean autoConfigure) {
+        if (autoConfigure) {
+            this.configure();
+        }
     }
 
     public abstract void configure();
