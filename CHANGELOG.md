@@ -1,3 +1,15 @@
+# 1.7.2
+
+## webui:
+
+- FIX : ouverture automatique du navigateur + port random par défaut
+
+# 1.7.1
+
+## core
+
+- ObjectBuilder: possibilité de ne pas appeler directement la méthode `configure` lors de la construction d'un objet fi
+
 # 1.7.0
 
 - Nouveau générateur: Not
