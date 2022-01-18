@@ -11,6 +11,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -40,8 +41,10 @@ public class StartupListener {
         int poolTime = 500;
         int maxTime = 5000;
         for (int duration = 0; duration < maxTime; duration += poolTime) {
-            this.httpPort = Integer.parseInt(System.getProperty("quarkus.http.port"));
-            if (httpPort != 0) {
+            String httpPort = Optional.ofNullable(System.getProperty("quarkus.http.port"))
+                    .orElse("0");
+            this.httpPort = Integer.parseInt(httpPort);
+            if (this.httpPort != 0) {
                 return true;
             }
             try {
