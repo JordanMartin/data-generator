@@ -4,7 +4,7 @@
 
 > Générateur de données aléatoire au format  json, yaml, xml, sql, csv ou personalisé via template
 
-La génération de données peut se faire via 4 méthodes : 
+La génération de données peut se faire via 3 méthodes : 
 - Requête HTTP (endpoints exposé par le module api)
 - Interface Web (exposée par le module api)
 - Programmatique en java/groovy/kotlin (module core)
