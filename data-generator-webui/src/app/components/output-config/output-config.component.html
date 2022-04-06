@@ -52,7 +52,7 @@
         {{sep}}
       </mat-button-toggle>
       <mat-button-toggle [value]="customSep.value">
-        <input placeholder="Custom separator" #customSep class="custom-separator" type="text" value=""
+        <input placeholder="Séparateur personalisé" #customSep class="custom-separator" type="text" value=""
                (click)="customSep.focus()"
                (keyup)="updateParam('separator', customSep.value)">
       </mat-button-toggle>
@@ -61,6 +61,10 @@
 
   <div class="editor-container" *ngIf="config.format == 'template'">
     <h2>Template</h2>
+    <div class="description">
+      Template au format <a target="_blank" href="https://velocity.apache.org/engine/devel/user-guide.html">Apache
+      Velocity</a>
+    </div>
     <app-template-editor
       [initialValue]="config.template"
       (onChange)="updateParam('template', $event)"></app-template-editor>

@@ -6,7 +6,4 @@ public class DefinitionException extends RuntimeException {
         super(message);
     }
 
-    public DefinitionException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

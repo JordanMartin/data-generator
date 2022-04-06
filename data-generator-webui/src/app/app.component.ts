@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataGeneratorApiService } from './services/data-generator-api.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'data-generator';
+  version!: string;
+
+  constructor(private api: DataGeneratorApiService) {
+    api.getVersion().subscribe(version => this.version = version);
+  }
 }

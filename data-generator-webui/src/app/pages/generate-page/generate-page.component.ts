@@ -3,8 +3,9 @@ import { DataGeneratorApiService } from '../../services/data-generator-api.servi
 import { Subject } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { DownloadForm } from './download-form/download-form.component';
+import { DownloadForm } from '../../components/download-form/download-form.component';
 import { OutputConfig } from '../../components/output-config/output-config';
+import { StorageService } from '../../services/storage-service';
 
 @Component({
   selector: 'app-generate-page',
@@ -16,16 +17,17 @@ export class GeneratePageComponent implements OnInit {
   private generateSubject = new Subject();
   auto_generate = true;
   currentDefinition!: string;
-  editorDefinition!: string;
   generated: any;
   output_config!: OutputConfig;
 
   is_request_pending = false;
+  is_error: boolean = false
+
   defaults = {
     auto_generate_debounce_ms: 200
   }
 
-  constructor(private api: DataGeneratorApiService, private dialog: MatDialog) {
+  constructor(private api: DataGeneratorApiService, public storage: StorageService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -33,7 +35,12 @@ export class GeneratePageComponent implements OnInit {
       debounceTime(this.defaults.auto_generate_debounce_ms),
       map(() => this.generate())
     ).subscribe();
-    this.reloadFromCache();
+
+    this.storage.definition.subscribe(definition => this.updateDefinition(definition));
+    this.storage.output_config.subscribe(output_config => this.updateOutputConfig({
+      update_now: true,
+      config: output_config
+    }));
   }
 
   generateDebounce() {
@@ -48,16 +55,17 @@ export class GeneratePageComponent implements OnInit {
     return this.api.generateFromTemplate(this.currentDefinition, this.output_config)
       .subscribe(
         result => this.updateGenerated(result),
-        error => this.updateGenerated(error.error)
+        error => this.updateGenerated(error.error, true)
       );
   }
 
-  updateGenerated(generatedData: string) {
+  updateGenerated(generatedData: string, isError: boolean = false) {
     this.generated = {
       content: generatedData,
       format: this.output_config.format
     };
     this.is_request_pending = false;
+    this.is_error = isError;
   }
 
   updateDefinition(definition: string) {
@@ -65,7 +73,6 @@ export class GeneratePageComponent implements OnInit {
     if (this.auto_generate) {
       this.generateDebounce();
     }
-    this.saveToCache();
   }
 
   changeAutoGenerate(auto_generate: boolean) {
@@ -97,26 +104,10 @@ export class GeneratePageComponent implements OnInit {
     }
   }
 
-  reloadFromCache() {
-    try {
-      const savedDefinition = window.localStorage.getItem('definition') || '';
-      const savedOutputConfig = JSON.parse(window.localStorage.getItem('output_config') || '');
-      this.editorDefinition = savedDefinition;
-      this.output_config = savedOutputConfig;
-    } catch (e) {
-      console.log('echec de chargement du cache', e);
-    }
-  }
-
-  saveToCache() {
-    window.localStorage.setItem('definition', this.currentDefinition);
-    window.localStorage.setItem('output_config', JSON.stringify(this.output_config));
-  }
-
   drag = false;
   dragEvent!: MouseEvent;
-  leftPaneWidth = "calc(50% - 1px)";
-  rightPaneWidth = "calc(50% - 1px)";
+  leftPaneWidth = 'calc(50% - 1px)';
+  rightPaneWidth = 'calc(50% - 1px)';
   lastOffset = 0;
 
   startResize(e: MouseEvent) {
@@ -140,10 +131,6 @@ export class GeneratePageComponent implements OnInit {
     let newSize = e.screenX - this.dragEvent.screenX - this.lastOffset;
     this.leftPaneWidth = 'calc(50% + ' + newSize + 'px)';
     this.rightPaneWidth = 'calc(50% - ' + (newSize + 2) + 'px)';
-  }
-
-  saveConfig() {
-    console.log('save config', this.output_config, this.currentDefinition);
   }
 }
 

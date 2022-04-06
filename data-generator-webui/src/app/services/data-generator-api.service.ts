@@ -46,6 +46,18 @@ export class DataGeneratorApiService {
     );
   }
 
+  getVersion(): Observable<string> {
+    return this.http.get<{version: string}>(this.base_api + '/version',
+      {
+        responseType: 'json',
+      }
+    ).pipe(
+      map(response => {
+        return response.version;
+      })
+    );
+  }
+
   private static sortGenerator(a: GeneratorDoc, b: GeneratorDoc): number {
     const compareGroupe = (a.groupe || '').localeCompare(b.groupe || '');
     const compareType = (a.type || '').localeCompare(b.type || '');
@@ -58,4 +70,6 @@ export class DataGeneratorApiService {
     }
     return compareName;
   }
+
+
 }

@@ -7,6 +7,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -26,6 +27,35 @@ public class StartupListener {
     void onStart(@Observes StartupEvent ev) {
         if ("prod".equals(ProfileManager.getActiveProfile()) && openBrowser) {
             openBrowserAsyncWhenPortIsSet();
+        }
+
+        createTrayIcon();
+    }
+
+    private void createTrayIcon() {
+        if (SystemTray.isSupported()) {
+            SystemTray tray = SystemTray.getSystemTray();
+            Image image = null;
+            try {
+                image = ImageIO.read(getClass().getResource("/tray-icon.png"));
+            } catch (Exception e) {
+
+            }
+            PopupMenu popup = new PopupMenu();
+            MenuItem defaultItem = new MenuItem("Quitter");
+            defaultItem.addActionListener(actionEvent -> {
+                System.exit(0);
+            });
+            popup.add(defaultItem);
+            TrayIcon trayIcon = new TrayIcon(image, "Générateur de données ", popup);
+            trayIcon.addActionListener(e -> {
+                openInBrowser();
+            });
+
+            try {
+                tray.add(trayIcon);
+            } catch (AWTException e) {
+            }
         }
     }
 
@@ -70,5 +100,4 @@ public class StartupListener {
             throw new IllegalStateException("Failed opening the default browser to show the URL (" + url + ").", e);
         }
     }
-
 }

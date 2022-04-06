@@ -8,12 +8,26 @@ import io.github.jordanmartin.datagenerator.server.repository.ProviderRepository
 import io.github.jordanmartin.datagenerator.server.service.ProviderDownloadUtil;
 import io.github.jordanmartin.datagenerator.server.utils.SleepUtil;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +57,8 @@ public class ProviderController {
     public static class GlobalExceptionMapper implements ExceptionMapper<Exception> {
         @Override
         public Response toResponse(Exception exception) {
-            StringWriter stacktrace = new StringWriter();
-            exception.printStackTrace(new PrintWriter(stacktrace));
             return Response.status(500)
-                    .entity(stacktrace.toString())
+                    .entity(exception.getClass().getSimpleName() + " : " + exception.getMessage())
                     .build();
         }
     }

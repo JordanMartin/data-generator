@@ -23,12 +23,16 @@ import {MatOptionModule} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDialogModule} from "@angular/material/dialog";
-import {DownloadForm} from "./pages/generate-page/download-form/download-form.component";
+import {DownloadForm} from "./components/download-form/download-form.component";
 import {TemplateEditorComponent} from "./components/template-editor/template-editor.component";
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {OutputConfigComponent} from './components/output-config/output-config.component';
 import {SimplifyJavaTypePipe} from "./components/generator-doc/simplify-java-type.pipe";
+import {ConfigStoreComponent} from './components/config-store/config-store.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatBadgeModule} from "@angular/material/badge";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -40,30 +44,34 @@ import {SimplifyJavaTypePipe} from "./components/generator-doc/simplify-java-typ
     DownloadForm,
     TemplateEditorComponent,
     OutputConfigComponent,
-    SimplifyJavaTypePipe
+    SimplifyJavaTypePipe,
+    ConfigStoreComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatGridListModule,
-    MatListModule,
-    MatExpansionModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatIconModule,
-    MatDialogModule,
-    MatSlideToggleModule,
-    MatButtonToggleModule,
-    MatProgressBarModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        FormsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+      MatGridListModule,
+      MatListModule,
+      MatExpansionModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatIconModule,
+      MatDialogModule,
+      MatSlideToggleModule,
+      MatButtonToggleModule,
+      MatProgressBarModule,
+      MatMenuModule,
+      MatBadgeModule,
+      MatTooltipModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
