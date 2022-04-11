@@ -81,6 +81,7 @@ public class JsonOutput extends ObjectWriterOuput {
     @Override
     public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
         setPretty(outputConfig.getOutputPretty());
+        setIncludeNull(outputConfig.getIncludeNull());
         return this;
     }
 

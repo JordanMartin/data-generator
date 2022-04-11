@@ -12,18 +12,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class ProviderRegistry {
 
+    private static final String PROVIDER_CORE_SEARCH_PACKAGE = "io.github.jordanmartin.datagenerator.provider";
+    private static final String PROVIDER_PLUGINS_SEARCH_PACKAGE = "io.github.datagenerator.plugins";
     private static ProviderRegistry INSTANCE;
 
     final Map<String, Class<? extends ValueProvider<?>>> providers = new HashMap<>();
     final Map<String, ProviderDoc> providersDoc = new HashMap<>();
-    private static final String PROVIDER_SEARCH_PACKAGE = "io.github.jordanmartin.datagenerator.provider";
 
     private ProviderRegistry() {
-        registerDefaultProviders();
+        registerProviders();
     }
 
     public static ProviderRegistry getInstance() {
@@ -33,9 +35,10 @@ public class ProviderRegistry {
         return INSTANCE;
     }
 
-    private void registerDefaultProviders() {
-        log.info("Recherche des générateur dans le package : {}", PROVIDER_SEARCH_PACKAGE);
-        new Reflections(PROVIDER_SEARCH_PACKAGE)
+    private void registerProviders() {
+        log.info("Recherche des générateurs dans les packages : {}, {}",
+                PROVIDER_CORE_SEARCH_PACKAGE, PROVIDER_PLUGINS_SEARCH_PACKAGE);
+        new Reflections(PROVIDER_CORE_SEARCH_PACKAGE, PROVIDER_PLUGINS_SEARCH_PACKAGE)
                 .getTypesAnnotatedWith(Provider.class)
                 .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
                 .forEach(this::registerProvider);

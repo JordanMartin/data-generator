@@ -1,6 +1,6 @@
 import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {OutputConfig} from "../../../components/output-config/output-config";
+import {OutputConfig} from "../output-config/output-config";
 
 @Component({
   templateUrl: './download-form.component.html',

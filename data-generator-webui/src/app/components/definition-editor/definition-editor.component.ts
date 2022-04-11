@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, Output} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, Output } from '@angular/core';
 import * as monaco from 'monaco-editor';
 import IStandaloneEditorConstructionOptions = monaco.editor.IStandaloneEditorConstructionOptions;
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
+import { StorageService } from '../../services/storage-service';
 
 @Component({
   selector: 'app-definition-editor',
@@ -13,14 +14,12 @@ export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
   @Output() onChange = new EventEmitter<string>();
 
   @Input()
-  set value(value: string) {
-    this._value = value;
-    if (this.editor) {
-      this.editor.setValue(value);
-    }
+  set definitionError(isError: boolean) {
+    this.is_definition_error = isError;
   }
 
   private _value!: string;
+  is_definition_error: boolean = false;
 
   editorOptions: IStandaloneEditorConstructionOptions = {
     theme: 'vs-light',
@@ -37,11 +36,19 @@ export class DefinitionEditorComponent implements AfterViewInit, OnDestroy {
   };
   private editor!: IStandaloneCodeEditor;
 
-  constructor(private _ngZone: NgZone) {
+  constructor(private _ngZone: NgZone, private storage: StorageService) {
   }
 
   ngAfterViewInit() {
     this.initMonaco();
+    this.storage.definition_load
+      .subscribe(value => {
+        this._value = value;
+        if (this.editor) {
+          this.editor.setValue(value);
+        }
+        this.onChange.emit(value);
+      });
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,12 @@
+.save-name {
+  width: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: solid 1px #ccc;
+  padding: 6px 15px;
+  font-family: sans-serif;
+
+  &::placeholder {
+    color: #d7d7d7;
+  }
+}

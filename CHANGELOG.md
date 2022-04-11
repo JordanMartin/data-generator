@@ -1,3 +1,15 @@
+# 1.8.0
+
+## webui:
+
+- Gestionnaire de sauvegardes
+- Affichage du numéro de version
+- Icone dans la zone de notification pour ouvrir ou fermer l'app
+
+## core
+
+- Nouveaux générateurs: Or, And, If
+
 # 1.7.2
 
 ## webui:

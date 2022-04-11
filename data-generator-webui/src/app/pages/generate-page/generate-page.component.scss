@@ -1,6 +1,13 @@
 .editor-container {
 }
 
+.description {
+  color: #444;
+  font-size: 0.9em;
+  margin-top: -15px;
+  margin-bottom: 20px;
+}
+
 .resize-bar {
   display: inline-block;
   width: 2px;
@@ -25,6 +32,19 @@ app-definition-editor {
   display: inline-block;
   border: solid 1px #ccc;
   width: calc(100% - 2px);
+}
+
+.definition-status {
+  mat-icon {
+    top: 3px;
+    position: relative;
+  }
+  .def-ok {
+    color: #009688;
+  }
+  .def-error {
+    color: #ff5722;
+  }
 }
 
 app-data-preview {
