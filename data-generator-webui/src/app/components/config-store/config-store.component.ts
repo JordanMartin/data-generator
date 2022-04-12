@@ -3,10 +3,6 @@ import {StorageService} from '../../services/storage-service';
 import {ModelConfig} from '../../services/model-config';
 import {OutputConfig} from "../output-config/output-config";
 
-interface ConfigSave {
-  name: string;
-}
-
 @Component({
   selector: 'app-config-store',
   templateUrl: './config-store.component.html',
@@ -19,9 +15,6 @@ export class ConfigStoreComponent {
 
   constructor(private storage: StorageService) {
     this.store = this.getStore();
-    if (!this.save_count) {
-      this.store = this.loadExamples();
-    }
     // this.storage.definition.subscribe(() => this.save('<non sauvegardé>'));
     // this.storage.output_config.subscribe(() => this.save('<non sauvegardé>'));
   }
@@ -30,7 +23,7 @@ export class ConfigStoreComponent {
     return Object.keys(this.store).length;
   }
 
-  save(name: string) {
+  saveCurrent(name: string) {
     if (!name) {
       return;
     }
@@ -67,8 +60,8 @@ export class ConfigStoreComponent {
     this.save_name = name;
   }
 
-  private loadExamples(): { [key: string]: ModelConfig } {
-    return {
+  loadExamples() {
+    const examples = {
       "[Exemple] Template": {
         "definition": "template:\n  id: Increment()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)",
         "output_config": {
@@ -126,6 +119,12 @@ export class ConfigStoreComponent {
           "pretty": true,
         } as OutputConfig
       }
+    };
+
+    for (let name in examples) {
+      // @ts-ignore
+      this.store[name] = examples[name];
     }
+    window.localStorage.setItem('store', JSON.stringify(this.store));
   }
 }

@@ -1,8 +1,15 @@
 .param-field {
   border: solid 1px #ccc;
   border-radius: 3px;
-  height: 40px;
+  height: 30px;
   padding: 0 15px;
+}
+
+mat-button-toggle::ng-deep {
+  .mat-button-toggle-label-content {
+    line-height: 30px;
+    padding: 0 20px;
+  }
 }
 
 .object-count {
@@ -17,7 +24,7 @@
 
 .param {
   display: inline-block;
-  margin: 0 15px;
+  margin: 10px 15px 0;
 }
 
 .param-name {

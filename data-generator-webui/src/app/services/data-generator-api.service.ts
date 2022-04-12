@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { GeneratorDoc } from './generator-doc';
-import { OutputConfig } from '../components/output-config/output-config';
-import { map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {GeneratorDoc} from './generator-doc';
+import {OutputConfig} from '../components/output-config/output-config';
+import {map} from 'rxjs/operators';
+import {VersionInfo} from "./version-info";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class DataGeneratorApiService {
   }
 
   getAvailableGenerator(): Observable<GeneratorDoc[]> {
-    return this.http.get<{ [ key: string ]: GeneratorDoc }>(this.base_api + '/provider-doc',
+    return this.http.get<{ [key: string]: GeneratorDoc }>(this.base_api + '/provider-doc',
       {
         responseType: 'json',
       }
@@ -46,15 +47,11 @@ export class DataGeneratorApiService {
     );
   }
 
-  getVersion(): Observable<string> {
-    return this.http.get<{version: string}>(this.base_api + '/version',
+  getVersion(): Observable<VersionInfo> {
+    return this.http.get<VersionInfo>(this.base_api + '/version',
       {
         responseType: 'json',
       }
-    ).pipe(
-      map(response => {
-        return response.version;
-      })
     );
   }
 

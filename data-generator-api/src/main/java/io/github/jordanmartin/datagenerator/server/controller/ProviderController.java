@@ -5,7 +5,7 @@ import io.github.jordanmartin.datagenerator.server.domain.OutputConfig;
 import io.github.jordanmartin.datagenerator.server.domain.ProviderConf;
 import io.github.jordanmartin.datagenerator.server.domain.ProviderConfDto;
 import io.github.jordanmartin.datagenerator.server.repository.ProviderRepository;
-import io.github.jordanmartin.datagenerator.server.service.ProviderDownloadUtil;
+import io.github.jordanmartin.datagenerator.server.utils.ProviderDownloadUtil;
 import io.github.jordanmartin.datagenerator.server.utils.SleepUtil;
 
 import javax.ws.rs.BeanParam;

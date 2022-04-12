@@ -1,4 +1,4 @@
-package io.github.jordanmartin.datagenerator.server.service;
+package io.github.jordanmartin.datagenerator.server.utils;
 
 import io.github.jordanmartin.datagenerator.server.domain.OutputConfig;
 import io.github.jordanmartin.datagenerator.server.domain.ProviderConf;
