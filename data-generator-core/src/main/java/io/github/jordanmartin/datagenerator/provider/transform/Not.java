@@ -16,7 +16,7 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
                 "Not(Boolean()) => false"
         },
         returns = Boolean.class,
-        group = "number"
+        group = "nombre"
 )
 public class Not extends TransformerProvider<Boolean, Boolean> {
 
@@ -33,7 +33,7 @@ public class Not extends TransformerProvider<Boolean, Boolean> {
     @ProviderCtor
     public Not(
             @ProviderArg(
-                    name = "booleen",
+                    name = "boolean",
                     description = "Une valeur booléen",
                     examples = "true"
             ) boolean bool) {

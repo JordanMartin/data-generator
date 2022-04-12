@@ -33,6 +33,7 @@ import {ConfigStoreComponent} from './components/config-store/config-store.compo
 import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -47,31 +48,32 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     SimplifyJavaTypePipe,
     ConfigStoreComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        FormsModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-      MatGridListModule,
-      MatListModule,
-      MatExpansionModule,
-      MatSelectModule,
-      MatOptionModule,
-      MatIconModule,
-      MatDialogModule,
-      MatSlideToggleModule,
-      MatButtonToggleModule,
-      MatProgressBarModule,
-      MatMenuModule,
-      MatBadgeModule,
-      MatTooltipModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    FormsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatGridListModule,
+    MatListModule,
+    MatExpansionModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatIconModule,
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatButtonToggleModule,
+    MatProgressBarModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTooltipModule,
+    MatRadioModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

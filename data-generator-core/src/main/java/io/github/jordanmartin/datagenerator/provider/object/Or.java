@@ -8,7 +8,7 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
         name = "Or",
         description = "Retourne vrai si l'un des deux valeurs est vrai",
         returns = Boolean.class,
-        group = "reference"
+        group = "booléen"
 )
 public class Or implements ValueProvider<Boolean> {
 

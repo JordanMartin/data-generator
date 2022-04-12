@@ -16,7 +16,7 @@ import java.util.List;
                 "If(\"age\", \">=\", 18) => retourne true si le champ age est >= 18 sinon false"
         },
         returns = Boolean.class,
-        group = "reference"
+        group = "booléen"
 )
 public class If implements ValueProvider<Boolean> {
 
