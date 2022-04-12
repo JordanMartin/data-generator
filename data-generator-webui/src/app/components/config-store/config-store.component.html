@@ -12,9 +12,13 @@
     </button>
   </mat-menu>
 
-  <button mat-icon-button (click)="save(save_name)" [disabled]="!save_name"
+  <button mat-icon-button (click)="saveCurrent(save_name)" [disabled]="!save_name"
           matTooltip="Sauvegarder la configuration courante">
     <mat-icon>save</mat-icon>
+  </button>
+
+  <button mat-icon-button (click)="loadExamples()" matTooltip="Charger les exemples">
+    <mat-icon>live_tv</mat-icon>
   </button>
 
   <button mat-icon-button (click)="delete()" [disabled]="!save_name || !store[save_name]"

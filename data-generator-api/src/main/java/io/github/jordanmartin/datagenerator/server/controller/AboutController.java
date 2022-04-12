@@ -1,22 +1,15 @@
 package io.github.jordanmartin.datagenerator.server.controller;
 
-import io.github.jordanmartin.datagenerator.definition.DefinitionException;
-import io.github.jordanmartin.datagenerator.server.domain.OutputConfig;
-import io.github.jordanmartin.datagenerator.server.domain.ProviderConf;
-import io.github.jordanmartin.datagenerator.server.domain.ProviderConfDto;
-import io.github.jordanmartin.datagenerator.server.repository.ProviderRepository;
-import io.github.jordanmartin.datagenerator.server.service.ProviderDownloadUtil;
-import io.github.jordanmartin.datagenerator.server.utils.SleepUtil;
+import io.github.jordanmartin.datagenerator.server.service.LatestVersionChecker;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-import java.net.URI;
-import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Path("/api/version")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,10 +18,22 @@ public class AboutController {
     @ConfigProperty(name = "quarkus.application.version")
     String version;
 
+    private final LatestVersionChecker latestVersionChecker;
+
+    public AboutController(LatestVersionChecker latestVersionChecker) {
+        this.latestVersionChecker = latestVersionChecker;
+    }
+
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response version() {
-        return Response.ok(Map.of("version", version)).build();
+        Optional<Map<String, String>> latest = latestVersionChecker.getLatestVersion()
+                .map(l -> Map.of("version", l.getVersion(), "date", l.getCreated_at()));
+
+        return Response.ok(Map.of(
+                "version", version,
+                "latest", latest
+        )).build();
     }
 }

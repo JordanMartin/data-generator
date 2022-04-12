@@ -38,8 +38,7 @@ public class StartupListener {
             Image image = null;
             try {
                 image = ImageIO.read(getClass().getResource("/tray-icon.png"));
-            } catch (Exception e) {
-
+            } catch (Exception ignored) {
             }
             PopupMenu popup = new PopupMenu();
             MenuItem defaultItem = new MenuItem("Quitter");
@@ -54,7 +53,7 @@ public class StartupListener {
 
             try {
                 tray.add(trayIcon);
-            } catch (AWTException e) {
+            } catch (AWTException ignored) {
             }
         }
     }
