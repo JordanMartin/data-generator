@@ -42,7 +42,7 @@ export class DataGeneratorApiService {
       }
     ).pipe(
       map(response => {
-        return Object.values(response).sort(DataGeneratorApiService.sortGenerator);
+        return Object.values(response);
       })
     );
   }
@@ -54,19 +54,4 @@ export class DataGeneratorApiService {
       }
     );
   }
-
-  private static sortGenerator(a: GeneratorDoc, b: GeneratorDoc): number {
-    const compareGroupe = (a.groupe || '').localeCompare(b.groupe || '');
-    const compareType = (a.type || '').localeCompare(b.type || '');
-    const compareName = (a.name || '').localeCompare(b.name || '');
-    if (compareGroupe != 0) {
-      return compareGroupe;
-    }
-    if (compareType != 0) {
-      return compareType;
-    }
-    return compareName;
-  }
-
-
 }
