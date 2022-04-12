@@ -56,7 +56,7 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
     public RandomFromRegex(
             String regex,
             int count,
-            @ProviderArg(description = "Si true: les données générées sont séquentielles. A favoriser pour nombre important car plus rapide") boolean sequential) {
+            @ProviderArg(description = "Si true: les données générées sont séquentielles. A favoriser si <count> est important") boolean sequential) {
         this(regex);
         generateUniqueCache(count, sequential);
     }
