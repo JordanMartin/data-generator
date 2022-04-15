@@ -8,8 +8,8 @@
   <div class="app-info">
     <div class="app-name">Générateur de données</div>
     <div class="app-version">
-      {{ versionInfo.version }}
-      <a *ngIf="versionInfo.version != versionInfo.latest.version"
+      {{ versionInfo?.version }}
+      <a *ngIf="versionInfo && (versionInfo.version != versionInfo.latest.version)"
          class="new-version" matTooltip="Nouvelle version disponible"
          href="https://github.com/JordanMartin/data-generator/releases/latest" target="_blank">
         <mat-icon>notifications_active</mat-icon>

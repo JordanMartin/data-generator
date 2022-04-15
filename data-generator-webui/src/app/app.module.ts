@@ -29,11 +29,13 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {OutputConfigComponent} from './components/output-config/output-config.component';
 import {SimplifyJavaTypePipe} from "./components/generator-doc/simplify-java-type.pipe";
-import {ConfigStoreComponent} from './components/config-store/config-store.component';
+import {FavoritesComponent} from './components/favorites/favorites.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import { MatRadioModule } from '@angular/material/radio';
+import {MatRadioModule} from '@angular/material/radio';
+import {ManageFavoritesComponent} from './components/manage-favorites/manage-favorites.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ import { MatRadioModule } from '@angular/material/radio';
     TemplateEditorComponent,
     OutputConfigComponent,
     SimplifyJavaTypePipe,
-    ConfigStoreComponent
+    FavoritesComponent,
+    ManageFavoritesComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +75,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatMenuModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,40 @@
+<div>
+  <div mat-dialog-title>
+    <mat-icon>star</mat-icon>
+    Favoris
+  </div>
+  <mat-dialog-content class="favorites-container">
+    <mat-list>
+      <mat-list-item *ngFor="let favorite of favorites">
+        <div class="favorites">
+          <span class="name">{{favorite.name}}</span>
+          <div class="actions">
+            <button class="remove" mat-button matTooltip="Supprimer" (click)="removeFavorite(favorite)">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-list-item *ngIf="!favorites.length">
+        Vous n'avez pas encore sauvegardé de favoris.
+      </mat-list-item>
+    </mat-list>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="exportFavorites()" [disabled]="!favorites.length">
+      <mat-icon>cloud_download</mat-icon>
+      Exporter
+    </button>
+    <input #importInput type="file" hidden="hidden"
+           (change)="importInput.files && importFavorites(importInput.files[0])">
+    <button mat-button (click)="importInput.click()">
+      <mat-icon>cloud_upload</mat-icon>
+      Importer
+    </button>
+    <button mat-button (click)="loadExamples()">
+      <mat-icon>live_tv</mat-icon>
+      Charger les exemples
+    </button>
+    <button mat-button mat-dialog-close>Fermer</button>
+  </mat-dialog-actions>
+</div>

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { DataGeneratorApiService } from '../../services/data-generator-api.service';
-import { Subject } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { DownloadForm } from '../../components/download-form/download-form.component';
-import { OutputConfig } from '../../components/output-config/output-config';
-import { StorageService } from '../../services/storage-service';
+import {Component, OnInit} from '@angular/core';
+import {DataGeneratorApiService} from '../../services/data-generator-api.service';
+import {Subject} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {DownloadForm} from '../../components/download-form/download-form.component';
+import {OutputConfig} from '../../components/output-config/output-config';
+import {StorageService} from '../../services/storage-service';
 
 @Component({
   selector: 'app-generate-page',
@@ -44,7 +44,7 @@ export class GeneratePageComponent implements OnInit {
   }
 
   generateDebounce() {
-    this.generateSubject.next();
+    this.generateSubject.next(null);
   }
 
   generate() {
@@ -53,10 +53,10 @@ export class GeneratePageComponent implements OnInit {
     }
     this.is_request_pending = true;
     return this.api.generateFromTemplate(this.currentDefinition, this.output_config)
-      .subscribe(
-        result => this.updateGenerated(result),
-        error => this.updateGenerated(error.error, true)
-      );
+      .subscribe({
+        next: result => this.updateGenerated(result),
+        error: error => this.updateGenerated(error.error, true)
+      });
   }
 
   updateGenerated(generatedData: string, isError: boolean = false) {
@@ -92,7 +92,7 @@ export class GeneratePageComponent implements OnInit {
     });
   }
 
-  updateOutputConfig({ update_now, config }: { update_now: boolean, config: OutputConfig }) {
+  updateOutputConfig({update_now, config}: { update_now: boolean, config: OutputConfig }) {
     this.output_config = config;
 
     if (this.auto_generate) {

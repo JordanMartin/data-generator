@@ -13,7 +13,7 @@ import IStandaloneEditorConstructionOptions = monaco.editor.IStandaloneEditorCon
 export class TemplateEditorComponent implements AfterViewInit, OnDestroy {
 
   @Output() onChange = new EventEmitter<string>();
-  @Input() initialValue!: string;
+  @Input() initialValue?: string;
 
   private editor!: IStandaloneCodeEditor;
 
