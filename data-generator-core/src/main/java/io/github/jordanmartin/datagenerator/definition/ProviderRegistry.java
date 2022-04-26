@@ -36,9 +36,12 @@ public class ProviderRegistry {
     }
 
     private void registerProviders() {
+        String pluginsProviderSearchPackage = Optional.ofNullable(System.getenv("PROVIDER_PLUGINS_SEARCH_PACKAGE"))
+                .orElse(PROVIDER_PLUGINS_SEARCH_PACKAGE);
+
         log.info("Recherche des générateurs dans les packages : {}, {}",
-                PROVIDER_CORE_SEARCH_PACKAGE, PROVIDER_PLUGINS_SEARCH_PACKAGE);
-        new Reflections(PROVIDER_CORE_SEARCH_PACKAGE, PROVIDER_PLUGINS_SEARCH_PACKAGE)
+                PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage);
+        new Reflections(PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage)
                 .getTypesAnnotatedWith(Provider.class)
                 .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
                 .forEach(this::registerProvider);

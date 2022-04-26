@@ -187,7 +187,7 @@ template:
 
 ## Générateurs
 
-TODO : renvoi vers webui
+La liste et documentation des générateurs sont disponible via la webui.
 
 ### Composition de générateur
 
@@ -372,3 +372,9 @@ ObjectOutput.from(provider)
 - id: 2
   name: Noa
 ```
+
+## Créer un nouveau générateur
+Pour définir votre propre générateur, basez vous sur [ceux existants](https://github.com/JordanMartin/data-generator/tree/main/data-generator-core/src/main/java/io/github/jordanmartin/datagenerator/provider)
+
+Par défaut le module core enregistre tous les générateurs présents dans le package `io.github.datagenerator.plugins`.
+Ce package peut être modifié en définissant la varialbe d'environnement `PROVIDER_PLUGINS_SEARCH_PACKAGE`.
