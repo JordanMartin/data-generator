@@ -1,6 +1,6 @@
 <div class="editor-container" (mousemove)="doResize($event)" (mouseup)="stopResize($event)" [class.isError]="is_error">
   <div class="half-pane" [style]="{width: leftPaneWidth}">
-    <h2>Définition du modèle
+    <h2 class="title">Définition du modèle
       <span class="definition-status">
         <mat-icon *ngIf="is_error" class="def-error">error_outline</mat-icon>
         <mat-icon *ngIf="!is_error" class="def-ok">check_circle</mat-icon>
@@ -12,7 +12,7 @@
   </div>
   <div class="resize-bar" (mousedown)="startResize($event)"></div>
   <div class="half-pane" [style]="{width: rightPaneWidth}">
-    <h2>Prévisualisation</h2>
+    <h2 class="title">Prévisualisation</h2>
     <mat-slide-toggle [checked]="auto_generate" (change)="changeAutoGenerate($event.checked)">
       Actualisation auto
     </mat-slide-toggle>
@@ -38,7 +38,7 @@
 
 <app-output-config (onChange)="storage.output_config.next($event)"></app-output-config>
 
-<h2>Documentation</h2>
+<h2 class="title">Documentation</h2>
 <p class="description">
   Liste les générateurs et fonctions pour la définition d'un champ
 </p>

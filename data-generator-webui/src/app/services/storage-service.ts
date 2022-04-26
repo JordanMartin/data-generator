@@ -1,7 +1,7 @@
-import {BehaviorSubject} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {OutputConfig} from '../components/output-config/output-config';
-import {Favorite} from "./favorite";
+import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { OutputConfig } from '../components/output-config/output-config';
+import { Favorite } from './favorite';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,8 @@ export class StorageService {
 
   private readonly LOCAL_STORAGE_FAVORITE_KEY = 'favorites';
 
+  public favorite_name = new BehaviorSubject<string>('');
+  public dirty_favorite = new BehaviorSubject<boolean>(false);
   public definition = new BehaviorSubject<string>('');
   public output_config = new BehaviorSubject<OutputConfig>({} as OutputConfig);
 
@@ -21,6 +23,8 @@ export class StorageService {
   } as OutputConfig);
 
   constructor() {
+    this.definition.subscribe(def => this.dirty_favorite.next(true));
+    this.output_config.subscribe(def => this.dirty_favorite.next(true));
   }
 
   loadFavorites(): Favorite[] {
@@ -29,6 +33,18 @@ export class StorageService {
       return [];
     }
     return JSON.parse(favorites);
+  }
+
+  loadFavorite(name: string): void {
+    const favorite: Favorite = this.loadFavorites()
+      .filter(favorite => favorite.name === name)[ 0 ];
+    if (!favorite) {
+      return;
+    }
+    this.favorite_name.next(name);
+    this.output_config_load.next(favorite.output_config);
+    this.definition_load.next(favorite.definition);
+    this.dirty_favorite.next(false);
   }
 
   saveFavorite(favorite: Favorite): Favorite[] {
@@ -52,5 +68,14 @@ export class StorageService {
 
   private persitFavorites(favorites: Favorite[]) {
     window.localStorage.setItem(this.LOCAL_STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
+  }
+
+  saveCurrent(name: string) {
+    this.saveFavorite({
+      name: name,
+      definition: this.definition.getValue(),
+      output_config: this.output_config.getValue()
+    } as Favorite);
+    this.dirty_favorite.next(false);
   }
 }

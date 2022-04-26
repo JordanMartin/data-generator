@@ -9,8 +9,13 @@
         <div class="favorites">
           <span class="name">{{favorite.name}}</span>
           <div class="actions">
-            <button class="remove" mat-button matTooltip="Supprimer" (click)="removeFavorite(favorite)">
-              <mat-icon>remove_circle</mat-icon>
+            <button class="remove" mat-button (click)="removeFavorite(favorite)">
+              <mat-icon>delete</mat-icon>
+              Supprimer
+            </button>
+            <button class="load" mat-button (click)="loadFavorite(favorite)">
+              <mat-icon>open_in_browser</mat-icon>
+              Charger
             </button>
           </div>
         </div>

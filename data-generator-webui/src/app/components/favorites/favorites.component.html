@@ -1,25 +1,20 @@
 <div>
-  <div class="save-list-container" [matBadge]="favorites.length" matBadgePosition="above" matBadgeSize="small"
-       matBadgeColor="accent">
-    <select #favoritesSelect (change)="load(favoritesSelect.value)" [value]="favorite_name">
-      <option></option>
-      <option *ngFor="let favorite of favorites" [value]="favorite.name">
-        {{ favorite.name }}
-      </option>
-    </select>
-  </div>
+  <span class="favorite-name" [class.unsaved]="storage.dirty_favorite.getValue()">{{favorite_name || 'Non sauvegardé'}}</span>
 
-  <button mat-icon-button (click)="saveCurrent(favorite_name)" [disabled]="!favorite_name"
-          matTooltip="Sauvegarder la configuration courante">
+  <button mat-icon-button (click)="storage.saveCurrent(favorite_name)" [disabled]="!storage.dirty_favorite.getValue() || !favorite_name"
+          matTooltip="Enregistrer la configuration courante">
     <mat-icon>save</mat-icon>
   </button>
 
-  <button mat-icon-button
-          matTooltip="Ajouter un favoris">
+  <button matTooltip="Enregistrer sous..." mat-icon-button
+          (click)="createNewFavorite()">
     <mat-icon>add_circle_outline</mat-icon>
   </button>
 
   <button mat-icon-button (click)="manageFavorites()" matTooltip="Gérer les sauvagardes">
-    <mat-icon>settings</mat-icon>
+    <mat-icon class="manage-favorite-container" [matBadge]="favorites.length" matBadgePosition="above"
+              matBadgeSize="small"
+              matBadgeColor="accent">settings
+    </mat-icon>
   </button>
 </div>

@@ -15,9 +15,8 @@ export class ManageFavoritesComponent implements OnInit {
   favorites: Favorite[];
 
   constructor(private storage: StorageService,
-              private snackBar: MatSnackBar,
-              @Inject(MAT_DIALOG_DATA) data: { favorites: Favorite[] }) {
-    this.favorites = data.favorites;
+              private snackBar: MatSnackBar) {
+    this.favorites = this.storage.loadFavorites();
   }
 
   ngOnInit(): void {
@@ -135,5 +134,9 @@ export class ManageFavoritesComponent implements OnInit {
     this.favorites = this.storage.loadFavorites();
     this.snackBar.open('✔ ' + favorites.length
       + ' favoris importé' + (favorites.length > 1 ? 's' : ''), 'Ok');
+  }
+
+  loadFavorite(favorite: Favorite) {
+      this.storage.loadFavorite(favorite.name);
   }
 }
