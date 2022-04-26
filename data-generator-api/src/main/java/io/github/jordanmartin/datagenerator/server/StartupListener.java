@@ -69,11 +69,14 @@ public class StartupListener {
     private boolean waitPortIsSet() {
         int poolTime = 500;
         int maxTime = 5000;
+        if (this.httpPort > 0) {
+            return true;
+        }
         for (int duration = 0; duration < maxTime; duration += poolTime) {
             String httpPort = Optional.ofNullable(System.getProperty("quarkus.http.port"))
                     .orElse("0");
             this.httpPort = Integer.parseInt(httpPort);
-            if (this.httpPort != 0) {
+            if (this.httpPort > 0) {
                 return true;
             }
             try {

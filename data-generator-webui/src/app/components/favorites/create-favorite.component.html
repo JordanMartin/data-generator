@@ -1,0 +1,12 @@
+<div>
+  <mat-dialog-content class="favorites-container">
+    <mat-form-field appearance="fill" class="name">
+      <mat-label>Nom du favoris</mat-label>
+      <input matInput #name (keyup.enter)="dialogRef.close(name.value)">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Annuler</button>
+    <button mat-button color="primary" [mat-dialog-close]="name.value" [disabled]="!name.value">Créer</button>
+  </mat-dialog-actions>
+</div>

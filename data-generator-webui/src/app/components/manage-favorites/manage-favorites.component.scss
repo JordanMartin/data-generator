@@ -1,0 +1,23 @@
+.favorites-container {
+  min-height: 300px;
+}
+
+.favorites {
+  display: flex;
+  width: 100%;
+
+  .name {
+    flex: 1;
+  }
+
+  .actions {
+    justify-content: right;
+
+    .remove {
+      color: #ff5722;
+    }
+    .load {
+      color: #298aff;
+    }
+  }
+}

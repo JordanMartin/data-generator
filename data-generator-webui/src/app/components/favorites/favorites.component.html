@@ -1,0 +1,20 @@
+<div>
+  <span class="favorite-name" [class.unsaved]="storage.dirty_favorite.getValue()">{{favorite_name || 'Non sauvegardé'}}</span>
+
+  <button mat-icon-button (click)="storage.saveCurrent(favorite_name)" [disabled]="!storage.dirty_favorite.getValue() || !favorite_name"
+          matTooltip="Enregistrer la configuration courante">
+    <mat-icon>save</mat-icon>
+  </button>
+
+  <button matTooltip="Enregistrer sous..." mat-icon-button
+          (click)="createNewFavorite()">
+    <mat-icon>add_circle_outline</mat-icon>
+  </button>
+
+  <button mat-icon-button (click)="manageFavorites()" matTooltip="Gérer les sauvagardes">
+    <mat-icon class="manage-favorite-container" [matBadge]="favorites.length" matBadgePosition="above"
+              matBadgeSize="small"
+              matBadgeColor="accent">settings
+    </mat-icon>
+  </button>
+</div>

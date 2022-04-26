@@ -1,0 +1,44 @@
+.save-name {
+  width: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: solid 1px #ccc;
+  padding: 6px 15px;
+  font-family: sans-serif;
+
+  &::placeholder {
+    color: #d7d7d7;
+  }
+}
+
+.create-favorite-container {
+  display: inline-block;
+
+  .create-favorite-input {
+    overflow: hidden;
+    display: inline-block;
+    transition: width 200ms;
+    width: 0;
+  }
+
+  &:hover {
+    .create-favorite-input {
+      width: 100px;
+    }
+  }
+}
+
+.favorite-name {
+  display: inline-flex;
+  min-width: 200px;
+  padding: 4px 30px;
+  border-radius: 25px;
+  background: #00000017;
+  border: solid 1px #b1b1b1;
+  text-align: center;
+  font-size: 0.9em;
+
+  &.unsaved {
+    font-style: italic;
+  }
+}

@@ -134,6 +134,8 @@ $type-color: #0088ff;
 }
 
 .filter-container {
+  position: relative;
+
   input {
     font-weight: bold;
     width: 210px;
@@ -145,9 +147,11 @@ $type-color: #0088ff;
     background: #fbfbfb;
     transition: all 0.1s ease 0s;
   }
+
   span {
-    position: relative;
-    left: -45px;
+    position: absolute;
+    right: 12px;
     font-size: 0.8em;
+    top: 8px;
   }
 }
