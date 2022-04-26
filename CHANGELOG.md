@@ -1,3 +1,16 @@
+# 1.9.0
+
+## webui:
+
+- Gestionnaire de favoris amélioré
+- Import/export des favoris
+- Affichage si nouvelle version disponible
+
+## core
+
+- Fix le port HTTP => 8050 pour conserver le localstorage
+- Customisation du package de recherche pour les plugins provider
+
 # 1.8.0
 
 ## webui:
