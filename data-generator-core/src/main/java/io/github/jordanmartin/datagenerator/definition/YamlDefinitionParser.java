@@ -190,6 +190,8 @@ public class YamlDefinitionParser extends DefinitionParser {
                 return visitString(ctx.string());
             } else if (ctx.booleanValue() != null) {
                 return visitBooleanValue(ctx.booleanValue());
+            } else if(ctx.reference() != null) {
+                return visitReference(ctx.reference());
             }
 
             // Ne devrait jamais arriver
