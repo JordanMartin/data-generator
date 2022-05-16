@@ -6,18 +6,21 @@ import lombok.SneakyThrows;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
+/**
+ * Classe pour l'implémentation d'un parser
+ */
 public abstract class DefinitionParser {
 
-    private final ProviderRegistry defaultProvider = ProviderRegistry.getInstance();
+    private final ProviderRegistry providerRegistry = ProviderRegistry.getInstance();
 
     public abstract ObjectProvider parse();
 
     @SneakyThrows
     protected Object createNewProvider(String providerName, Object[] providerParams) {
-        Class<?> classProvider = defaultProvider.get(providerName);
+        Class<?> classProvider = providerRegistry.get(providerName);
 
         if (classProvider == null) {
-            String providers = String.join(", ", defaultProvider.listNames());
+            String providers = String.join(", ", providerRegistry.listNames());
             throw new DefinitionException("Le générateur \"" + providerName + "\" n'existe pas\n" +
                     "Générateur disponibles: " + providers);
         }
@@ -26,6 +29,7 @@ public abstract class DefinitionParser {
                 .map(Object::getClass)
                 .toArray(Class<?>[]::new);
 
+        // TODO exception détaillée pour chaque cas
         Constructor<?> constructor = Arrays.stream(classProvider.getConstructors())
                 .filter(c -> {
                     Class<?>[] types = c.getParameterTypes();
@@ -48,7 +52,7 @@ public abstract class DefinitionParser {
                     return true;
                 })
                 .findFirst().orElseThrow(() ->
-                        new DefinitionException("Les paramètres du générateur \"" + providerName + "\" sont incorrects"));
+                        new ProviderDefinitionException(providerName, providerRegistry.getDoc(providerName).orElse(null)));
 
         return constructor.newInstance(providerParams);
     }

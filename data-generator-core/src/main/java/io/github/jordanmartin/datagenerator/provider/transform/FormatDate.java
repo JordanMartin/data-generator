@@ -35,8 +35,8 @@ public class FormatDate extends TransformerProvider<Date, String> {
             ) ValueProvider<Date> dateProvider,
             @ProviderArg(
                     name = "format",
-                    description = "un format de date telle que définit par java.text.SimpleDateFormat",
-                    examples = {"yyyy-MM-dd HH:mm:ss.SSS"}
+                    description = "Un format de date tel que définit par java.text.SimpleDateFormat",
+                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ"}
             ) String format
     ) {
         super(dateProvider);
