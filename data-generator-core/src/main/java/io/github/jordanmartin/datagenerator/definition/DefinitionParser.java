@@ -63,8 +63,8 @@ public abstract class DefinitionParser {
     private boolean isTypeAssignable(Class<?> from, Class<?> to) {
         if (from.isAssignableFrom(to)) {
             return true;
-        } else if (from == int.class && to == Integer.class
-                || from == Integer.class && to == int.class) {
+        } else if ((from == int.class || from == long.class || from == Integer.class || from == Long.class)
+                && (to == int.class || to == long.class || to == Integer.class || to == Long.class)) {
             return true;
         } else if (from == double.class && to == Double.class
                 || from == Double.class && to == double.class) {
