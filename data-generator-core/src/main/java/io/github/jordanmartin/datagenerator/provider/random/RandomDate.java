@@ -1,6 +1,5 @@
 package io.github.jordanmartin.datagenerator.provider.random;
 
-import com.github.javafaker.Faker;
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Génère une date aléatoire dans un interval donnée
@@ -31,7 +31,6 @@ import java.util.Date;
 )
 public class RandomDate implements ValueProvider<Date> {
 
-    private final Faker faker = new Faker();
     private ValueProvider<Date> fromProvider;
     private ValueProvider<Date> toProvider;
 
@@ -123,6 +122,14 @@ public class RandomDate implements ValueProvider<Date> {
             return from;
         }
         Date to = this.toProvider.getOneWithContext(ctx);
-        return faker.date().between(from, to);
+
+        if (to.before(from)) {
+            throw new IllegalArgumentException("Invalid date range, the upper bound date is before the lower bound.");
+        } else if (from.equals(to)) {
+            return from;
+        } else {
+            long offsetMillis = ThreadLocalRandom.current().nextLong(to.getTime() - from.getTime());
+            return new Date(from.getTime() + offsetMillis);
+        }
     }
 }

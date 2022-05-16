@@ -1,5 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {Component, OnInit} from '@angular/core';
 import {OutputConfig} from "../output-config/output-config";
 import {Favorite} from "../../services/favorite";
 import {StorageService} from "../../services/storage-service";
@@ -54,7 +53,7 @@ export class ManageFavoritesComponent implements OnInit {
       },
       {
         name: "[Exemple] Dates",
-        definition: "template:\n  start: FormatDate(Date(\"2000-01-01\", \"2000-12-31\"), \"yyyy-MM-dd\")\n  end: FormatDate(Date(\"2001-01-01\", \"2001-12-31\"), \"yyyy-MM-dd\")\n  generatedAt: FormatDate(Now(), \"yyyy-MM-dd hh:mm:ss\")",
+        definition: "template:\n  start: FormatDate(Date(\"2000-01-01\", \"2000-12-31\"), \"yyyy-MM-dd\")\n  end: FormatDate(Date(\"2001-01-01\", \"2001-12-31\"), \"yyyy-MM-dd\")\n  generatedAt: FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss\")",
         output_config: {
           count: 5,
           format: "json",
