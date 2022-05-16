@@ -41,14 +41,19 @@ public class StartupListener {
             } catch (Exception ignored) {
             }
             PopupMenu popup = new PopupMenu();
-            MenuItem defaultItem = new MenuItem("Quitter");
-            defaultItem.addActionListener(actionEvent -> {
+            MenuItem openItem = new MenuItem("Ouvrir dans le navigateur");
+            openItem.addActionListener(actionEvent -> {
+                openInBrowser(false);
+            });
+            popup.add(openItem);
+            MenuItem exitItem = new MenuItem("Quitter");
+            exitItem.addActionListener(actionEvent -> {
                 System.exit(0);
             });
-            popup.add(defaultItem);
+            popup.add(exitItem);
             TrayIcon trayIcon = new TrayIcon(image, "Générateur de données ", popup);
             trayIcon.addActionListener(e -> {
-                openInBrowser();
+                openInBrowser(false);
             });
 
             try {
@@ -61,7 +66,7 @@ public class StartupListener {
     private void openBrowserAsyncWhenPortIsSet() {
         new Thread(() -> {
             if (waitPortIsSet()) {
-                openInBrowser();
+                openInBrowser(true);
             }
         }).start();
     }
@@ -87,7 +92,7 @@ public class StartupListener {
         return false;
     }
 
-    private void openInBrowser() {
+    private void openInBrowser(boolean openAuto) {
         String url = "http://localhost:" + httpPort;
         log.info("Serveur démarré: {}", url);
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -97,7 +102,9 @@ public class StartupListener {
         }
         try {
             desktop.browse(new URI(url));
-            log.info("Ouverture automatique du navagateur. Utilisez l'option -Dopen-browser=false pour le désactiver");
+            if (openAuto) {
+                log.info("Ouverture automatique du navagateur. Utilisez l'option -Dopen-browser=false pour le désactiver");
+            }
         } catch (IOException | URISyntaxException e) {
             throw new IllegalStateException("Failed opening the default browser to show the URL (" + url + ").", e);
         }
