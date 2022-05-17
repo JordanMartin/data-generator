@@ -10,13 +10,15 @@ public interface IOutputConfig {
 
     Integer getCount();
 
+    Integer getCountPerFile();
+
     void setGzip(String gzip);
 
     Boolean getGzip();
 
-    void setSingleFile(String singleFile);
+    void setZip(String zip);
 
-    Boolean getSingleFile();
+    Boolean getZip();
 
     void setOutputTemplate(String outputTemplate);
 
@@ -45,4 +47,5 @@ public interface IOutputConfig {
     void setIncludeNull(String includeNull);
 
     Boolean getIncludeNull();
+
 }

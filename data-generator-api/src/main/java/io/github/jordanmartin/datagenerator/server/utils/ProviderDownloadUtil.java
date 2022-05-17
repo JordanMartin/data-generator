@@ -60,6 +60,38 @@ public class ProviderDownloadUtil {
      *
      * @param providerConf La configuration du générateur
      */
+    public static Response zipMultipleObjectPerFile(ProviderConf providerConf) {
+        OutputConfig outputConfig = providerConf.getOutputConfig();
+        StreamingOutput streamingOutput = out -> {
+            int countPerFile = outputConfig.getCountPerFile();
+            int count = outputConfig.getCount();
+            try (ZipOutputStream zos = new ZipOutputStream(out)) {
+                int fileNum = 0;
+                while (count > 0) {
+                    int numberToWrite = Math.min(count, countPerFile);
+                    String entryName = Optional.ofNullable(outputConfig.getTemplateFilename()).orElse("#uuid")
+                            .replace("#num", Integer.toString(fileNum++))
+                            .replace("#uuid", UUID.randomUUID().toString());
+                    zos.putNextEntry(new ZipEntry(entryName));
+                    providerConf.getOutput().writeMany(zos, numberToWrite);
+                    zos.closeEntry();
+                    count -= countPerFile;
+                }
+            }
+        };
+        String filename = getFilename(outputConfig) + ".zip";
+        return Response
+                .ok(streamingOutput)
+                .header(HttpHeaders.CONTENT_TYPE, "application/zip")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + filename)
+                .build();
+    }
+
+    /**
+     * Génère un ZIP avec un objet par fichier
+     *
+     * @param providerConf La configuration du générateur
+     */
     public static Response zipOneObjectPerFile(ProviderConf providerConf) {
         OutputConfig outputConfig = providerConf.getOutputConfig();
         int count = outputConfig.getCount();
