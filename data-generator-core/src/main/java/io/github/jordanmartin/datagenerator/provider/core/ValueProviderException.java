@@ -22,9 +22,14 @@ public class ValueProviderException extends RuntimeException {
 
     @Override
     public String getMessage() {
+        StringBuilder sb = new StringBuilder();
         if (provider != null) {
-            return "[Générateur : " + provider.getClass().getSimpleName() + "] " + super.getMessage();
+            sb.append("[Générateur : ").append(provider.getClass().getSimpleName()).append("] ");
         }
-        return super.getMessage();
+        sb.append(super.getMessage());
+        if (getCause() != null && getCause().getMessage() != null) {
+            sb.append("\n").append(getCause().getMessage());
+        }
+        return sb.toString();
     }
 }

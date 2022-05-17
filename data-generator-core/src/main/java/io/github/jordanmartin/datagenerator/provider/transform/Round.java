@@ -35,7 +35,9 @@ public class Round implements DoubleProvider {
 
     @ProviderCtor
     public Round(
+            @ProviderArg(description = "Un générateur de double")
             ValueProvider<Double> provider,
+            @ProviderArg(description = "Nombre de décimales")
             int precision,
             @ProviderArg(
                     description = "Type de l'arrondie",
@@ -46,7 +48,12 @@ public class Round implements DoubleProvider {
     }
 
     @ProviderCtor("Arrondie à la décimale supérieur")
-    public Round(ValueProvider<Double> provider, int precision) {
+    public Round(
+            @ProviderArg(description = "Un générateur de double")
+            ValueProvider<Double> provider,
+            @ProviderArg(description = "Nombre de décimales")
+            int precision
+    ) {
         this(provider, precision, RoundingMode.UP);
     }
 
