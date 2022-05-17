@@ -150,8 +150,12 @@ public class ProviderController {
 
         ProviderConf providerConf = ProviderConf.from(definition, outputConfig);
 
-        if (outputConfig.getSingleFile()) {
-            return ProviderDownloadUtil.zipOneObjectPerFile(providerConf);
+        if (outputConfig.getZip()) {
+            if (outputConfig.getCountPerFile() <= 1) {
+                return ProviderDownloadUtil.zipOneObjectPerFile(providerConf);
+            } else {
+                return ProviderDownloadUtil.zipMultipleObjectPerFile(providerConf);
+            }
         } else if (outputConfig.getGzip()) {
             return ProviderDownloadUtil.gzipObjects(providerConf);
         } else {

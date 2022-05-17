@@ -43,13 +43,23 @@ public class OutputConfig extends HashMap<String, String> implements IOutputConf
         return getBoolean("gzip").orElse(null);
     }
 
-    @FormParam("output.single_file")
-    public void setSingleFile(String singleFile) {
-        put("single_file", singleFile);
+    @FormParam("output.zip")
+    public void setZip(String zip) {
+        put("zip", zip);
     }
 
-    public Boolean getSingleFile() {
-        return getBoolean("single_file").orElse(null);
+    @Override
+    public Integer getCountPerFile() {
+        return getInt("count_per_file").orElse(null);
+    }
+
+    @FormParam("output.count_per_file")
+    public void setCountPerFile(String countPerFile) {
+        put("count_per_file", countPerFile);
+    }
+
+    public Boolean getZip() {
+        return getBoolean("zip").orElse(null);
     }
 
     @FormParam("output.template")

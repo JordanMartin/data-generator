@@ -15,6 +15,7 @@ export class DownloadForm {
     @Inject(MAT_DIALOG_DATA) data: { definition: string; config: OutputConfig }) {
     this.config = {...data.config};
     this.config.filename_template = '#num.' + this.config.format;
+    this.config.count_per_file = 1;
     this.definition = data.definition;
   }
 

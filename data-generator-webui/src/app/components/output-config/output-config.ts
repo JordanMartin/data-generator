@@ -1,5 +1,6 @@
 export interface OutputConfig {
   count: number;
+  count_per_file?: number;
   format: string;
   include_null?: boolean;
   filename_template?: string;
@@ -9,5 +10,5 @@ export interface OutputConfig {
   template?: string;
   separator?: string;
   gzip?: boolean;
-  single_file?: boolean;
+  zip?: boolean;
 }

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { OutputConfig } from './output-config';
-import { StorageService } from '../../services/storage-service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {OutputConfig} from './output-config';
+import {StorageService} from '../../services/storage-service';
 
 @Component({
   selector: 'app-output-config',
@@ -24,7 +24,7 @@ export class OutputConfigComponent implements OnInit {
     table_name: 'my_table',
     separator: ';',
     gzip: false,
-    single_file: false,
+    zip: false,
     filename_template: '',
     template: [].join('\n'),
   };
