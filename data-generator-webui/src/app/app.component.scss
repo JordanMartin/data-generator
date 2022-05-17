@@ -7,8 +7,9 @@
   display: flex;
   align-items: center;
   padding: 10px;
-  background: linear-gradient(110deg, #009688 70%, #4db6ac 70%);
   color: #fff;
+  background-image: linear-gradient( 135deg, #009688 10%, #00897b 70%,#009688 70%, #028978 100%);
+  border-bottom: solid 2px #00695c;
 }
 
 .app-info {

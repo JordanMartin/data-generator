@@ -1,7 +1,7 @@
 <div>
   <div mat-dialog-title>
     <mat-icon>star</mat-icon>
-    Favoris
+    Favorites
   </div>
   <mat-dialog-content class="favorites-container">
     <mat-list>
@@ -11,35 +11,35 @@
           <div class="actions">
             <button class="remove" mat-button (click)="removeFavorite(favorite)">
               <mat-icon>delete</mat-icon>
-              Supprimer
+              Delete
             </button>
             <button class="load" mat-button (click)="loadFavorite(favorite)">
               <mat-icon>open_in_browser</mat-icon>
-              Charger
+              Load
             </button>
           </div>
         </div>
       </mat-list-item>
       <mat-list-item *ngIf="!favorites.length">
-        Vous n'avez pas encore sauvegardé de favoris.
+        You have not created any favorites yet
       </mat-list-item>
     </mat-list>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button (click)="exportFavorites()" [disabled]="!favorites.length">
       <mat-icon>cloud_download</mat-icon>
-      Exporter
+      Export as json
     </button>
     <input #importInput type="file" hidden="hidden"
            (change)="importInput.files && importFavorites(importInput.files[0])">
     <button mat-button (click)="importInput.click()">
       <mat-icon>cloud_upload</mat-icon>
-      Importer
+      Import from json...
     </button>
     <button mat-button (click)="loadExamples()">
       <mat-icon>live_tv</mat-icon>
-      Charger les exemples
+      Add some examples
     </button>
-    <button mat-button mat-dialog-close>Fermer</button>
+    <button mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </div>

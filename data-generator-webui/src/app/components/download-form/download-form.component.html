@@ -12,37 +12,36 @@
   <input type="hidden" name="output.filename_template" [value]="config.filename_template"/>
 
   <mat-form-field appearance="fill" class="field count">
-    <mat-label>Nombre d'objet à générer</mat-label>
+    <mat-label>Number of objects to generate</mat-label>
     <input matInput name="output.count" type="number" [(ngModel)]="config.count"/>
   </mat-form-field>
 
   <mat-slide-toggle class="field" *ngIf="!config.single_file" [(ngModel)]="config.gzip">
-    Compresser le fichier en GZIP
+    Compress the file to GZIP
   </mat-slide-toggle>
 
   <mat-slide-toggle *ngIf="!config.gzip" [(ngModel)]="config.single_file" class="field">
-    Zip avec {{config.count}} fichiers (un par objet)
+    Zip with {{config.count}} files (one object per file)
   </mat-slide-toggle>
 
   <div *ngIf="config.single_file">
     <mat-form-field appearance="fill" class="field">
-      <mat-label>Nomenclature des fichiers</mat-label>
+      <mat-label>Name of files</mat-label>
       <input matInput [(ngModel)]="config.filename_template" class="template-filename" required>
     </mat-form-field>
     <ul class="template-filename-hint">
-      <li>#num = numéro du fichier (0 à {{config.count - 1}})</li>
-      <li>#uuid = identifiant unique (ex: da421811-da52-48ce-befd-a49c36d99439)</li>
-      <li>${{ '{' }}nom{{ '}' }} = valeur du champ "nom" de l'objet généré</li>
+      <li>#num = number of file (0 to {{config.count - 1}})</li>
+      <li>#uuid = unique identifier (ex: da421811-da52-48ce-befd-a49c36d99439)</li>
+      <li>${{ '{' }}myField{{ '}' }} = Value of the field "myField" from the generated object</li>
     </ul>
   </div>
 
   <button class="field" type="submit" mat-flat-button color="primary" (click)="download()">
     <mat-icon>download</mat-icon>
-    Télécharger
-    <span *ngIf="config.single_file">le zip contenant {{config.count}} fichiers</span>
-    <span *ngIf="config.gzip">les {{config.count}} objets dans un fichier .{{config.format}}.gz</span>
-    <span *ngIf="!config.gzip && !config.single_file">les {{config.count}}
-      objets dans un fichier .{{config.format}}</span>
+    Download
+    <span *ngIf="config.single_file">the zip containing {{config.count}} files</span>
+    <span *ngIf="config.gzip">the {{config.count}} objects in one file .{{config.format}}.gz</span>
+    <span *ngIf="!config.gzip && !config.single_file">the {{config.count}} objects in one file .{{config.format}}</span>
   </button>
 </form>
 

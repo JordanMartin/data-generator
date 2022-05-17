@@ -3,6 +3,37 @@
   margin-right: 20px;
   margin-top: 40px;
   margin-bottom: 0;
+  background-image: linear-gradient(283deg, #008d7f 10%, #4db6ac 100%);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 1.2em;
+  padding: 5px 20px;
+  color: #fff;
+  text-shadow: 0 0 1px #000000;
+  border-radius: 5px;
+  font-weight: 600;
+
+  &.def {
+    border-radius: 5px 15px 5px 5px;
+  }
+}
+
+.isError .title.def {
+  background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+}
+
+.definition-status {
+  position: relative;
+  top: -9px;
+  left: -32px;
+
+  .def-ok {
+    color: #008c7f;
+  }
+
+  .def-error {
+    color: #fe9a8b;
+  }
 }
 
 .description {
@@ -16,9 +47,9 @@
   display: inline-block;
   width: 2px;
   height: 502px;
-  background: rgb(33, 150, 243, 0.56);
+  background: rgb(0 138 124);
   vertical-align: top;
-  margin-top: 79px;
+  margin-top: 87px;
   cursor: col-resize;
 }
 
@@ -31,21 +62,6 @@ app-definition-editor {
   display: inline-block;
   border: solid 1px #ccc;
   width: calc(100% - 2px);
-}
-
-.definition-status {
-  mat-icon {
-    top: 3px;
-    position: relative;
-  }
-
-  .def-ok {
-    color: #009688;
-  }
-
-  .def-error {
-    color: #ff5722;
-  }
 }
 
 app-data-preview {
@@ -64,6 +80,10 @@ app-template-editor {
 app-generator-doc {
   display: block;
   padding-bottom: 50px;
+}
+
+app-generator-doc {
+  margin-top: 10px;
 }
 
 .loader {

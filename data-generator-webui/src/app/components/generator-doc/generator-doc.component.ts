@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { DataGeneratorApiService } from '../../services/data-generator-api.service';
-import { GeneratorDoc } from '../../services/generator-doc';
-import { GeneratorCtor } from '../../services/generator-ctor';
-import { GeneratorArg } from '../../services/generator-arg';
-import { SimplifyJavaTypePipe } from './simplify-java-type.pipe';
-import { map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {DataGeneratorApiService} from '../../services/data-generator-api.service';
+import {GeneratorDoc} from '../../services/generator-doc';
+import {GeneratorCtor} from '../../services/generator-ctor';
+import {GeneratorArg} from '../../services/generator-arg';
+import {SimplifyJavaTypePipe} from './simplify-java-type.pipe';
 
 @Component({
   selector: 'app-generator-doc',
@@ -65,8 +64,8 @@ export class GeneratorDocComponent implements OnInit {
   }
 
   get preffiledIssueUrl() {
-    let title = encodeURIComponent('Ajouter un générateur de ' + this._search);
-    let body = encodeURIComponent('Description :  \n\nType retourné : \n\nParamètres : ');
+    let title = encodeURIComponent('Create new provider ' + this._search);
+    let body = encodeURIComponent('## Description\n\n## Returned type\n\n## Parameters');
     const labels = 'enhancement';
     return `https://github.com/JordanMartin/data-generator/issues/new?title=${title}&labels=${labels}&body=${body}`;
   }
