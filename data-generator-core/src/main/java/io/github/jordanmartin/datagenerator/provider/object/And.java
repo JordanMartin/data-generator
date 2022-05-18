@@ -12,7 +12,7 @@ import java.util.function.Predicate;
         name = "And",
         description = "Retourne vrai tous les paramètres sont vrais",
         returns = Boolean.class,
-        group = "booléen"
+        group = "boolean"
 )
 public class And implements ValueProvider<Boolean> {
 

@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Provider(
         name = "Now",
-        description = "Retourne la date courante",
+        description = "Returns the current date",
         group = "date"
 )
 public class Now implements StatelessValueProvider<Date> {
