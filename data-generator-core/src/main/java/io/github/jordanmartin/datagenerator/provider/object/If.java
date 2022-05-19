@@ -11,34 +11,34 @@ import java.util.List;
 
 @Provider(
         name = "If",
-        description = "Retourne true ou false selon une condition sur un champ. A noter: les type des champs doivent être identiques",
+        description = "Returns true of false by comparing the value of a field. Note: the fields must have the same data type",
         examples = {
-                "If(\"age\", \">=\", 18) => retourne true si le champ age est >= 18 sinon false"
+                "If(\"age\", \">=\", 18) => returns true if the field \"age\" is >= 18 otherwise false"
         },
         returns = Boolean.class,
         group = "boolean"
 )
 public class If implements ValueProvider<Boolean> {
 
-    private final String field;
+    private final String fieldA;
     private final String operator;
     private final ValueProvider<?> provider;
     public static final List<String> AVAILABLE_OPERATORS = List.of("<", "<=", "=", "!=", ">",  ">=");
 
     @ProviderCtor
     public If(
-            @ProviderArg(description = "Nom du champ sur lequel porte la condition") String field,
-            @ProviderArg(description = "Opérateur : <, <=, =, !=, >, >=") String operator,
+            @ProviderArg(description = "Name of the field to compare") String field,
+            @ProviderArg(description = "Comparison operator : <, <=, =, !=, >, >=") String operator,
             @ProviderArg(description = "Valeur à comparer") Object value) {
         this(field, operator, ctx -> value);
     }
 
     @ProviderCtor
     public If(
-            @ProviderArg(description = "Nom du champ sur lequel porte la condition") String field,
-            @ProviderArg(description = "Opérateur : <, <=, =, !=, >, >=") String operator,
-            @ProviderArg(description = "Valeur à comparer") ValueProvider<?> provider) {
-        this.field = field;
+            @ProviderArg(description = "Name of the field to compare") String field,
+            @ProviderArg(description = "Comparison operator : <, <=, =, !=, >, >=") String operator,
+            @ProviderArg(description = "Value to compare with") ValueProvider<?> provider) {
+        this.fieldA = field;
         this.operator = operator;
         this.provider = provider;
 
@@ -103,9 +103,9 @@ public class If implements ValueProvider<Boolean> {
     }
 
     private Object getFieldValue(IObjectProviderContext ctx) {
-        Object value = ctx.getFieldValue(field);
+        Object value = ctx.getFieldValue(fieldA);
         if (value == null) {
-            value = ctx.getRefValue(field);
+            value = ctx.getRefValue(fieldA);
         }
         return value;
     }
@@ -117,16 +117,16 @@ public class If implements ValueProvider<Boolean> {
 
         @Override
         public String getMessage() {
-            return String.format("Condition invalide : '%s' %s %s.\nLa valeur <%s> (%s) est incompatible avec <%s> (%s)",
-                    field, operator, b, a, a.getClass().getSimpleName(), b, b.getClass().getSimpleName());
+            return String.format("Invalid condition : '%s' %s %s.\nThe value <%s> (%s) is incompatible <%s> (%s)",
+                    fieldA, operator, b, a, a.getClass().getSimpleName(), b, b.getClass().getSimpleName());
         }
     }
 
     public class InvalidConditionOperator extends RuntimeException {
         @Override
         public String getMessage() {
-            return String.format("La condition du champ \"%s\" est invalide. \"%s\" n'est pas un opérateur valide." +
-                    "\nLes opérateurs valides sont : %s", field, operator, AVAILABLE_OPERATORS);
+            return String.format("The condition on the field \"%s\" is not valid. \"%s\" is not a valid operator." +
+                    "\nAvailable operators are : %s", fieldA, operator, AVAILABLE_OPERATORS);
         }
     }
 }

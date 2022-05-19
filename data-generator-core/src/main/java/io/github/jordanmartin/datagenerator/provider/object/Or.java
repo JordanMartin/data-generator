@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 @Provider(
         name = "Or",
-        description = "Retourne vrai si l'un des paramètres est vrai",
+        description = "Returns true when at least one parameter are true otherwise returns false",
         returns = Boolean.class,
         group = "boolean"
 )
@@ -19,13 +19,13 @@ public class Or implements ValueProvider<Boolean> {
     private final List<ValueProvider<Boolean>> values;
 
     @ProviderCtor
-    public Or(@ProviderArg(description = "Un générateur de booléen") ValueProvider<Boolean> a,
-              @ProviderArg(description = "Un générateur de booléen") ValueProvider<Boolean> b) {
+    public Or(@ProviderArg(description = "A boolean provider") ValueProvider<Boolean> a,
+              @ProviderArg(description = "A boolean provider") ValueProvider<Boolean> b) {
         this(List.of(a, b));
     }
 
     @ProviderCtor
-    public Or(@ProviderArg(description = "Liste de générateur de booléen") List<ValueProvider<Boolean>> values) {
+    public Or(@ProviderArg(description = "A list of boolean provider") List<ValueProvider<Boolean>> values) {
         this.values = values;
     }
 
