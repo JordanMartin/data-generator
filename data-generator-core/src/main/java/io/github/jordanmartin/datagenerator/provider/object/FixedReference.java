@@ -12,18 +12,16 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  */
 @Provider(
         name = "FixedReference",
-        description = "Référence un autre champ. S'il s'agit d'un champ de référence, la générateur associé ne sera appelé qu'une fois",
+        description = "Reference the value of another field. When the field is declared from references then it calls the provider once and returns always this value",
         examples = {
-                "FixedReference(\"champ1\")"
+                "FixedReference(\"myField\")",
+                "$$myField"
         },
         returns = Object.class,
         group = "reference"
 )
 public class FixedReference<T> implements ValueProvider<T> {
 
-    /**
-     * Nom de la reference
-     **/
     private final String refName;
 
     @ProviderCtor
@@ -42,7 +40,7 @@ public class FixedReference<T> implements ValueProvider<T> {
         }
 
         if (objectField == null) {
-            throw new ValueProviderException(this, "La référence \"" + refName + "\" n'existe pas");
+            throw new ValueProviderException(this, "The reference \"" + refName + "\" doesn't exists");
         }
 
         return objectField;

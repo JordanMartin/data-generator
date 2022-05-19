@@ -10,7 +10,10 @@ import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderConte
  *
  * @param <T>
  */
-@Provider(name = "Constant", description = "Retourne toujours la même valeur")
+@Provider(
+        name = "Constant",
+        description = "Returns always the same value", examples = "Constant(\"Hello World\") => \"Hello World\""
+)
 public class Constant<T> implements ValueProvider<T> {
 
     private final T value;

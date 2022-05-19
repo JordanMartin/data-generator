@@ -11,11 +11,11 @@ import java.util.Locale;
 
 /**
  * Générateur de donnée à partir d'une expression {@link Faker}
- * http://dius.github.io/java-faker/apidocs/index.html
+ * <a href="http://dius.github.io/java-faker/apidocs/index.html">http://dius.github.io/java-faker/apidocs/index.html</a>
  */
 @Provider(
         name = "Faker",
-        description = "Retourne une valeur à partir d'une expression Faker (https://dius.github.io/java-faker)",
+        description = "Returns &Retourne une valeur à partir d'une expression Faker (https://dius.github.io/java-faker)",
         examples = {
                 "Faker(\"Name.firstName\") => \"Pierre\"",
                 "Faker(\"Address.city\") => \"Aulnay-sous-Bois\""

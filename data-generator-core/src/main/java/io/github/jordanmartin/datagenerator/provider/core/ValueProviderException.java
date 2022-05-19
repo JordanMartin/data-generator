@@ -24,7 +24,7 @@ public class ValueProviderException extends RuntimeException {
     public String getMessage() {
         StringBuilder sb = new StringBuilder();
         if (provider != null) {
-            sb.append("[Générateur : ").append(provider.getClass().getSimpleName()).append("] ");
+            sb.append("[Provider : ").append(provider.getClass().getSimpleName()).append("] ");
         }
         sb.append(super.getMessage());
         if (getCause() != null && getCause().getMessage() != null) {

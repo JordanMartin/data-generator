@@ -10,8 +10,9 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
  */
 @Provider(
         name = "Boolean",
-        description = "Retourne un booléen aléatoire",
-        group = "booléen"
+        description = "Returns a random boolean",
+        group = "boolean",
+        examples = "Boolean(0.3) => returns 30% of true"
 )
 public class RandomBoolean implements StatelessValueProvider<Boolean> {
 
@@ -28,9 +29,9 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
      *                         Ex: 0.5: autant de true que de false
      *                         Ex: 0.25: 25% de true, 75% de true
      */
-    @ProviderCtor("Change la probabilité de retourner true")
+    @ProviderCtor("Define the probability of returning true")
     public RandomBoolean(
-            @ProviderArg(description = "Probabilité de retourner true (entre 0 et 1)")
+            @ProviderArg(description = "The probability between 0 (always false) and 1 (always true)")
                     double percentageOfTrue
     ) {
         this.percentage = percentageOfTrue;
@@ -39,7 +40,7 @@ public class RandomBoolean implements StatelessValueProvider<Boolean> {
     /**
      * Génère autant de valeur true que de valeur false
      */
-    @ProviderCtor("Probabilité de 50% de retourner true")
+    @ProviderCtor("Equal probability of returning true and false")
     public RandomBoolean() {
         this(AS_MANY_TRUE_AS_FALSE_PERCENTAGE);
     }

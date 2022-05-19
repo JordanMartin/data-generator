@@ -12,14 +12,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Parse le classe d'un générateur avec ses annotations pour générer la documentation associée
+ * Parse la classe d'un générateur avec ses annotations pour générer la documentation associée
  */
 @Slf4j
 public class ProviderDocumentationParser {
 
     public static Optional<ProviderDoc> parse(Class<?> clazz) {
         Provider providerAnnotation = Optional.ofNullable(clazz.getAnnotation(Provider.class))
-                .orElseThrow(() -> new IllegalArgumentException("La classe " + clazz + " ne possède pas l'annotation " + Provider.class));
+                .orElseThrow(() -> new IllegalArgumentException("The class " + clazz + " must have the annotation " + Provider.class));
 
         ProviderDoc providerDoc = new ProviderDoc();
         providerDoc.setName(clazz.getSimpleName());
@@ -44,11 +44,11 @@ public class ProviderDocumentationParser {
                 .forEach(providerDoc.constructors::add);
 
         if (providerDoc.constructors.isEmpty()) {
-            log.warn("Le generateur " + clazz + " est ignoré car il ne possède aucun constructeur accessible");
+            log.warn("Ignoring provider " + clazz + " because it has no available constructor annotated with " + ProviderCtor.class);
             return Optional.empty();
         }
 
-        // Trie les constructeurs par nombre de paramètre
+        // Trie les constructeurs par nombre de paramètres
         providerDoc.constructors.sort(Comparator.comparingInt(value -> value.getArgs().size()));
         return Optional.of(providerDoc);
     }
