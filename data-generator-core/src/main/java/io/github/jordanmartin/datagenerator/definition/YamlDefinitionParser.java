@@ -49,7 +49,7 @@ public class YamlDefinitionParser extends DefinitionParser {
         ObjectProvider rootProvider = new ObjectProvider();
 
         if (definition == null || definition.getTemplate() == null || definition.getTemplate().isEmpty()) {
-            throw new DefinitionException("La définition doit déclarer \"template\" avec au moins un champ");
+            throw new DefinitionException("The definition must declares a section \"template\" with at least one field");
         }
 
         if (definition.getReferences() != null && !definition.getReferences().isEmpty()) {
@@ -99,7 +99,7 @@ public class YamlDefinitionParser extends DefinitionParser {
         }
         // Ne devrait jamais arriver
         else {
-            throw new DefinitionException("Definition incorrect du champ \"" + fieldName + "\" : " + definition);
+            throw new DefinitionException("The definition of the field \"" + fieldName + "\" is not correct : " + definition);
         }
 
         return provider;
@@ -253,7 +253,7 @@ public class YamlDefinitionParser extends DefinitionParser {
         }
 
         private Void notSupportedDefinition(ParserRuleContext ctx) throws UnsupportedOperationException {
-            throw new UnsupportedOperationException("La definition \"" + ctx.getText() + "\" n'est pas implémentée");
+            throw new UnsupportedOperationException("The definition \"" + ctx.getText() + "\" is not implemented. Please report this issue.");
         }
     }
 }
