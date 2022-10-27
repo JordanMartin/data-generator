@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 @Provider(
         name = "Expression",
-        description = "Returns a string based on others field ",
+        description = "Generate a string from others fields",
         examples = {
                 "Expression(\"Full name: ${firstName} ${lastName}\") => \"Full name: John Doe\""
         },

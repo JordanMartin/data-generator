@@ -12,7 +12,7 @@
   <div class="resize-bar" (mousedown)="startResize($event)"></div>
   <div class="half-pane" [style]="{width: rightPaneWidth}">
     <div class="title">PREVIEW</div>
-    <mat-slide-toggle [checked]="auto_generate" (change)="changeAutoGenerate($event.checked)">
+    <mat-slide-toggle [checked]="auto_generate" (change)="changeAutoGenerate($event.checked)" matTooltip="Turn on to generate the result as you type">
       Auto refresh
     </mat-slide-toggle>
 

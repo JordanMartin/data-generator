@@ -13,6 +13,6 @@ public class ProviderDefinitionException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return String.format("Les paramètres du générateurs \"%s\" sont incorrects", name);
+        return String.format("The parameters of the provider \"%s\" are not valid", name);
     }
 }

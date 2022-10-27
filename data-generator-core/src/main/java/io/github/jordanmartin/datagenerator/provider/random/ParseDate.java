@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Provider(
         name = "ParseDate",
-        description = "Parse une date à partir d'une chaine de caractère",
+        description = "Parse a date from a string",
         examples = {
                 "ParseDate(\"2022-10-10 21:30\", \"yyyy-MM-dd HH:mm\")"
         },
@@ -32,23 +32,23 @@ public class ParseDate implements ValueProvider<Date> {
 
     private final Date date;
 
-    @ProviderCtor("Date à partir d'une chaine de caractère au timezone UTC")
+    @ProviderCtor("Date from a string interpreted in UTC timezone")
     public ParseDate(
-            @ProviderArg(description = "La date au timezone UTC") String date,
-            @ProviderArg(description = "Le format de la date",
-                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Documentation complète : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
+            @ProviderArg(description = "Date in UTC") String date,
+            @ProviderArg(description = "The pattern of the date with format of Java DateTimeFormatter)",
+                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Full documentation of the pattern : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
             ) String format
     ) {
         this(date, format, "UTC");
     }
 
-    @ProviderCtor("Date à partir d'une chaine de caractère et d'un timezone")
+    @ProviderCtor("Date from a string and interpreted with the specified timezone")
     public ParseDate(
-            @ProviderArg(description = "La date au timezone définit") String date,
-            @ProviderArg(description = "Le format de la date",
-                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Documentation complète : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
+            @ProviderArg(description = "Date in the specified timezone") String date,
+            @ProviderArg(description = "The pattern of the date with format of Java DateTimeFormatter)",
+                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Full documentation of the pattern : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
             ) String format,
-            @ProviderArg(description = "Timezone de la date", examples = {"UTC", "CET", "Europe/Paris", "Europe/Berlin"}) String timezone
+            @ProviderArg(description = "Date timezone", examples = {"UTC", "CET", "Europe/Paris", "Europe/Berlin"}) String timezone
     ) {
       this(date, format, ZoneId.of(timezone));
     }
@@ -59,8 +59,8 @@ public class ParseDate implements ValueProvider<Date> {
             ZonedDateTime zonedDateTime = LocalDateTime.from(parsed).atZone(timezone);
             this.date = new Date(zonedDateTime.toInstant().toEpochMilli());
         } catch (DateTimeException e) {
-            throw new ValueProviderException(this, String.format("Impossible de parser la date '%s' avec " +
-                    "le format '%s' au timezone '%s'", date, format, timezone), e);
+            throw new ValueProviderException(this, String.format("Failed to parse date '%s' with " +
+                    "pattern '%s' and timezone '%s'", date, format, timezone), e);
         }
     }
 

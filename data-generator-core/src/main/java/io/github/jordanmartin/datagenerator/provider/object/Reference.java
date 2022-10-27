@@ -13,7 +13,7 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  */
 @Provider(
         name = "Reference",
-        description = "Reference another field. When the field is declared from the references section then the referenced provider is called for every object",
+        description = "Reference another field and use his provider",
         examples = {
                 "Reference(\"myField\")",
                 "$myField"
@@ -26,7 +26,8 @@ public class Reference<T> implements ValueProvider<T> {
     private final String refName;
 
     @ProviderCtor
-    public Reference(@ProviderArg(description = "Name of the field to reference") String refName) {
+    public Reference(@ProviderArg(description = "Name of the field to reference. When the field " +
+            "is declared from 'references' part of the definition then it use the referenced provider for each use") String refName) {
         this.refName = refName;
     }
 

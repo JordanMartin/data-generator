@@ -13,9 +13,9 @@ import java.util.Random;
  */
 @Provider(
         name = "Integer",
-        description = "Retourne un entier aléatoire",
+            description = "Random number",
         examples = {"Integer()", "Integer(10)", "Integer(10, 10)"},
-        group = "nombre"
+        group = "number"
 )
 public class RandomInt implements IntegerProvider, StatelessValueProvider<Integer> {
 
@@ -23,21 +23,21 @@ public class RandomInt implements IntegerProvider, StatelessValueProvider<Intege
     private final int min;
     private final int max;
 
-    @ProviderCtor("Entier entre min et max")
+    @ProviderCtor("Number between min and max")
     public RandomInt(int min, int max) {
         if (min > max) {
-            throw new ValueProviderException(this, "La valeur minimum doit être <= à la valeur maximum");
+            throw new ValueProviderException(this, "Min value must be less than the max");
         }
         this.min = min;
         this.max = max;
     }
 
-    @ProviderCtor("Entier entre 0 et Integer.MAX_VALUE - 1")
+    @ProviderCtor("Number between 0 and Integer.MAX_VALUE - 1")
     public RandomInt() {
         this(0, Integer.MAX_VALUE - 1);
     }
 
-    @ProviderCtor("Entier entre 0 et max")
+    @ProviderCtor("Number between 0 and max")
     public RandomInt(int max) {
         this(0, max);
     }

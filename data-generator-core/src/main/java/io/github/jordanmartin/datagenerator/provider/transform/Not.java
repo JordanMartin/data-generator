@@ -10,33 +10,27 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
  */
 @Provider(
         name = "Not",
-        description = "Inverse un booléen",
+        description = "Inverse the value of a Boolean",
         examples = {
                 "Not(true) => false",
                 "Not(Boolean()) => false"
         },
         returns = Boolean.class,
-        group = "nombre"
+        group = "boolean"
 )
 public class Not extends TransformerProvider<Boolean, Boolean> {
 
     @ProviderCtor
     public Not(
-            @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur de booléen ou une référence vers un booléen",
-                    examples = "Boolean()"
-            ) ValueProvider<Boolean> provider) {
+            @ProviderArg(description = "A provider of Boolean", examples = {"Boolean()", "Reference(\"booleanField\")"})
+            ValueProvider<Boolean> provider
+    ) {
         super(provider);
     }
 
     @ProviderCtor
     public Not(
-            @ProviderArg(
-                    name = "boolean",
-                    description = "Une valeur booléen",
-                    examples = "true"
-            ) boolean bool) {
+            @ProviderArg(name = "boolean", description = "Boolean value", examples = {"true", "false"}) boolean bool) {
         super(ctx -> bool);
     }
 

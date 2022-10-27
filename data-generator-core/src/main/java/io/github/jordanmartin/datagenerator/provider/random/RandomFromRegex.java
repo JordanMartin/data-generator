@@ -14,12 +14,12 @@ import java.util.Random;
 
 /**
  * Génère une chaine de caractère aléatoire basé sur une regex.
- * A noter: il peut y avoir des doublons
+ * À noter: il peut y avoir des doublons
  */
 @Slf4j
 @Provider(
         name = "Regex",
-        description = "Retourne une chaine de caractères basée sur une expression régulière",
+        description = "Generate a string based on a regex expression",
         examples = {
                 "Regex(\"[A-Z]{2}[-][0-9]{3}[-][A-Z]{2}\") => OY-230-WL",
                 "Regex(\"[A-ZaZ0-9]{16}\") => 0218NaN7XaNaaAE7"
@@ -40,23 +40,21 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
     private final Random random = new Random();
 
 
-    @ProviderCtor("Retourne une valeur aléatoire à partir de l'expression régulière (doublon possible)")
+    @ProviderCtor("Random string from a regex (this can generate duplicate values)")
     public RandomFromRegex(String regex) {
         this.generex = new Generex(regex);
     }
 
-    @ProviderCtor("Permet la mise en cache d'un nombre spécifié d'élément unique et aléatoire. " +
-            "Ce générateur retourne ensuite aléatoirement une valeur depuis le cache.")
+    @ProviderCtor("Generate $count random string from a regex. Returns one of these values on each use")
     public RandomFromRegex(String regex, int count) {
         this(regex, count, false);
     }
 
-    @ProviderCtor("Permet la mise en cache d'un nombre spécifié d'élément unique. " +
-            "Ce générateur retourne ensuite aléatoirement une valeur depuis le cache.")
+    @ProviderCtor("Generate <count> string from a regex. Returns one of these values on each use")
     public RandomFromRegex(
             String regex,
             int count,
-            @ProviderArg(description = "Si true: les données générées sont séquentielles. A favoriser si <count> est important") boolean sequential) {
+            @ProviderArg(description = "true for a sequential generation (eg. [a-z]{2} => a, b, c, ...). False for a random one. Use true if <count> is big") boolean sequential) {
         this(regex);
         generateUniqueCache(count, sequential);
     }
@@ -74,8 +72,8 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
     /**
      * Génère un cache de {@code count} éléments
      *
-     * @param count      Nombre d'élément à générer
-     * @param sequential S'il doivent être séquentiels ou non
+     * @param count      Nombre d'éléments à générer
+     * @param sequential S'ils doivent être séquentiels ou non
      */
     private void generateUniqueCache(int count, boolean sequential) {
         this.cache = new ArrayList<>();
@@ -98,7 +96,7 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
 
     /**
      * Alimente le cache avec des données séquentielles à partir de la regex.
-     * Méthode plus rapide que la génération aléatoire. A privilégier pour un grand nombre d'objet à mettre en cache
+     * Méthode plus rapide que la génération aléatoire. À privilégier pour un grand nombre d'objet à mettre en cache
      */
     private void fillCacheWithSequential(int count) {
         Iterator it = generex.iterator();

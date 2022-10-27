@@ -12,7 +12,7 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
  */
 @Provider(
         name = "Increment",
-        description = "Retourne une valeur entière incrémentée",
+        description = "Generate a value which increment on each use",
         group = "id"
 )
 public class IntIncrement implements StatelessValueProvider<Integer> {
@@ -40,16 +40,16 @@ public class IntIncrement implements StatelessValueProvider<Integer> {
     /**
      * AutoIncrement start=0, step=1, max={@link Integer#MAX_VALUE}
      */
-    @ProviderCtor("Incrémente la valeur pour chaque objet (start=0, step=1, max=Integer.MAX_VALUE)")
+    @ProviderCtor("start=0, step=1, max=Integer.MAX_VALUE")
     public IntIncrement() {
         this(0, 1, Integer.MAX_VALUE);
     }
 
-    @ProviderCtor("Incrémente la valeur pour chaque objet")
+    @ProviderCtor("Custom start, step and max")
     public IntIncrement(
-            @ProviderArg(description = "Valeur de départ") int start,
-            @ProviderArg(description = "Quantité à incrémenter") int step,
-            @ProviderArg(description = "Valeur maximum") int max
+            @ProviderArg(description = "First value") int start,
+            @ProviderArg(description = "Amount for each increment") int step,
+            @ProviderArg(description = "Maximum value. When reached the value restart from <start>") int max
     ) {
         this.start = start;
         this.step = step;

@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 @Provider(
         name = "UUID",
-        description = "Retourne un identifiant unique aléatoire",
+        description = "Random UUID",
         examples = "UUID() => dc16324a-9d7f-4454-ab82-92f6092a7918",
         group = "id"
 )

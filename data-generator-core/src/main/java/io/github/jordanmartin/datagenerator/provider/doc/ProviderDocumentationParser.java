@@ -88,17 +88,17 @@ public class ProviderDocumentationParser {
     }
 
     /**
-     * Génère la documentation d'un argement de constructeur
+     * Génère la documentation d'un argument de constructeur
      */
     private static ProviderArgDoc getArgDoc(Parameter param) {
-        // Récupère les information via introspection
+        // Récupère les informations via introspection
         ProviderArgDoc argDoc = new ProviderArgDoc();
         argDoc.setType(getTypeName(param));
         argDoc.setName(param.getName());
         argDoc.setExamples(new String[]{});
 
 
-        // Si annotation présente, remplace les information disponibles depuis celle-ci
+        // Si annotation présente, remplace les informations disponibles depuis celle-ci
         if (param.isAnnotationPresent(ProviderArg.class)) {
             ProviderArg argAnnotation = param.getAnnotation(ProviderArg.class);
             if (!argAnnotation.name().isBlank()) {

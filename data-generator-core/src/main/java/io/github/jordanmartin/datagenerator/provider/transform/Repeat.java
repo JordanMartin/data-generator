@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.transform;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.base.Constant;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
  */
 @Provider(
         name = "Repeat",
-        description = "Répète une valeur",
+        description = "Generate a list by repeating a provider",
         examples = {
                 "Repeat(Faker(\"Name.firstName\"), Integer(0, 3)) => [ \"Zoe\", \"Sacha\", \"Rayan\" ] ou [ \"Benjamin\", \"Laura\" ]",
                 "Repeat(UUID(), 2) => [ \"d9443c7c-81c9-4188-869f-f9145a298837\", \"578b2d27-f7ca-4da0-9849-22fc5b7e31fe\" ]"
@@ -37,14 +38,19 @@ public class Repeat<T> implements ValueProvider<List<T>> {
     private final ValueProvider<Integer> countProvider;
 
     @ProviderCtor
-    public Repeat(ValueProvider<T> valueProvider, ValueProvider<Integer> countProvider) {
+    public Repeat(
+            @ProviderArg(description = "A provider of any type") ValueProvider<T> valueProvider,
+            @ProviderArg(description = "A provider of Integer that define the size of the list")
+            ValueProvider<Integer> countProvider) {
         this.countProvider = countProvider;
         this.valueProvider = valueProvider;
     }
 
     @ProviderCtor
-    public Repeat(ValueProvider<T> valueProvier, int count) {
-        this(valueProvier, new Constant<>(count));
+    public Repeat(
+            @ProviderArg(description = "A provider of any type") ValueProvider<T> valueProvider,
+            @ProviderArg(description = "Size of the list") int count) {
+        this(valueProvider, new Constant<>(count));
     }
 
 

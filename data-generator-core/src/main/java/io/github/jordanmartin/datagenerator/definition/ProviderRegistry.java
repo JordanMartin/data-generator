@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class ProviderRegistry {
@@ -39,13 +38,13 @@ public class ProviderRegistry {
         String pluginsProviderSearchPackage = Optional.ofNullable(System.getenv("PROVIDER_PLUGINS_SEARCH_PACKAGE"))
                 .orElse(PROVIDER_PLUGINS_SEARCH_PACKAGE);
 
-        log.info("Recherche des générateurs dans les packages : {}, {}",
+        log.info("Search providers in packages : {}, {}",
                 PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage);
         new Reflections(PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage)
                 .getTypesAnnotatedWith(Provider.class)
                 .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
                 .forEach(this::registerProvider);
-        log.info("{} générateurs enregistrés : {}", providers.size(), providers.entrySet());
+        log.info("{} providers registered : {}", providers.size(), providers.entrySet());
     }
 
     @SuppressWarnings("unchecked")
@@ -57,7 +56,7 @@ public class ProviderRegistry {
 
         Optional.ofNullable(providers.get(providerDoc.getName()))
                 .ifPresentOrElse(existingProviderClass -> {
-                    log.warn("Le generateur {} est ignoré car le générateur {} est déjà enregistré sous le même nom : {}",
+                    log.warn("The provider {} is ignored because another provider {} is already registered with the same name : {}",
                             providerClass, existingProviderClass, providerDoc.getName());
                 }, () -> {
                     providers.put(providerDoc.getName(), (Class<? extends ValueProvider<?>>) providerClass);

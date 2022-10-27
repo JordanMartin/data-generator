@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
@@ -12,7 +13,7 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  */
 @Provider(
         name = "FixedReference",
-        description = "Reference the value of another field. When the field is declared from references then it calls the provider once and returns always this value",
+        description = "Reference another field and use his provider",
         examples = {
                 "FixedReference(\"myField\")",
                 "$$myField"
@@ -25,7 +26,9 @@ public class FixedReference<T> implements ValueProvider<T> {
     private final String refName;
 
     @ProviderCtor
-    public FixedReference(String refName) {
+    public FixedReference(@ProviderArg(description = "Name of the field to reference. When the field " +
+            "is declared from 'references' part of the definition then it generate a value from this" +
+            " provider and returns always this value") String refName) {
         this.refName = refName;
     }
 

@@ -13,9 +13,9 @@ import java.util.Optional;
  */
 @Provider(
         name = "Optional",
-        description = "Retourne la valeur de façon optionnel",
+        description = "Optionally generates a field based on a condition",
         examples = {
-            "Optional(\"deuxiemePrenom\", Boolean(0.1)) le champ sera présent dans 10% des objets avec la valeur \"deuxiemePrenom\""
+                "Optional(\"second-first-name\", Boolean(0.1)) the field has a 10% chance of being present with the value \"second-first-name\""
         },
         returns = Optional.class
 )
@@ -26,32 +26,20 @@ public class OptionalProvider implements ValueProvider<Optional<?>> {
 
     @ProviderCtor
     public OptionalProvider(
-            @ProviderArg(
-                    name = "generateur",
-                    description = "Un autre générateur",
-                    examples = "IntIncrement()"
-            ) ValueProvider<?> provider,
-            @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur de booléen",
-                    examples = "Boolean(0.9) pour avoir 90% de valeur non null"
-            ) ValueProvider<Boolean> condition) {
+            @ProviderArg(description = "A provider of any type", examples = "IntIncrement()")
+            ValueProvider<?> provider,
+            @ProviderArg(description = "A provider of Boolean", examples = "Boolean(0.9) => generates 10% of null value")
+            ValueProvider<Boolean> conditionProvider) {
         this.provider = provider;
-        this.condition = condition;
+        this.condition = conditionProvider;
     }
 
     @ProviderCtor
     public OptionalProvider(
-            @ProviderArg(
-                    name = "valeur",
-                    description = "La valeur à retourner",
-                    examples = "\"test\""
-            ) Object value,
-            @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur de booléen",
-                    examples = "Boolean(0.9) pour avoir 90% de valeur non null"
-            ) ValueProvider<Boolean> condition) {
+            @ProviderArg(description = "The value to return", examples = "\"test\"")
+            Object value,
+            @ProviderArg(description = "A provider of Boolean", examples = "Boolean(0.9) => generates 10% of null value")
+            ValueProvider<Boolean> condition) {
         this.provider = (ctx) -> value;
         this.condition = condition;
     }
