@@ -30,27 +30,23 @@ class ProviderDocumentationParserTest {
     }
 
     @Test
-    void should_get_second_constructors() {
-        ProviderCtorDoc ctor2 = doc.getConstructors().get(1);
-        assertEquals(1, ctor2.getArgs().size());
-    }
-
-    @Test
     void sould_get_first_constructors() {
         ProviderCtorDoc ctor1 = doc.getConstructors().get(0);
+        assertEquals("Additionne 10 et 10", ctor1.description);
         assertEquals(0, ctor1.getArgs().size());
     }
 
     @Test
-    void should_fail_with_not_annotated_class() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            ProviderDocumentationParser.parse(Object.class);
-        });
+    void should_get_second_constructors() {
+        ProviderCtorDoc ctor2 = doc.getConstructors().get(1);
+        assertEquals("Additionne un nombre avec 10", ctor2.description);
+        assertEquals(1, ctor2.getArgs().size());
     }
 
     @Test
-    void should_get_fird_constructors() {
+    void should_get_third_constructors() {
         ProviderCtorDoc ctor3 = doc.getConstructors().get(2);
+        assertEquals("Additionne deux nombre", ctor3.description);
         assertEquals(2, ctor3.getArgs().size());
 
         ProviderArgDoc ctor3Arg1 = ctor3.getArgs().get(0);
@@ -64,6 +60,11 @@ class ProviderDocumentationParserTest {
         assertEquals("Valeur B", ctor3Arg2.getDescription());
         assertEquals("int", ctor3Arg2.getType());
         assertArrayEquals(new String[]{"1"}, ctor3Arg2.getExamples());
+    }
+
+    @Test
+    void should_fail_with_not_annotated_class() {
+        assertThrows(IllegalArgumentException.class, () -> ProviderDocumentationParser.parse(Object.class));
     }
 
     @Provider(name = "Plus", description = "Un test")
@@ -86,7 +87,7 @@ class ProviderDocumentationParserTest {
             this(a, 10);
         }
 
-        @ProviderCtor("Aditionne 10 et 10")
+        @ProviderCtor("Additionne 10 et 10")
         public Plus() {
             this(10, 10);
         }
