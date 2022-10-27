@@ -11,7 +11,7 @@ export class SimplifyJavaTypePipe implements PipeTransform {
     'float': 'Float',
     'double': 'Double',
     'boolean': 'Boolean',
-    'io.github.jordanmartin.datagenerator.provider.core.ValueProvider': 'Generator'
+    'io.github.jordanmartin.datagenerator.provider.core.ValueProvider': 'Provider'
   }
 
   transform(value: string): string {

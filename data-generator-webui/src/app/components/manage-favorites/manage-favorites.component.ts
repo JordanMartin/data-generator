@@ -24,16 +24,16 @@ export class ManageFavoritesComponent implements OnInit {
   loadExamples() {
     const examples: Favorite[] = [
       {
-        name: "[Exemple] Template",
+        name: "[Sample] Template",
         definition: "template:\n  id: Increment()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)",
         output_config: {
           count: 5,
           format: "template",
-          template: "#set ($title = \"Liste de personne aléatoire\")\r\n$title\r\n===================\r\n#foreach($data in $list)\r\nid=$data.id\r\nnom=$data.firstname $data.lastname\r\nage=$data.age\r\n#if($data.age >= 18)\r\nmajeur=oui\r\n#else\r\nmajeur=no\r\n#end\r\n---------\r\n#end"
+          template: "#set ($title = \"Random people list\")\n$title\n===================\n#foreach($data in $list)\nid=$data.id\nname=$data.firstname $data.lastname\nage=$data.age\n#if($data.age >= 18)\nmajor=yes\n#else\nmajor=no\n#end\n---------\n#end"
         }
       },
       {
-        name: "[Exemple] Références",
+        name: "[Sample] References",
         definition: "references:\n  car:\n    brand: Enum([\"Peugeot\", \"Renault\"])\n    number_plate: Regex(\"[A-Z]{2}-[0-9]{3}-[A-Z]{2}\")\n\ntemplate:\n  id: Increment()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  cars: Repeat($car, Integer(0,2))",
         output_config: {
           "count": 5,
@@ -42,7 +42,7 @@ export class ManageFavoritesComponent implements OnInit {
         }
       },
       {
-        name: "[Exemple] SQL",
+        name: "[Sample] SQL",
         definition: "template:\n  id: Increment()\n  uuid: UUID()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  fullname: $(\"${firstname} ${lastname}\")",
         output_config: {
           include_null: true,
@@ -52,8 +52,8 @@ export class ManageFavoritesComponent implements OnInit {
         }
       },
       {
-        name: "[Exemple] Dates",
-        definition: "template:\n  start: FormatDate(Date(\"2000-01-01\", \"2000-12-31\"), \"yyyy-MM-dd\")\n  end: FormatDate(Date(\"2001-01-01\", \"2001-12-31\"), \"yyyy-MM-dd\")\n  generatedAt: FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss\")",
+        name: "[Sample] Dates",
+        definition: "template:\n  start: FormatDate(Date(\"2000-01-01\", \"2000-12-31\"), \"yyyy-MM-dd\")\n  end: FormatDate(Date(\"2001-01-01\", \"2001-12-31\"), \"yyyy-MM-dd\")\n  generatedAt: FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss\")\n  nextWeekSameDay: FormatDate(DateAdd(Now(), 7, \"DAYS\"), \"yyyy-MM-dd HH:mm:ss\"))",
         output_config: {
           count: 5,
           format: "json",
@@ -61,7 +61,7 @@ export class ManageFavoritesComponent implements OnInit {
         }
       },
       {
-        name: "[Exemple] Enumérations",
+        name: "[Sample] Enumerations",
         definition: "template:\n  id: Increment()\n  uuid: UUID()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  fullname: $(\"${firstname} ${lastname}\")\n  blood_group: Enum([EnumWeight(\"O-\", 6), EnumWeight(\"O+\", 36), EnumWeight(\"A-\", 7), EnumWeight(\"A+\", 37), EnumWeight(\"B-\", 1), EnumWeight(\"B+\", 9), EnumWeight(\"AB-\", 1), EnumWeight(\"AB+\", 3)])\n  universal_donor: If(\"blood_group\", \"=\", \"O-\")",
         output_config: {
           count: 10,
@@ -70,7 +70,7 @@ export class ManageFavoritesComponent implements OnInit {
         }
       },
       {
-        name: "[Exemple] Séquences",
+        name: "[Sample] Sequences",
         definition: "template:\n  seq: Sequence([\"a\", \"b\", \"c\"])",
         output_config: {
           count: 10,
@@ -79,7 +79,7 @@ export class ManageFavoritesComponent implements OnInit {
         } as OutputConfig
       },
       {
-        name: "[Exemple] Sous objets",
+        name: "[Sample] Sub object",
         definition: "template:\n  array: List([UUID(), Constant(42), Integer(0, 100)])\n  array2: \n    - UUID()\n    - Constant(42)\n    - Integer(0, 100)\n  array3: Repeat(Round(Double(0, 100), 2), 3)",
         output_config: {
           count: 10,
@@ -98,7 +98,7 @@ export class ManageFavoritesComponent implements OnInit {
     const format = (n: number) => n < 9 ? '0' + n : n;
     const date = `${now.getFullYear()}-${format(now.getMonth())}-${format(now.getDate())}`;
     const time = `${format(now.getHours())}-${format(now.getMinutes())}-${format(now.getSeconds())}`;
-    this.downloadData(`data-generator-favoris-${date}_${time}.json`, this.favorites)
+    this.downloadData(`data-generator-favorites-${date}_${time}.json`, this.favorites)
   }
 
   downloadData(filename: string, data: any) {
@@ -126,13 +126,15 @@ export class ManageFavoritesComponent implements OnInit {
       favorites = JSON.parse(json);
       favorites = favorites.filter(favorite => !!favorite.name);
     } catch (e) {
-      this.snackBar.open('❌ Favoris non importé. Le fichier de sauvegarde est invalide', 'Fermer');
+      this.snackBar.open('❌ Failed to import your saved configuration. The file is not valid', 'Close');
       return;
     }
     this.storage.saveFavorites(favorites);
     this.favorites = this.storage.loadFavorites();
-    this.snackBar.open('✔ ' + favorites.length
-      + ' favoris importé' + (favorites.length > 1 ? 's' : ''), 'Ok');
+    const plural = (favorites.length > 1 ? 's' : '');
+    this.snackBar.open(`✔ ${favorites.length} configuration${plural} imported`, 'Ok', {
+      duration: 10000
+    });
   }
 
   loadFavorite(favorite: Favorite) {

@@ -13,8 +13,8 @@ import io.github.jordanmartin.datagenerator.provider.object.IObjectProviderConte
  */
 @Provider(
         name = "Idempotent",
-        description = "Retourne systématiquement la première valeur obtenu à partir d'un autre générateur",
-        examples = {"Idempotent(UUID())"}
+        description = "Use a provider to compute a value and returns always this value on each use",
+        examples = {"Idempotent(UUID()) => returns always the same UUID"}
 )
 public class Idempotent<T> implements ValueProvider<T> {
 
@@ -23,11 +23,7 @@ public class Idempotent<T> implements ValueProvider<T> {
 
     @ProviderCtor
     public Idempotent(
-            @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur de n'importe quel type",
-                    examples = {"UUID()", "RandomDate()"}
-            ) ValueProvider<T> provider
+            @ProviderArg(description = "Provider of any type", examples = {"UUID()", "RandomDate()"}) ValueProvider<T> provider
     ) {
         this.provider = provider;
     }

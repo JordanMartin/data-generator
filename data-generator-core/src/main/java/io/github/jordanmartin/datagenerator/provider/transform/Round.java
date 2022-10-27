@@ -15,11 +15,11 @@ import java.math.RoundingMode;
  */
 @Provider(
         name = "Round",
-        description = "Arrondie une valeur décimale",
+        description = "Round a decimal value",
         examples = {
                 "Round(Double(10, 20), 2) => 17.22"
         },
-        group = "nombre"
+        group = "number"
 )
 public class Round implements DoubleProvider {
 
@@ -35,23 +35,23 @@ public class Round implements DoubleProvider {
 
     @ProviderCtor
     public Round(
-            @ProviderArg(description = "Un générateur de double")
+            @ProviderArg(description = "A double number provider")
             ValueProvider<Double> provider,
-            @ProviderArg(description = "Nombre de décimales")
+            @ProviderArg(description = "Number of digit for decimal part")
             int precision,
             @ProviderArg(
-                    description = "Type de l'arrondie",
+                    description = "Rounding mode",
                     examples = {"UP", "DOWN", "CEILING", "FLOOR", "HALF_UP", "HALF_DOWN", "HALF_EVEN"}
             ) String roundingMode
     ) {
         this(provider, precision, RoundingMode.valueOf(roundingMode.toUpperCase()));
     }
 
-    @ProviderCtor("Arrondie à la décimale supérieur")
+    @ProviderCtor("Round to the upper decimal number")
     public Round(
-            @ProviderArg(description = "Un générateur de double")
+            @ProviderArg(description = "A double number provider")
             ValueProvider<Double> provider,
-            @ProviderArg(description = "Nombre de décimales")
+            @ProviderArg(description = "Number of digit for decimal part")
             int precision
     ) {
         this(provider, precision, RoundingMode.UP);

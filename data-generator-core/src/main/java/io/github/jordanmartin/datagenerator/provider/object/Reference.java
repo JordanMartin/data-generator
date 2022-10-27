@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
@@ -12,22 +13,21 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  */
 @Provider(
         name = "Reference",
-        description = "Référence un autre champ. S'il s'agit d'un champ de référence, une nouvelle valeur sera générée à chaque utilisation",
+        description = "Reference another field and use his provider",
         examples = {
-                "Reference(\"champ1\")"
+                "Reference(\"myField\")",
+                "$myField"
         },
         returns = Object.class,
         group = "reference"
 )
 public class Reference<T> implements ValueProvider<T> {
 
-    /**
-     * Nom de la reference
-     **/
     private final String refName;
 
     @ProviderCtor
-    public Reference(String refName) {
+    public Reference(@ProviderArg(description = "Name of the field to reference. When the field " +
+            "is declared from 'references' part of the definition then it use the referenced provider for each use") String refName) {
         this.refName = refName;
     }
 
@@ -42,7 +42,7 @@ public class Reference<T> implements ValueProvider<T> {
         }
 
         if (objectField == null) {
-            throw new ValueProviderException(this, "La référence \"" + refName + "\" n'existe pas");
+            throw new ValueProviderException(this, "The reference \"" + refName + "\" doesn't exists");
         }
 
         return objectField;

@@ -1,5 +1,8 @@
 package io.github.jordanmartin.datagenerator.provider.core;
 
+import io.github.jordanmartin.datagenerator.provider.doc.ProviderDoc;
+import io.github.jordanmartin.datagenerator.provider.doc.ProviderDocumentationParser;
+
 public class ValueProviderException extends RuntimeException {
 
     private transient ValueProvider<?> provider;
@@ -24,12 +27,18 @@ public class ValueProviderException extends RuntimeException {
     public String getMessage() {
         StringBuilder sb = new StringBuilder();
         if (provider != null) {
-            sb.append("[Générateur : ").append(provider.getClass().getSimpleName()).append("] ");
+            sb.append("[Provider : ").append(getProviderName()).append("] ");
         }
         sb.append(super.getMessage());
         if (getCause() != null && getCause().getMessage() != null) {
             sb.append("\n").append(getCause().getMessage());
         }
         return sb.toString();
+    }
+
+    private String getProviderName() {
+        return ProviderDocumentationParser.parse(provider.getClass())
+                .map(ProviderDoc::getName)
+                .orElse(provider.getClass().getSimpleName());
     }
 }

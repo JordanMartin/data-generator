@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Génère une valeur aléatoire à partir d'un liste donnée
+ * Génère une valeur aléatoire à partir d'une liste donnée
  * Peut être un générateur
  *
  * @param <T> Le type des éléments de la liste
@@ -21,11 +21,11 @@ import java.util.Random;
 @Slf4j
 @Provider(
         name = "Enum",
-        description = "Retourne un élément aléatoire à partir d'une liste de valeur",
+        description = "Random element from a predefined list",
         examples = {
-                "Enum([\"A\", \"B\", \"C\"]) => retourne l'un des éléments avec la même probabilité",
+                "Enum([\"A\", \"B\", \"C\"]) => Returns A, B or C with the same probability",
                 "Enum([EnumWeight(\"A\", 50), EnumWeight(\"B\", 30), EnumWeight(\"C\", 20)]) =>" +
-                        " retourne \"A\" avec un probabilité de 50%, \"B\": 30% ou \"C\": 20% "
+                        " returns \"A\" with a probability of 50, \"B\": 30% ou \"C\": 20% "
         },
         group = "enum"
 )
@@ -35,16 +35,21 @@ public class EnumProvider<T> implements ValueProvider<T> {
     private final List<Object> items;
 
     @SafeVarargs
-    @ProviderCtor("Chaque valeur à la même probabilité d'être sélectionnée. Utilisez l'objet EnumWeight pour changer la probabilité d'apparition d'une valeur")
+    @ProviderCtor("Returns one of the values with the same probability")
     public EnumProvider(
-            @ProviderArg(examples = {"\"A\"", "EnumWeight(\"A\", 10)"}) T... items
+            @ProviderArg(description = "List of items. Can be a value (string, number, boolean) or a provider ", examples = {"\"A\"", "Integer(1, 10)"}) T... items
     ) {
         this.items = Arrays.asList(items);
     }
 
     @SafeVarargs
-    @ProviderCtor("Utilise d'autres générateurs pour retourner les valeurs. Chaque valeur à la même probabilité d'être choisi")
-    public EnumProvider(ValueProvider<T>... items) {
+    @ProviderCtor("Changes the probability of selecting a value")
+    public EnumProvider(
+            @ProviderArg(
+                    description = "List of items wrapped with an EnumWeight (the wrapped value can be a string," +
+                            " number, boolean or a provider)",
+                    examples = {"EnumWeight(\"A\", 10)", "EnumWeight(Integer(1, 10), 90)"})
+            ValueProvider<T>... items) {
         this.items = Arrays.asList(items);
     }
 

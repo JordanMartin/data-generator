@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
@@ -12,22 +13,22 @@ import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException
  */
 @Provider(
         name = "FixedReference",
-        description = "Référence un autre champ. S'il s'agit d'un champ de référence, la générateur associé ne sera appelé qu'une fois",
+        description = "Reference another field and use his provider",
         examples = {
-                "FixedReference(\"champ1\")"
+                "FixedReference(\"myField\")",
+                "$$myField"
         },
         returns = Object.class,
         group = "reference"
 )
 public class FixedReference<T> implements ValueProvider<T> {
 
-    /**
-     * Nom de la reference
-     **/
     private final String refName;
 
     @ProviderCtor
-    public FixedReference(String refName) {
+    public FixedReference(@ProviderArg(description = "Name of the field to reference. When the field " +
+            "is declared from 'references' part of the definition then it generate a value from this" +
+            " provider and returns always this value") String refName) {
         this.refName = refName;
     }
 
@@ -42,7 +43,7 @@ public class FixedReference<T> implements ValueProvider<T> {
         }
 
         if (objectField == null) {
-            throw new ValueProviderException(this, "La référence \"" + refName + "\" n'existe pas");
+            throw new ValueProviderException(this, "The reference \"" + refName + "\" doesn't exists");
         }
 
         return objectField;

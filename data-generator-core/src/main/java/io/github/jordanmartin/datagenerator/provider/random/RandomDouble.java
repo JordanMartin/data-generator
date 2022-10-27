@@ -13,40 +13,40 @@ import java.util.Random;
  */
 @Provider(
         name = "Double",
-        description = "Retourne un nombre décimale aléatoire",
+        description = "Random decimal number",
         examples = {
                 "Double(0, 10) => 5.494573180435739"
         },
-        group = "nombre"
+        group = "number"
 )
 public class RandomDouble implements DoubleProvider, StatelessValueProvider<Double> {
     private final Random random = new Random();
     private final double min;
     private final double max;
 
-    @ProviderCtor("Décimale entre min et max")
+    @ProviderCtor("Decimal number between min and max")
     public RandomDouble(double min, double max) {
         if (min > max) {
-            throw new ValueProviderException(this, "La valeur minimum doit être <= à la valeur maximum");
+            throw new ValueProviderException(this, "Min value must be less than the max");
         }
         this.min = min;
         this.max = max;
     }
 
-    public RandomDouble(int min, int max) {
-        this((double) min, (double) max);
-    }
-
-    @ProviderCtor("Décimale entre 0 et max")
+    @ProviderCtor("Decimal number between 0 and max")
     public RandomDouble(double max) {
         this(0, max);
+    }
+
+    public RandomDouble(int min, int max) {
+        this(min, (double) max);
     }
 
     public RandomDouble(int max) {
         this(0, (double) max);
     }
 
-    @ProviderCtor("Décimale entre 0 et Double.MAX_VALUE")
+    @ProviderCtor("Decimal value between 0 and Double.MAX_VALUE (1.7976931348623157e+308)")
     public RandomDouble() {
         this(0, Double.MAX_VALUE);
     }

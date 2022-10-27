@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Provider(
         name = "FormatDate",
-        description = "Formate une date",
+        description = "Format a date",
         examples = {
                 "FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss.SSSXXX\") => \"2022-05-17 18:22:34.253Z\"",
                 "FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss.SSSXXX\", \"Europe/Paris\") => \"2022-05-17 20:22:34.253+02:00\""
@@ -32,33 +32,31 @@ public class FormatDate extends TransformerProvider<Date, String> {
      * @param dateProvider Générateur de date
      * @param format       Format de la date {@link DateTimeFormatter}
      */
-    @ProviderCtor("Formate une date. La date sera interprétée au timezone UTC")
+    @ProviderCtor("Format a date at the specified timezone")
     public FormatDate(
             @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur retournant un type Date",
+                    description = "Provider of Date",
                     examples = "Now()"
             ) ValueProvider<Date> dateProvider,
             @ProviderArg(
                     name = "format",
-                    description = "Un format de date tel que définit par java.time.DateTimeFormatter",
-                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Documentation complète : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
+                    description = "Date format as defined by java.time.DateTimeFormatter",
+                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Full documentation : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
             ) String format
     ) {
         this(dateProvider, format, "UTC");
     }
 
-    @ProviderCtor("Formate une date dans un timezone spécifié")
+    @ProviderCtor("Format a date in the specified timezone")
     public FormatDate(
             @ProviderArg(
-                    name = "generateur",
-                    description = "Un générateur retournant un type Date",
+                    description = "Provider of Date",
                     examples = "Now()"
             ) ValueProvider<Date> dateProvider,
             @ProviderArg(
                     name = "format",
-                    description = "Un format de date tel que définit par java.time.DateTimeFormatter",
-                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Documentation complète : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
+                    description = "Date format as defined by java.time.DateTimeFormatter",
+                    examples = {"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "Full documentation : https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns"}
             ) String format,
             @ProviderArg(description = "Timezone de la date", examples = {"UTC", "CET", "Europe/Paris", "Europe/Berlin"}) String timezone) {
         super(dateProvider);

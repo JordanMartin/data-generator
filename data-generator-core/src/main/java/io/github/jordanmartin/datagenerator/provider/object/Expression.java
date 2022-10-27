@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  */
 @Provider(
         name = "Expression",
-        description = "Construit une expression basée sur d'autre champ",
+        description = "Generate a string from others fields",
         examples = {
                 "Expression(\"Full name: ${firstName} ${lastName}\") => \"Full name: John Doe\""
         },
@@ -30,7 +31,9 @@ public class Expression implements ValueProvider<String> {
     private final String expression;
 
     @ProviderCtor
-    public Expression(String expression) {
+    public Expression(
+            @ProviderArg(description = "Expression containing references to others field with ${fieldName}") String expression
+    ) {
         this.expression = expression;
     }
 
@@ -57,7 +60,7 @@ public class Expression implements ValueProvider<String> {
             }
 
             if (objectField == null) {
-                throw new ValueProviderException(this, "La référence \"" + refType + "{" + ref + "}\" n'existe pas");
+                throw new ValueProviderException(this, "The reference \"" + refType + "{" + ref + "}\" doesn't exists");
             }
 
             // Remplace la variable par sa valeur dans l'expression

@@ -21,8 +21,8 @@ public abstract class DefinitionParser {
 
         if (classProvider == null) {
             String providers = String.join(", ", providerRegistry.listNames());
-            throw new DefinitionException("Le générateur \"" + providerName + "\" n'existe pas\n" +
-                    "Générateur disponibles: " + providers);
+            throw new DefinitionException("The provider \"" + providerName + "\" doesn't exists\n" +
+                    "Available providers : " + providers);
         }
 
         Class<?>[] paramsClass = Arrays.stream(providerParams)

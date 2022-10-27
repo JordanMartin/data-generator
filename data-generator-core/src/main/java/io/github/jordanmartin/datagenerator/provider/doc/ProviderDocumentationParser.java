@@ -12,14 +12,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Parse le classe d'un générateur avec ses annotations pour générer la documentation associée
+ * Parse la classe d'un générateur avec ses annotations pour générer la documentation associée
  */
 @Slf4j
 public class ProviderDocumentationParser {
 
     public static Optional<ProviderDoc> parse(Class<?> clazz) {
         Provider providerAnnotation = Optional.ofNullable(clazz.getAnnotation(Provider.class))
-                .orElseThrow(() -> new IllegalArgumentException("La classe " + clazz + " ne possède pas l'annotation " + Provider.class));
+                .orElseThrow(() -> new IllegalArgumentException("The class " + clazz + " must have the annotation " + Provider.class));
 
         ProviderDoc providerDoc = new ProviderDoc();
         providerDoc.setName(clazz.getSimpleName());
@@ -44,11 +44,11 @@ public class ProviderDocumentationParser {
                 .forEach(providerDoc.constructors::add);
 
         if (providerDoc.constructors.isEmpty()) {
-            log.warn("Le generateur " + clazz + " est ignoré car il ne possède aucun constructeur accessible");
+            log.warn("Ignoring provider " + clazz + " because it has no available constructor annotated with " + ProviderCtor.class);
             return Optional.empty();
         }
 
-        // Trie les constructeurs par nombre de paramètre
+        // Trie les constructeurs par nombre de paramètres
         providerDoc.constructors.sort(Comparator.comparingInt(value -> value.getArgs().size()));
         return Optional.of(providerDoc);
     }
@@ -88,17 +88,17 @@ public class ProviderDocumentationParser {
     }
 
     /**
-     * Génère la documentation d'un argement de constructeur
+     * Génère la documentation d'un argument de constructeur
      */
     private static ProviderArgDoc getArgDoc(Parameter param) {
-        // Récupère les information via introspection
+        // Récupère les informations via introspection
         ProviderArgDoc argDoc = new ProviderArgDoc();
         argDoc.setType(getTypeName(param));
         argDoc.setName(param.getName());
         argDoc.setExamples(new String[]{});
 
 
-        // Si annotation présente, remplace les information disponibles depuis celle-ci
+        // Si annotation présente, remplace les informations disponibles depuis celle-ci
         if (param.isAnnotationPresent(ProviderArg.class)) {
             ProviderArg argAnnotation = param.getAnnotation(ProviderArg.class);
             if (!argAnnotation.name().isBlank()) {

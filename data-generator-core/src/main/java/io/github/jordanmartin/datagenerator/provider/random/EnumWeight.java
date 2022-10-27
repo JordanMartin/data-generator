@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Provider(
-        name = "EnumWeight", description = "Retourne un objet EnumWeight à utiliser avec Enum(...)",
+        name = "EnumWeight",
+        description = "Returns a EnumWeight. Note: should only be used with Enum(...) provider",
         examples = {
-                "EnumWeight(\"A\", 10) => Valeur \"A\" avec un poids de 10",
-                "EnumWeight(Faker(\"Name.firstName\"), 10) => Un prénom aléatoire avec un poids de 10",
+                "See examples of Enum(...) provider"
         },
         returns = EnumWeight.class,
         group = "enum"
@@ -21,13 +21,13 @@ public class EnumWeight {
     private Object item;
     private int weight;
 
-    @ProviderCtor
+    @ProviderCtor("Constante value")
     public EnumWeight(Object item, int weight) {
         this.item = item;
         this.weight = weight;
     }
 
-    @ProviderCtor("Valeur depuis un autre générateur")
+    @ProviderCtor("Value from another provider")
     public EnumWeight(ValueProvider<?> item, int weight) {
         this.item = item;
         this.weight = weight;
