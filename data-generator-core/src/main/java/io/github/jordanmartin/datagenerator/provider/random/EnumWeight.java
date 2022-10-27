@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Provider(
         name = "EnumWeight",
-        description = "Returns a EnumWeight. Note: it can only be used with Enum(...) provider",
+        description = "Returns a EnumWeight. Note: should only be used with Enum(...) provider",
         examples = {
                 "See examples of Enum(...) provider"
         },
@@ -21,7 +21,7 @@ public class EnumWeight {
     private Object item;
     private int weight;
 
-    @ProviderCtor
+    @ProviderCtor("Constante value")
     public EnumWeight(Object item, int weight) {
         this.item = item;
         this.weight = weight;

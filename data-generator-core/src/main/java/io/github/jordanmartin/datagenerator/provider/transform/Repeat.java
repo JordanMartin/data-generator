@@ -39,8 +39,8 @@ public class Repeat<T> implements ValueProvider<List<T>> {
 
     @ProviderCtor
     public Repeat(
-            @ProviderArg(description = "A provider of any type") ValueProvider<T> valueProvider,
-            @ProviderArg(description = "A provider of Integer that define the size of the list")
+            @ProviderArg(description = "Provider of any type") ValueProvider<T> valueProvider,
+            @ProviderArg(description = "Provider of Integer that define the size of the list")
             ValueProvider<Integer> countProvider) {
         this.countProvider = countProvider;
         this.valueProvider = valueProvider;
@@ -48,7 +48,7 @@ public class Repeat<T> implements ValueProvider<List<T>> {
 
     @ProviderCtor
     public Repeat(
-            @ProviderArg(description = "A provider of any type") ValueProvider<T> valueProvider,
+            @ProviderArg(description = "Provider of any type") ValueProvider<T> valueProvider,
             @ProviderArg(description = "Size of the list") int count) {
         this(valueProvider, new Constant<>(count));
     }

@@ -19,13 +19,13 @@ public class Or implements ValueProvider<Boolean> {
     private final List<ValueProvider<Boolean>> values;
 
     @ProviderCtor
-    public Or(@ProviderArg(description = "A boolean provider") ValueProvider<Boolean> a,
-              @ProviderArg(description = "A boolean provider") ValueProvider<Boolean> b) {
+    public Or(@ProviderArg(description = "Boolean provider") ValueProvider<Boolean> a,
+              @ProviderArg(description = "Boolean provider") ValueProvider<Boolean> b) {
         this(List.of(a, b));
     }
 
     @ProviderCtor
-    public Or(@ProviderArg(description = "A list of boolean provider") List<ValueProvider<Boolean>> values) {
+    public Or(@ProviderArg(description = "List of boolean provider") List<ValueProvider<Boolean>> values) {
         this.values = values;
     }
 

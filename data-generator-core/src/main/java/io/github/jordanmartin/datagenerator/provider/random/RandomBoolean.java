@@ -10,7 +10,7 @@ import io.github.jordanmartin.datagenerator.provider.core.StatelessValueProvider
  */
 @Provider(
         name = "Boolean",
-        description = "Returns a random boolean",
+        description = "Random boolean",
         group = "boolean",
         examples = "Boolean(0.3) => returns 30% of true"
 )

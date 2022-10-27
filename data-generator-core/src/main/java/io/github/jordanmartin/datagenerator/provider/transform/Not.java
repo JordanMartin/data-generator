@@ -22,7 +22,7 @@ public class Not extends TransformerProvider<Boolean, Boolean> {
 
     @ProviderCtor
     public Not(
-            @ProviderArg(description = "A provider of Boolean", examples = {"Boolean()", "Reference(\"booleanField\")"})
+            @ProviderArg(description = "Provider of Boolean", examples = {"Boolean()", "Reference(\"booleanField\")"})
             ValueProvider<Boolean> provider
     ) {
         super(provider);

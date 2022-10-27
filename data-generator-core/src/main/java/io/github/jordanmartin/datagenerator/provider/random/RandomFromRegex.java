@@ -22,7 +22,8 @@ import java.util.Random;
         description = "Generate a string based on a regex expression",
         examples = {
                 "Regex(\"[A-Z]{2}[-][0-9]{3}[-][A-Z]{2}\") => OY-230-WL",
-                "Regex(\"[A-ZaZ0-9]{16}\") => 0218NaN7XaNaaAE7"
+                "Regex(\"[A-ZaZ0-9]{16}\") => 0218NaN7XaNaaAE7",
+                "Documentation of regular expression : https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html"
         }
 )
 public class RandomFromRegex implements StatelessValueProvider<String> {
@@ -41,19 +42,22 @@ public class RandomFromRegex implements StatelessValueProvider<String> {
 
 
     @ProviderCtor("Random string from a regex (this can generate duplicate values)")
-    public RandomFromRegex(String regex) {
+    public RandomFromRegex(
+            @ProviderArg(description = "The regular expression") String regex) {
         this.generex = new Generex(regex);
     }
 
-    @ProviderCtor("Generate $count random string from a regex. Returns one of these values on each use")
-    public RandomFromRegex(String regex, int count) {
+    @ProviderCtor("Generate <count> random string from a regex. Returns one of these values on each use")
+    public RandomFromRegex(
+            @ProviderArg(description = "The regular expression") String regex,
+            @ProviderArg(description = "Number of distinct values to generate") int count) {
         this(regex, count, false);
     }
 
     @ProviderCtor("Generate <count> string from a regex. Returns one of these values on each use")
     public RandomFromRegex(
-            String regex,
-            int count,
+            @ProviderArg(description = "The regular expression") String regex,
+            @ProviderArg(description = "Number of distinct values to generate") int count,
             @ProviderArg(description = "true for a sequential generation (eg. [a-z]{2} => a, b, c, ...). False for a random one. Use true if <count> is big") boolean sequential) {
         this(regex);
         generateUniqueCache(count, sequential);

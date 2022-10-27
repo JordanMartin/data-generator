@@ -21,7 +21,7 @@ import java.util.Random;
 @Slf4j
 @Provider(
         name = "Enum",
-        description = "Returns a random element from a list",
+        description = "Random element from a predefined list",
         examples = {
                 "Enum([\"A\", \"B\", \"C\"]) => Returns A, B or C with the same probability",
                 "Enum([EnumWeight(\"A\", 50), EnumWeight(\"B\", 30), EnumWeight(\"C\", 20)]) =>" +
@@ -35,16 +35,21 @@ public class EnumProvider<T> implements ValueProvider<T> {
     private final List<Object> items;
 
     @SafeVarargs
-    @ProviderCtor("Wrap your value with an EnumWeight to change the probability. Otherwise each value has the same probability")
+    @ProviderCtor("Returns one of the values with the same probability")
     public EnumProvider(
-            @ProviderArg(examples = {"\"A\"", "EnumWeight(\"A\", 10)"}) T... items
+            @ProviderArg(description = "List of items. Can be a value (string, number, boolean) or a provider ", examples = {"\"A\"", "Integer(1, 10)"}) T... items
     ) {
         this.items = Arrays.asList(items);
     }
 
     @SafeVarargs
-    @ProviderCtor("Use another provider for the value ")
-    public EnumProvider(ValueProvider<T>... items) {
+    @ProviderCtor("Changes the probability of selecting a value")
+    public EnumProvider(
+            @ProviderArg(
+                    description = "List of items wrapped with an EnumWeight (the wrapped value can be a string," +
+                            " number, boolean or a provider)",
+                    examples = {"EnumWeight(\"A\", 10)", "EnumWeight(Integer(1, 10), 90)"})
+            ValueProvider<T>... items) {
         this.items = Arrays.asList(items);
     }
 

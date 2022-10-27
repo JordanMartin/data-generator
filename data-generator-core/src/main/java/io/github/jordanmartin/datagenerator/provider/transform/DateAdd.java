@@ -28,7 +28,7 @@ public class DateAdd extends TransformerProvider<Date, Date> {
     @ProviderCtor
     public DateAdd(
             @ProviderArg(
-                    description = "A provider of Date",
+                    description = "Provider of Date",
                     examples = "Now()"
             ) ValueProvider<Date> dateProvider,
             @ProviderArg(description = "Amount to add or subtract (if negative)") long amount,

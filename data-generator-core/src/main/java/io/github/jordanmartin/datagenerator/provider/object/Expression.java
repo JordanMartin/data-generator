@@ -1,6 +1,7 @@
 package io.github.jordanmartin.datagenerator.provider.object;
 
 import io.github.jordanmartin.datagenerator.provider.annotation.Provider;
+import io.github.jordanmartin.datagenerator.provider.annotation.ProviderArg;
 import io.github.jordanmartin.datagenerator.provider.annotation.ProviderCtor;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProvider;
 import io.github.jordanmartin.datagenerator.provider.core.ValueProviderException;
@@ -30,7 +31,9 @@ public class Expression implements ValueProvider<String> {
     private final String expression;
 
     @ProviderCtor
-    public Expression(String expression) {
+    public Expression(
+            @ProviderArg(description = "Expression containing references to others field with ${fieldName}") String expression
+    ) {
         this.expression = expression;
     }
 

@@ -23,7 +23,7 @@ public class Idempotent<T> implements ValueProvider<T> {
 
     @ProviderCtor
     public Idempotent(
-            @ProviderArg(description = "A provider of any type", examples = {"UUID()", "RandomDate()"}) ValueProvider<T> provider
+            @ProviderArg(description = "Provider of any type", examples = {"UUID()", "RandomDate()"}) ValueProvider<T> provider
     ) {
         this.provider = provider;
     }
