@@ -7,7 +7,16 @@
   width: 100%;
 
   .name {
+
+  }
+
+  .update-date {
     flex: 1;
+    font-size: 0.8em;
+    margin-top: 4px;
+    text-transform: none;
+    margin-left: 5px;
+    color: darkgrey;
   }
 
   .actions {

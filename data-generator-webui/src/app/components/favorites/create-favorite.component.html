@@ -1,12 +1,13 @@
 <div>
   <mat-dialog-content class="favorites-container">
     <mat-form-field appearance="fill" class="name">
-      <mat-label>Name of the favorite</mat-label>
+      <mat-label>Name your configuration</mat-label>
       <input matInput #name (keyup.enter)="dialogRef.close(name.value)">
-    </mat-form-field>
+     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button color="primary" [mat-dialog-close]="name.value" [disabled]="!name.value">Create</button>
+    <button *ngIf="favorites.includes(name.value)" mat-button color="warn" [mat-dialog-close]="name.value" [disabled]="!name.value">Overwrite {{name.value}}</button>
+    <button *ngIf="!favorites.includes(name.value)" mat-button color="primary" [mat-dialog-close]="name.value" [disabled]="!name.value">Save</button>
   </mat-dialog-actions>
 </div>

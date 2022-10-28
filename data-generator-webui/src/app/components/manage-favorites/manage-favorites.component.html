@@ -1,13 +1,14 @@
 <div>
   <div mat-dialog-title>
     <mat-icon>star</mat-icon>
-    Favorites
+    Saved configurations
   </div>
   <mat-dialog-content class="favorites-container">
     <mat-list>
       <mat-list-item *ngFor="let favorite of favorites">
         <div class="favorites">
-          <span class="name">{{favorite.name}}</span>
+          <span class="name">{{favorite.name }}</span>
+          <span class="update-date">Updated <app-date-ago [date]="favorite.update_date" [refresh]="10"></app-date-ago></span>
           <div class="actions">
             <button class="remove" mat-button (click)="removeFavorite(favorite)">
               <mat-icon>delete</mat-icon>
@@ -21,7 +22,7 @@
         </div>
       </mat-list-item>
       <mat-list-item *ngIf="!favorites.length">
-        You have not created any favorites yet
+        You haven't saved any configuration yet
       </mat-list-item>
     </mat-list>
   </mat-dialog-content>
@@ -38,7 +39,7 @@
     </button>
     <button mat-button (click)="loadExamples()">
       <mat-icon>live_tv</mat-icon>
-      Add some examples
+      Add samples definitions
     </button>
     <button mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>

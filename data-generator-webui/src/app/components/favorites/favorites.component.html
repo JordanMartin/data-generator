@@ -1,12 +1,14 @@
 <div>
-  <span class="favorite-name" [class.unsaved]="storage.dirty_favorite.getValue()">{{favorite_name || 'Unsaved configuration'}}</span>
+  <span class="favorite-name" [class.unsaved]="storage.dirty_favorite.getValue()">
+    {{ loaded_favorite ? loaded_favorite.name : 'Unsaved configuration' }}
+  </span>
 
-  <button mat-icon-button (click)="storage.saveCurrent(favorite_name)" [disabled]="!storage.dirty_favorite.getValue() || !favorite_name"
-          matTooltip="Enregistrer la configuration courante">
+  <button mat-icon-button (click)="storage.saveCurrent(loaded_favorite.name)" [disabled]="!storage.dirty_favorite.getValue() || !loaded_favorite"
+          matTooltip="Enregistrer la configuration courante (ctrl + s)">
     <mat-icon>save</mat-icon>
   </button>
 
-  <button matTooltip="Save as..." mat-icon-button
+  <button matTooltip="Save current definition... (ctrl + shift + s)" mat-icon-button
           (click)="createNewFavorite()">
     <mat-icon>add_circle_outline</mat-icon>
   </button>

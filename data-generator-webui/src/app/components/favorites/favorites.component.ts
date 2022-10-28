@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { StorageService } from '../../services/storage-service';
 import { Favorite } from '../../services/favorite';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,10 +14,11 @@ export class FavoritesComponent {
 
   favorite_name: string = '';
   favorites!: Favorite[];
+  loaded_favorite!: Favorite;
 
   constructor(public storage: StorageService, private dialog: MatDialog) {
     this.loadFavorites();
-    this.storage.favorite_name.subscribe(name => this.favorite_name = name);
+    this.storage.loaded_favorite.subscribe(favorite => this.loaded_favorite = favorite);
   }
 
   loadFavorites() {
@@ -41,5 +42,20 @@ export class FavoritesComponent {
       this.storage.loadFavorite(name);
       this.loadFavorites();
     });
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === 'S') {
+      this.createNewFavorite();
+      event.preventDefault();
+    } else if ((event.metaKey || event.ctrlKey) && event.key === 's') {
+      if (!this.loaded_favorite) {
+        this.createNewFavorite();
+      } else {
+        this.storage.saveCurrent(this.loaded_favorite.name)
+      }
+      event.preventDefault();
+    }
   }
 }

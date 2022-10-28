@@ -3,6 +3,7 @@ import {OutputConfig} from "../output-config/output-config";
 import {Favorite} from "../../services/favorite";
 import {StorageService} from "../../services/storage-service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import samplesDefinition from './sample-definitions.json';
 
 @Component({
   selector: 'app-manage-favorites',
@@ -11,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class ManageFavoritesComponent implements OnInit {
 
-  favorites: Favorite[];
+  favorites: Favorite[] = [];
 
   constructor(private storage: StorageService,
               private snackBar: MatSnackBar) {
@@ -22,74 +23,7 @@ export class ManageFavoritesComponent implements OnInit {
   }
 
   loadExamples() {
-    const examples: Favorite[] = [
-      {
-        name: "[Sample] Template",
-        definition: "template:\n  id: Increment()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)",
-        output_config: {
-          count: 5,
-          format: "template",
-          template: "#set ($title = \"Random people list\")\n$title\n===================\n#foreach($data in $list)\nid=$data.id\nname=$data.firstname $data.lastname\nage=$data.age\n#if($data.age >= 18)\nmajor=yes\n#else\nmajor=no\n#end\n---------\n#end"
-        }
-      },
-      {
-        name: "[Sample] References",
-        definition: "references:\n  car:\n    brand: Enum([\"Peugeot\", \"Renault\"])\n    number_plate: Regex(\"[A-Z]{2}-[0-9]{3}-[A-Z]{2}\")\n\ntemplate:\n  id: Increment()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  cars: Repeat($car, Integer(0,2))",
-        output_config: {
-          "count": 5,
-          "format": "json",
-          "pretty": true,
-        }
-      },
-      {
-        name: "[Sample] SQL",
-        definition: "template:\n  id: Increment()\n  uuid: UUID()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  fullname: $(\"${firstname} ${lastname}\")",
-        output_config: {
-          include_null: true,
-          count: 5,
-          format: "sql",
-          table_name: "person",
-        }
-      },
-      {
-        name: "[Sample] Dates",
-        definition: "template:\n  start: FormatDate(Date(\"2000-01-01\", \"2000-12-31\"), \"yyyy-MM-dd\")\n  end: FormatDate(Date(\"2001-01-01\", \"2001-12-31\"), \"yyyy-MM-dd\")\n  generatedAt: FormatDate(Now(), \"yyyy-MM-dd HH:mm:ss\")\n  nextWeekSameDay: FormatDate(DateAdd(Now(), 7, \"DAYS\"), \"yyyy-MM-dd HH:mm:ss\"))",
-        output_config: {
-          count: 5,
-          format: "json",
-          pretty: true,
-        }
-      },
-      {
-        name: "[Sample] Enumerations",
-        definition: "template:\n  id: Increment()\n  uuid: UUID()\n  firstname: Faker(\"Name.firstName\")\n  lastname: Faker(\"Name.lastName\")\n  age: Integer(0, 100)\n  fullname: $(\"${firstname} ${lastname}\")\n  blood_group: Enum([EnumWeight(\"O-\", 6), EnumWeight(\"O+\", 36), EnumWeight(\"A-\", 7), EnumWeight(\"A+\", 37), EnumWeight(\"B-\", 1), EnumWeight(\"B+\", 9), EnumWeight(\"AB-\", 1), EnumWeight(\"AB+\", 3)])\n  universal_donor: If(\"blood_group\", \"=\", \"O-\")",
-        output_config: {
-          count: 10,
-          format: "json",
-          pretty: true,
-        }
-      },
-      {
-        name: "[Sample] Sequences",
-        definition: "template:\n  seq: Sequence([\"a\", \"b\", \"c\"])",
-        output_config: {
-          count: 10,
-          format: "json",
-          pretty: true,
-        } as OutputConfig
-      },
-      {
-        name: "[Sample] Sub object",
-        definition: "template:\n  array: List([UUID(), Constant(42), Integer(0, 100)])\n  array2: \n    - UUID()\n    - Constant(42)\n    - Integer(0, 100)\n  array3: Repeat(Round(Double(0, 100), 2), 3)",
-        output_config: {
-          count: 10,
-          format: "json",
-          pretty: true,
-        }
-      }
-    ];
-
-    this.storage.saveFavorites(examples);
+    this.storage.saveFavorites(samplesDefinition);
     this.favorites = this.storage.loadFavorites();
   }
 

@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { OutputConfig } from '../components/output-config/output-config';
 import { Favorite } from './favorite';
@@ -10,7 +10,7 @@ export class StorageService {
 
   private readonly LOCAL_STORAGE_FAVORITE_KEY = 'favorites';
 
-  public favorite_name = new BehaviorSubject<string>('');
+  public loaded_favorite = new ReplaySubject<Favorite>();
   public dirty_favorite = new BehaviorSubject<boolean>(false);
   public definition = new BehaviorSubject<string>('');
   public output_config = new BehaviorSubject<OutputConfig>({} as OutputConfig);
@@ -41,7 +41,7 @@ export class StorageService {
     if (!favorite) {
       return;
     }
-    this.favorite_name.next(name);
+    this.loaded_favorite.next(favorite);
     this.output_config_load.next(favorite.output_config);
     this.definition_load.next(favorite.definition);
     this.dirty_favorite.next(false);
@@ -53,10 +53,24 @@ export class StorageService {
 
   saveFavorites(favorites: Favorite[]): Favorite[] {
     const newFavoritesNames = favorites.map(f => f.name);
+        // Mise à jour des dates de creation/modif
+        const now = new Date();
+        favorites.forEach(f => {
+          if (!f.create_date) {
+            f.create_date = now;
+          }
+          f.update_date = now;
+        });
     const newFavorites = this.loadFavorites()
       .filter(f => !newFavoritesNames.includes(f.name))
       .concat(favorites)
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => {
+        if (a.update_date && b.update_date) {
+          return a.update_date < b.update_date ? 1 : -1;
+        } else {
+          return a.name.localeCompare(b.name);
+        }
+      });
     this.persitFavorites(newFavorites);
     return newFavorites;
   }
@@ -66,10 +80,6 @@ export class StorageService {
     this.persitFavorites(favorites);
   }
 
-  private persitFavorites(favorites: Favorite[]) {
-    window.localStorage.setItem(this.LOCAL_STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
-  }
-
   saveCurrent(name: string) {
     this.saveFavorite({
       name: name,
@@ -77,5 +87,9 @@ export class StorageService {
       output_config: this.output_config.getValue()
     } as Favorite);
     this.dirty_favorite.next(false);
+  }
+
+  private persitFavorites(favorites: Favorite[]) {
+    window.localStorage.setItem(this.LOCAL_STORAGE_FAVORITE_KEY, JSON.stringify(favorites));
   }
 }

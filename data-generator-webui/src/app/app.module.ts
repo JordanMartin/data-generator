@@ -35,8 +35,9 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatRadioModule} from '@angular/material/radio';
 import {ManageFavoritesComponent} from './components/manage-favorites/manage-favorites.component';
-import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { DateAgoComponent } from './components/manage-favorites/date-ago.component';
 import { CreateFavoriteComponent } from './components/favorites/create-favorite.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { CreateFavoriteComponent } from './components/favorites/create-favorite.
     SimplifyJavaTypePipe,
     FavoritesComponent,
     ManageFavoritesComponent,
+    DateAgoComponent,
     CreateFavoriteComponent
   ],
   imports: [
