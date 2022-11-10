@@ -33,7 +33,7 @@ export class FavoritesComponent {
 
   createNewFavorite() {
     this.dialog.open(CreateFavoriteComponent, {
-      width: '300px',
+      width: '350px',
     }).afterClosed().subscribe((name) => {
       if (!name) {
         return;

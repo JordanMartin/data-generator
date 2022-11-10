@@ -50,3 +50,23 @@ mat-button-toggle::ng-deep {
   margin-top: -15px;
   margin-bottom: 20px;
 }
+
+.template-title {
+  display: inline-block;
+  margin-right: 20px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background-image: linear-gradient(283deg, #008d7f 10%, #4db6ac 100%);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 1.2em;
+  padding: 5px 20px;
+  color: #fff;
+  text-shadow: 0 0 1px #000000;
+  border-radius: 5px;
+  font-weight: 600;
+
+  &.def {
+    border-radius: 5px 15px 5px 5px;
+  }
+}

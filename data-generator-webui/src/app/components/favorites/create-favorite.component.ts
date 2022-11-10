@@ -9,6 +9,9 @@ import { StorageService } from "../../services/storage-service";
 })
 export class CreateFavoriteComponent implements OnInit {
 
+  /**
+   * Names of all favorites
+   */
   favorites: string[] = [];
 
   constructor(public storage: StorageService, public dialogRef: MatDialogRef<CreateFavoriteComponent>) { }
