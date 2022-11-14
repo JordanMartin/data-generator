@@ -7,6 +7,10 @@ mat-form-field {
   margin: 10px 0;
 }
 
+mat-button-toggle-group, mat-button-toggle {
+  width: 100%;
+}
+
 .template-filename {
   font-family: consolas, monospace;
 }

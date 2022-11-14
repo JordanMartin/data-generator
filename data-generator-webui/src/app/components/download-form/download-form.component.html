@@ -2,7 +2,7 @@
 
   <input type="hidden" name="definition" [value]="definition"/>
   <input type="hidden" name="output.gzip" [value]="config.gzip"/>
-  <input type="hidden" name="output.single_file" [value]="config.single_file"/>
+  <input type="hidden" name="output.zip" [value]="config.zip"/>
   <input type="hidden" name="output.pretty" [value]="config.pretty"/>
   <input type="hidden" name="output.template" [value]="config.template"/>
   <input type="hidden" name="output.format" [value]="config.format"/>
@@ -13,18 +13,25 @@
 
   <mat-form-field appearance="fill" class="field count">
     <mat-label>Number of objects to generate</mat-label>
-    <input matInput name="output.count" type="number" [(ngModel)]="config.count"/>
+    <input matInput name="output.count" type="number" min="1" [(ngModel)]="config.count"/>
   </mat-form-field>
 
-  <mat-slide-toggle class="field" *ngIf="!config.single_file" [(ngModel)]="config.gzip">
-    Compress the file to GZIP
+  <mat-button-toggle-group name="single-file" class="field" aria-label="Compression mode"
+                           (change)="config.zip = $event.value == 'multiple'">
+    <mat-button-toggle value="single" [checked]="true">Single {{ config.format }} file</mat-button-toggle>
+    <mat-button-toggle value="multiple">Multiple {{ config.format }} file in zip</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <mat-slide-toggle class="field" *ngIf="!config.zip" [(ngModel)]="config.gzip">
+    Compress file to GZIP
   </mat-slide-toggle>
 
-  <mat-slide-toggle *ngIf="!config.gzip" [(ngModel)]="config.single_file" class="field">
-    Zip with {{config.count}} files (one object per file)
-  </mat-slide-toggle>
+  <mat-form-field appearance="fill" class="field count" *ngIf="config.zip">
+    <mat-label>Number of object per file</mat-label>
+    <input matInput name="output.count_per_file" type="number" min="1" [max]="config.count" [(ngModel)]="config.count_per_file"/>
+  </mat-form-field>
 
-  <div *ngIf="config.single_file">
+  <div *ngIf="config.zip">
     <mat-form-field appearance="fill" class="field">
       <mat-label>Name of files</mat-label>
       <input matInput [(ngModel)]="config.filename_template" class="template-filename" required>
@@ -32,16 +39,16 @@
     <ul class="template-filename-hint">
       <li>#num = number of file (0 to {{config.count - 1}})</li>
       <li>#uuid = unique identifier (ex: da421811-da52-48ce-befd-a49c36d99439)</li>
-      <li>${{ '{' }}myField{{ '}' }} = Value of the field "myField" from the generated object</li>
+      <li *ngIf="config.count_per_file == 1">${{ '{' }}myField{{ '}' }} = Value of the field "myField" from the generated object</li>
     </ul>
   </div>
 
   <button class="field" type="submit" mat-flat-button color="primary" (click)="download()">
     <mat-icon>download</mat-icon>
     Download
-    <span *ngIf="config.single_file">the zip containing {{config.count}} files</span>
-    <span *ngIf="config.gzip">the {{config.count}} objects in one file .{{config.format}}.gz</span>
-    <span *ngIf="!config.gzip && !config.single_file">the {{config.count}} objects in one file .{{config.format}}</span>
+    <span *ngIf="config.zip">zip containing {{computeNumberOfFile()}} files and {{ config.count_per_file }} per file</span>
+    <span *ngIf="config.gzip && !config.zip">{{config.count}} objects in one file .{{config.format}}.gz</span>
+    <span *ngIf="!config.gzip && !config.zip">{{config.count}} objects in one file .{{config.format}}</span>
   </button>
 </form>
 
