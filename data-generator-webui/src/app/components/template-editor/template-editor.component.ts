@@ -11,9 +11,16 @@ import IStandaloneEditorConstructionOptions = monaco.editor.IStandaloneEditorCon
   styleUrls: ['./template-editor.component.scss']
 })
 export class TemplateEditorComponent implements AfterViewInit, OnDestroy {
-
   @Output() onChange = new EventEmitter<string>();
-  @Input() initialValue?: string;
+
+  private _initialValue?: string;
+  @Input()
+  set initialValue(value: string | undefined) {
+    this._initialValue = value;
+    if (this.editor) {
+      this.editor.setValue(this._initialValue || '');
+    }
+  }
 
   private editor!: IStandaloneCodeEditor;
 
@@ -48,7 +55,7 @@ export class TemplateEditorComponent implements AfterViewInit, OnDestroy {
   initMonaco() {
     const editorDiv = document.getElementById('template-editor')!;
     this.editor = monaco.editor.create(editorDiv, this.editorOptions);
-    this.editor.setValue(this.initialValue || '');
+    this.editor.setValue(this._initialValue || '');
     this.editor.getModel()!.onDidChangeContent(() => {
       this.updateCode(this.editor.getValue());
     });
