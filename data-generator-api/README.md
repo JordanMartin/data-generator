@@ -1,11 +1,11 @@
-# Serveur HTTP pour la génération de données
+# HTTP Server powered by quarkus
 
-Serveur HTTP utilisant le module data-generator
+Use the core module and expose the WebUI
 
-## Choix du port de l'api
+## Choose the listening port
 
 `-Dquarkus.http.port=8080`
 
-## Ouverture automatque du navagiteur
+## Automatically open the browser
 
 `-Dopen-browser=<true|false>`

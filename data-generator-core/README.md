@@ -187,15 +187,8 @@ template:
 
 ## Générateurs
 
-La liste et documentation des générateurs sont disponible via la webui.
+La liste et documentation des générateurs sont disponibles via la webui.
 
-### Composition de générateur
-
-todo: A commenter
-
-### Références et expressions
-
-todo: A commenter
 
 ## Utilisation programmatique
 ### Définition d'un générateur
