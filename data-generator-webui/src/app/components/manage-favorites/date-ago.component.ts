@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DateAgoPipe} from '../../pipes/date-ago.pipe'
 
 @Component({
@@ -15,7 +15,7 @@ export class DateAgoComponent implements OnInit, OnDestroy {
   private _date?: Date;
 
   dateAgo: string = '';
-  private refreshIntervalId?: number;
+  private refreshIntervalId?:  ReturnType<typeof setTimeout>;
 
   constructor() { }
 
