@@ -5,12 +5,12 @@
     <parent>
         <groupId>io.github.jordanmartin.datagenerator</groupId>
         <artifactId>parent</artifactId>
-        <version>1.9.1-SNAPSHOT</version>
+        <version>1.10.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>core</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.10.0</version>
     <packaging>jar</packaging>
 
     <properties>
