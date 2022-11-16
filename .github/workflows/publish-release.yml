@@ -29,8 +29,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./data-generator-api/target/data-generator-api-[0-9].[0-9].[0-9]?(-SNAPSHOT)-runner.jar
-          ./data-generator-core/target/data-generator-core-[0-9].[0-9].[0-9]?(-SNAPSHOT).jar
-          ./data-generator-cli/target/data-generator-cli-[0-9].[0-9].[0-9]?(-SNAPSHOT).jar
+          ./data-generator-api/target/data-generator-api-[0-9]+.[0-9]+.[0-9]+?(-SNAPSHOT)-runner.jar
+          ./data-generator-core/target/data-generator-core-[0-9]+.[0-9]+.[0-9]+?(-SNAPSHOT).jar
+          ./data-generator-cli/target/data-generator-cli-[0-9]+.[0-9]+.[0-9]+?(-SNAPSHOT).jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
