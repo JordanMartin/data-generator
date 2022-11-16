@@ -17,7 +17,7 @@ export class TemplateEditorComponent implements AfterViewInit, OnDestroy {
   @Input()
   set initialValue(value: string | undefined) {
     this._initialValue = value;
-    if (this.editor) {
+    if (this.editor && this.editor.getValue() != value) {
       this.editor.setValue(this._initialValue || '');
     }
   }
