@@ -20,7 +20,7 @@ import java.util.zip.ZipOutputStream;
 
 public class ProviderDownloadUtil {
 
-    private final static Pattern FILENAME_TEMPLATE_VAR_PATTERN = Pattern.compile("\\$\\{(.+)}");
+    private final static Pattern FILENAME_TEMPLATE_VAR_PATTERN = Pattern.compile("\\$\\{([a-zA-Z-_ ]+)}");
 
     /**
      * Génène un unique fichier unique avec l'ensemble des objets
