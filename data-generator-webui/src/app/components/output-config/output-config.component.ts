@@ -26,7 +26,7 @@ export class OutputConfigComponent implements OnInit {
     gzip: false,
     zip: false,
     filename_template: '',
-    template: [].join('\n'),
+    template: ['#foreach($data in $list)', '## Use your fields with : $data.myField', '#end'].join('\n'),
   };
 
   constructor(private storage: StorageService) {
