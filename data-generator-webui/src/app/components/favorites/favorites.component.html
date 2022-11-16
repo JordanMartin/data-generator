@@ -4,19 +4,19 @@
   </span>
 
   <button mat-icon-button (click)="storage.saveCurrent(loaded_favorite.name)" [disabled]="!storage.dirty_favorite.getValue() || !loaded_favorite"
-          matTooltip="Enregistrer la configuration courante (ctrl + s)">
+          matTooltip="Save current configuration (ctrl + s)">
     <mat-icon>save</mat-icon>
   </button>
 
-  <button matTooltip="Save current configuration... (ctrl + shift + s)" mat-icon-button
+  <button matTooltip="Save current configuration as... (ctrl + shift + s)" mat-icon-button
           (click)="createNewFavorite()">
     <mat-icon>add_circle_outline</mat-icon>
   </button>
 
-  <button mat-icon-button (click)="manageFavorites()" matTooltip="Manage favorites">
+  <button mat-icon-button (click)="manageFavorites()" matTooltip="Manage favorites...">
     <mat-icon class="manage-favorite-container" [matBadge]="favorites.length" matBadgePosition="above"
               matBadgeSize="small"
-              matBadgeColor="accent">settings
+              matBadgeColor="accent">star
     </mat-icon>
   </button>
 </div>

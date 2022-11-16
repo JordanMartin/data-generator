@@ -11,6 +11,11 @@
   <input type="hidden" name="output.separator" [value]="config.separator"/>
   <input type="hidden" name="output.filename_template" [value]="config.filename_template"/>
 
+  <div mat-dialog-title>
+    <mat-icon>download</mat-icon>
+    Download as file
+  </div>
+
   <mat-form-field appearance="fill" class="field count">
     <mat-label>Number of objects to generate</mat-label>
     <input matInput name="output.count" type="number" min="1" [(ngModel)]="config.count"/>
@@ -18,12 +23,18 @@
 
   <mat-button-toggle-group name="single-file" class="field" aria-label="Compression mode"
                            (change)="config.zip = $event.value == 'multiple'">
-    <mat-button-toggle value="single" [checked]="true">Single {{ config.format }} file</mat-button-toggle>
-    <mat-button-toggle value="multiple">Multiple {{ config.format }} file in zip</mat-button-toggle>
+    <mat-button-toggle value="single" [checked]="true">
+      <mat-icon>insert_drive_file</mat-icon>
+      Single {{ config.format }} file
+    </mat-button-toggle>
+    <mat-button-toggle value="multiple">
+      <mat-icon>folder_open</mat-icon>
+      Zip with multiple {{ config.format }} files
+    </mat-button-toggle>
   </mat-button-toggle-group>
 
   <mat-slide-toggle class="field" *ngIf="!config.zip" [(ngModel)]="config.gzip">
-    Compress file to GZIP
+    Compress file with GZIP
   </mat-slide-toggle>
 
   <mat-form-field appearance="fill" class="field count" *ngIf="config.zip">

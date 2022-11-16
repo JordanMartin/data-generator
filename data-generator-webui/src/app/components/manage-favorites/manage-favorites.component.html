@@ -2,6 +2,7 @@
   <div mat-dialog-title>
     <mat-icon>star</mat-icon>
     Saved configurations
+    <div class="storage-notice">Your configurations are saved in the local storage of your browser. You can export/import to share them.</div>
   </div>
   <mat-dialog-content class="favorites-container">
     <mat-list>
@@ -39,7 +40,7 @@
     </button>
     <button mat-button (click)="loadExamples()">
       <mat-icon>live_tv</mat-icon>
-      Add samples definitions
+      Add sample configurations
     </button>
     <button mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>

@@ -1,9 +1,9 @@
-import { Component, HostListener } from '@angular/core';
-import { StorageService } from '../../services/storage-service';
-import { Favorite } from '../../services/favorite';
-import { MatDialog } from '@angular/material/dialog';
-import { ManageFavoritesComponent } from '../manage-favorites/manage-favorites.component';
-import { CreateFavoriteComponent } from './create-favorite.component';
+import {Component, HostListener} from '@angular/core';
+import {StorageService} from '../../services/storage-service';
+import {Favorite} from '../../services/favorite';
+import {MatDialog} from '@angular/material/dialog';
+import {ManageFavoritesComponent} from '../manage-favorites/manage-favorites.component';
+import {CreateFavoriteComponent} from './create-favorite.component';
 
 @Component({
   selector: 'app-config-store',
@@ -33,7 +33,7 @@ export class FavoritesComponent {
 
   createNewFavorite() {
     this.dialog.open(CreateFavoriteComponent, {
-      width: '350px',
+      width: '400px',
     }).afterClosed().subscribe((name) => {
       if (!name) {
         return;
