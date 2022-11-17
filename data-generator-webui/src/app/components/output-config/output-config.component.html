@@ -5,7 +5,7 @@
     </div>
   <div class="param">
     <span class="param-name">Number of objects</span>
-    <input class="param-field object-count" #count type="number"
+    <input class="param-field object-count" #count type="number" min="1"
            [value]="config.count" (change)="updateParam('count', count.value)">
   </div>
   <div class="param">
