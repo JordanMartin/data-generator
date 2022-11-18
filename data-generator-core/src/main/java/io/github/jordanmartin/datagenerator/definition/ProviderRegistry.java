@@ -6,6 +6,7 @@ import io.github.jordanmartin.datagenerator.provider.doc.ProviderDoc;
 import io.github.jordanmartin.datagenerator.provider.doc.ProviderDocumentationParser;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.reflections.ReflectionsException;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -35,16 +36,25 @@ public class ProviderRegistry {
     }
 
     private void registerProviders() {
-        String pluginsProviderSearchPackage = Optional.ofNullable(System.getenv("PROVIDER_PLUGINS_SEARCH_PACKAGE"))
-                .orElse(PROVIDER_PLUGINS_SEARCH_PACKAGE);
-
-        log.info("Search providers in packages : {}, {}",
-                PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage);
-        new Reflections(PROVIDER_CORE_SEARCH_PACKAGE, pluginsProviderSearchPackage)
+        log.info("Search core providers...");
+        new Reflections(PROVIDER_CORE_SEARCH_PACKAGE)
                 .getTypesAnnotatedWith(Provider.class)
                 .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
                 .forEach(this::registerProvider);
-        log.info("{} providers registered : {}", providers.size(), providers.entrySet());
+        int coreProviderCount = providers.size();
+        log.info("{} core providers registered", coreProviderCount);
+
+        log.info("Search addons providers in packages : {}...", PROVIDER_PLUGINS_SEARCH_PACKAGE);
+        try {
+            new Reflections(PROVIDER_PLUGINS_SEARCH_PACKAGE)
+                    .getTypesAnnotatedWith(Provider.class)
+                    .stream().filter(aClass -> Modifier.isPublic(aClass.getModifiers()))
+                    .forEach(this::registerProvider);
+        } catch (ReflectionsException e) {
+            // ignore
+        }
+
+        log.info("{} addons providers registered", providers.size() - coreProviderCount);
     }
 
     @SuppressWarnings("unchecked")
@@ -61,6 +71,7 @@ public class ProviderRegistry {
                 }, () -> {
                     providers.put(providerDoc.getName(), (Class<? extends ValueProvider<?>>) providerClass);
                     providersDoc.put(providerDoc.getName(), providerDoc);
+                    log.info("Register provider : {} -> {}", providerDoc.getName(), providerClass);
                 });
     }
 
