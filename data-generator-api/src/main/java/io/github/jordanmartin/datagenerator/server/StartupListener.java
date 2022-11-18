@@ -41,17 +41,17 @@ public class StartupListener {
             } catch (Exception ignored) {
             }
             PopupMenu popup = new PopupMenu();
-            MenuItem openItem = new MenuItem("Ouvrir dans le navigateur");
+            MenuItem openItem = new MenuItem("Open in browser");
             openItem.addActionListener(actionEvent -> {
                 openInBrowser(false);
             });
             popup.add(openItem);
-            MenuItem exitItem = new MenuItem("Quitter");
+            MenuItem exitItem = new MenuItem("Shutdown server");
             exitItem.addActionListener(actionEvent -> {
                 System.exit(0);
             });
             popup.add(exitItem);
-            TrayIcon trayIcon = new TrayIcon(image, "Générateur de données ", popup);
+            TrayIcon trayIcon = new TrayIcon(image, "Date generator ", popup);
             trayIcon.addActionListener(e -> {
                 openInBrowser(false);
             });
@@ -94,7 +94,7 @@ public class StartupListener {
 
     private void openInBrowser(boolean openAuto) {
         String url = "http://localhost:" + httpPort;
-        log.info("Serveur démarré: {}", url);
+        log.info("Server started: {}", url);
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
         if (desktop == null || !desktop.isSupported(Desktop.Action.BROWSE)) {
             // There is no default browser
@@ -103,7 +103,7 @@ public class StartupListener {
         try {
             desktop.browse(new URI(url));
             if (openAuto) {
-                log.info("Ouverture automatique du navagateur. Utilisez l'option -Dopen-browser=false pour le désactiver");
+                log.info("Browser automatically opened. Use option -Dopen-browser=false to disable");
             }
         } catch (IOException | URISyntaxException e) {
             throw new IllegalStateException("Failed opening the default browser to show the URL (" + url + ").", e);
