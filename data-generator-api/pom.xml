@@ -46,6 +46,7 @@
             <groupId>io.github.jordanmartin.datagenerator</groupId>
             <artifactId>core</artifactId>
             <version>1.10.2-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
