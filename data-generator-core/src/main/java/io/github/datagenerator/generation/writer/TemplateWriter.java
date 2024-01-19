@@ -1,6 +1,7 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
+import io.github.datagenerator.generation.conf.IOutputConfig;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -18,13 +19,13 @@ import java.util.stream.Stream;
 /**
  * Génère un document à partir d'un template velocity
  */
-public class TemplateOutput extends ObjectWriterOuput {
+public class TemplateWriter extends ObjectWriter {
 
-    private final String template;
+    public static final String CONFIG_TEMPLATE = "template";
+    private String template;
 
-    protected TemplateOutput(MapProvider provider, String template) {
+    public TemplateWriter(MapProvider provider) {
         super(provider);
-        this.template = template;
     }
 
     @Override
@@ -42,12 +43,17 @@ public class TemplateOutput extends ObjectWriterOuput {
             velocity.evaluate(velocityContext, writer, "Velocity String Template Evaluation", reader);
             writer.flush();
         } catch (Exception e) {
-            throw new OutputException(e);
+            throw new WriterException(e);
         }
     }
 
     @Override
-    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
+    public void configure(IOutputConfig config) {
+        this.template = config.getRequiredString(CONFIG_TEMPLATE);
+    }
+
+    public TemplateWriter setTemplate(String template) {
+        this.template = template;
         return this;
     }
 }

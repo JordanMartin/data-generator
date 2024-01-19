@@ -1,6 +1,7 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
+import io.github.datagenerator.generation.conf.IOutputConfig;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,23 +9,19 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
  * Génère les données au format insertion SQL
  */
-public class SqlOutput extends ObjectWriterOuput {
+public class SqlWriter extends ObjectWriter {
 
     private static final String DEFAULT_TABLE_NAME = "my_table";
     private String tableName;
 
-    public SqlOutput(MapProvider provider, String tableName) {
+    public SqlWriter(MapProvider provider) {
         super(provider);
-        setTableName(tableName);
-    }
-
-    public SqlOutput(MapProvider provider) {
-        this(provider, DEFAULT_TABLE_NAME);
     }
 
     @Override
@@ -48,16 +45,10 @@ public class SqlOutput extends ObjectWriterOuput {
                 writer.append(";");
                 writer.append('\n');
             } catch (IOException e) {
-                throw new OutputException(e);
+                throw new WriterException(e);
             }
         });
         writer.flush();
-    }
-
-    @Override
-    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
-        setTableName(outputConfig.getTableName());
-        return this;
     }
 
     private void writeInsertInto(Writer writer, Map<String, ?> object) throws IOException {
@@ -82,15 +73,6 @@ public class SqlOutput extends ObjectWriterOuput {
         writer.append(")");
     }
 
-    public SqlOutput setTableName(String tableName) {
-        if (tableName == null || tableName.isBlank()) {
-            this.tableName = DEFAULT_TABLE_NAME;
-        } else {
-            this.tableName = tableName;
-        }
-        return this;
-    }
-
     private String mapValue(Object value) {
         if (value == null) {
             return "NULL";
@@ -99,5 +81,17 @@ public class SqlOutput extends ObjectWriterOuput {
             return String.valueOf(value);
         }
         return "'" + value + "'";
+    }
+
+    @Override
+    public void configure(IOutputConfig config) {
+        this.tableName = Optional.ofNullable(tableName)
+                .filter(String::isBlank)
+                .orElse(DEFAULT_TABLE_NAME);
+    }
+
+    public SqlWriter setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
     }
 }

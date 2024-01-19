@@ -1,10 +1,11 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.datagenerator.domain.core.MapProvider;
+import io.github.datagenerator.generation.conf.IOutputConfig;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,25 +15,32 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format JSON
  */
-public class JsonOutput extends ObjectWriterOuput {
+@Formatter(name = "json", description = "JSON Format", args = {
+        @FormatterConfig(name = "pretty")
+})
+public class JsonWriter extends ObjectWriter {
+
+    public static final String CONFIG_PRETTY = "pretty";
+    public static final boolean CONFIG_PRETTY_DEFAULT = false;
+    public static final String CONFIG_INCLUDES_NULLS = "include_null";
+    public static final boolean CONFIG_INCLUDES_NULLS_DEFAULT = true;
 
     /**
      * Activation du pretty print
      */
-    private boolean pretty;
+    private boolean pretty = CONFIG_PRETTY_DEFAULT;
 
     /**
      * Détermine si les valeurs null doivent être incluses
      */
-    private boolean includeNull;
+    private boolean includeNull = CONFIG_INCLUDES_NULLS_DEFAULT;
 
-    public JsonOutput(MapProvider provider) {
-        this(provider, false);
+    public JsonWriter(MapProvider provider) {
+        super(provider);
     }
 
-    public JsonOutput(MapProvider provider, boolean pretty) {
+    public JsonWriter(MapProvider provider, IOutputConfig config) {
         super(provider);
-        this.pretty = pretty;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class JsonOutput extends ObjectWriterOuput {
             try {
                 jsonGenerator.writeObject(object);
             } catch (IOException e) {
-                throw new OutputException(e);
+                throw new WriterException(e);
             }
         });
         jsonGenerator.writeEndArray();
@@ -78,25 +86,21 @@ public class JsonOutput extends ObjectWriterOuput {
         return objectMapper;
     }
 
-    @Override
-    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
-        setPretty(outputConfig.getOutputPretty());
-        setIncludeNull(outputConfig.getIncludeNull());
-        return this;
+    public void configure(IOutputConfig config) {
+        this.pretty = config.getBoolean(CONFIG_PRETTY).orElse(CONFIG_PRETTY_DEFAULT);
+        this.includeNull = config.getBoolean(CONFIG_INCLUDES_NULLS).orElse(CONFIG_INCLUDES_NULLS_DEFAULT);
     }
 
     /**
      * Active ou désactive le formattage pretty json
      */
-    public JsonOutput setPretty(Boolean pretty) {
-        this.pretty = pretty != null && pretty;
+    public JsonWriter setPretty(boolean pretty) {
+        this.pretty = pretty;
         return this;
     }
 
-    public JsonOutput setIncludeNull(Boolean includeNull) {
-        if (includeNull != null) {
-            this.includeNull = includeNull;
-        }
+    public JsonWriter setIncludeNull(boolean includeNull) {
+        this.includeNull = includeNull;
         return this;
     }
 }

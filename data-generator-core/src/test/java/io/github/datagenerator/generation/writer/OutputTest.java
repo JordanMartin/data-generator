@@ -1,15 +1,16 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
 import io.github.datagenerator.domain.providers.base.IntIncrement;
 import io.github.datagenerator.domain.providers.random.FakerExpression;
+import io.github.datagenerator.generation.output.PojoOutput;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-class ObjectOutputTest {
+class OutputTest {
     @Test
     void generation_should_not_fail() throws IOException {
         MapProvider provider = new MapProviderBuilder()
@@ -17,26 +18,23 @@ class ObjectOutputTest {
                 .field("name", new FakerExpression("Name.firstName"))
                 .build();
 
-        ObjectOutput.from(provider)
-                .toJson().setPretty(true)
+        new JsonWriter(provider)
+                .setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOutput.from(provider)
-                .toCsv()
+        new CsvWriter(provider)
                 .writeMany(System.out, 2);
-        ObjectOutput.from(provider)
-                .toXml().setPretty(true)
+        new XmlWriter(provider)
+                .setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOutput.from(provider)
-                .toYaml().setPretty(true)
+        new YamlWriter(provider)
+                .setPretty(true)
                 .writeMany(System.out, 2);
-        ObjectOutput.from(provider)
-                .toSQL()
+        new SqlWriter(provider)
                 .writeMany(System.out, 2);
-        ObjectOutput.from(provider)
-                .toPojo(Pojo.class)
+        new PojoOutput(provider, Pojo.class)
                 .getMany(2);
-        ObjectOutput.from(provider)
-                .toTemplate("#foreach($d in $list)id=$d.id\n#end")
+        new TemplateWriter(provider)
+                .setTemplate("#foreach($d in $list)id=$d.id\n#end")
                 .writeMany(System.out, 2);
     }
 

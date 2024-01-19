@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -17,7 +17,7 @@ class CsvWriterTest {
                 .field("a", (objectContext) -> "a")
                 .build();
 
-        String result = new CsvOutput(provider).oneToString();
+        String result = new CsvWriter(provider).writeToString(1);
         assertEquals("id;a\n0;a", result);
     }
 }

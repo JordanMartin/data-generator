@@ -2,8 +2,7 @@ package io.github.datagenerator.server.domain;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.definition.YamlDefinitionParser;
-import io.github.datagenerator.output.ObjectOutput;
-import io.github.datagenerator.output.ObjectWriterOuput;
+import io.github.datagenerator.generation.writer.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,57 +12,64 @@ public class ProviderConf {
     private String name;
     private String definition;
     private MapProvider provider;
-    private ObjectWriterOuput output;
+    private ObjectWriter output;
     private String contentType;
-    private OutputConfig outputConfig;
+    private FormOutputConfig outputConfig;
 
-    public static ProviderConf from(String name, String definition, OutputConfig outputConfig) {
-        String format = outputConfig.getFormat();
+    public static ProviderConf from(String name, String definition, FormOutputConfig config) {
+        String format = config.getRequiredString("format");
         ProviderConf providerConf = new ProviderConf();
         YamlDefinitionParser parser = new YamlDefinitionParser(definition);
         MapProvider provider = parser.parse();
-        ObjectOutput output = ObjectOutput.from(provider);
+        ObjectWriter writer;
 
         switch (format) {
             case "yaml":
-                providerConf.setOutput(output.toYaml().setConfig(outputConfig));
+                writer = new YamlWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("text/yaml");
                 break;
             case "sql":
-                providerConf.setOutput(output.toSQL().setConfig(outputConfig));
+                writer = new SqlWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("text/sql");
                 break;
             case "csv":
-                providerConf.setOutput(output.toCsv().setConfig(outputConfig));
+                writer = new CsvWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("text/csv");
                 break;
             case "xml":
-                providerConf.setOutput(output.toXml().setConfig(outputConfig));
+                writer = new XmlWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("text/xml");
                 break;
             case "template":
-                providerConf.setOutput(output.toTemplate(outputConfig.getOutputTemplate()).setConfig(outputConfig));
+                writer = new TemplateWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("text/plain");
                 break;
             default:
-                providerConf.setOutput(output.toJson().setConfig(outputConfig));
+                writer = new JsonWriter(provider);
+                providerConf.setOutput(writer);
                 providerConf.setContentType("application/json");
                 break;
         }
 
+        writer.configure(config);
         providerConf.setProvider(provider);
         providerConf.setDefinition(definition);
-        providerConf.setOutputConfig(outputConfig);
+        providerConf.setOutputConfig(config);
         providerConf.setName(name);
 
         return providerConf;
     }
 
-    public static ProviderConf from(String definition, OutputConfig outputConfig) {
+    public static ProviderConf from(String definition, FormOutputConfig outputConfig) {
         return from(null, definition, outputConfig);
     }
 
-    public OutputConfig getOutputConfig() {
+    public FormOutputConfig getOutputConfig() {
         return outputConfig;
     }
 }

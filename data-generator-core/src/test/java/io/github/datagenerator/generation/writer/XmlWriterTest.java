@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -8,9 +8,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class YamlWriterTest {
+class XmlWriterTest {
+
     @Test
-    void write() throws IOException {
+    void writeOne() throws IOException {
         MapProvider child = new MapProviderBuilder()
                 .field("b", (objectContext) -> "b")
                 .field("c", (objectContext) -> "c")
@@ -22,17 +23,8 @@ class YamlWriterTest {
                 .field("child", child)
                 .build();
 
-        String result = new YamlOutput(provider).manyToString(2);
-        var expected = "- id: 0\n" +
-                "  a: a\n" +
-                "  child:\n" +
-                "    b: b\n" +
-                "    c: c\n" +
-                "- id: 0\n" +
-                "  a: a\n" +
-                "  child:\n" +
-                "    b: b\n" +
-                "    c: c\n";
+        String result = new XmlWriter(provider).setObjectName("obj").writeToString(1);
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><obj><id>0</id><a>a</a><child><b>b</b><c>c</c></child></obj>";
         assertEquals(expected, result);
     }
 }

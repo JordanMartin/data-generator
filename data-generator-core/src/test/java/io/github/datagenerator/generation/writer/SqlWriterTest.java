@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -17,9 +17,9 @@ class SqlWriterTest {
                 .field("a", (objectContext) -> "a")
                 .build();
 
-        String result = new SqlOutput(provider)
+        String result = new SqlWriter(provider)
                 .setTableName("test_table")
-                .oneToString();
+                .writeToString(1);
         assertEquals("INSERT INTO test_table(id,a) VALUES(0,'a');", result);
     }
 }

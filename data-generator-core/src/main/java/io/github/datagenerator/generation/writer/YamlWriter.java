@@ -1,6 +1,7 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
+import io.github.datagenerator.generation.conf.IOutputConfig;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -16,7 +17,13 @@ import java.util.stream.Stream;
 /**
  * Génère les données au format JSON
  */
-public class YamlOutput extends ObjectWriterOuput {
+public class YamlWriter extends ObjectWriter {
+
+    public static final String CONFIG_PRETTY = "pretty";
+    public static final boolean CONFIG_PRETTY_DEFAULT = false;
+    public static final String CONFIG_INCLUDES_NULLS = "include_null";
+    public static final boolean CONFIG_INCLUDES_NULLS_DEFAULT = true;
+
 
     /**
      * Active le pretty print
@@ -28,9 +35,10 @@ public class YamlOutput extends ObjectWriterOuput {
      */
     private boolean includeNull;
 
-    public YamlOutput(MapProvider provider) {
+    public YamlWriter(MapProvider provider) {
         super(provider);
     }
+
 
     @Override
     public void writeMany(OutputStream out, Stream<Map<String, ?>> stream) throws IOException {
@@ -44,10 +52,9 @@ public class YamlOutput extends ObjectWriterOuput {
     }
 
     @Override
-    public ObjectWriterOuput setConfig(IOutputConfig outputConfig) {
-        setPretty(outputConfig.getOutputPretty());
-        setIncludeNull(outputConfig.getIncludeNull());
-        return this;
+    public void configure(IOutputConfig config) {
+        this.pretty = config.getBoolean(CONFIG_PRETTY).orElse(CONFIG_PRETTY_DEFAULT);
+        this.includeNull = config.getBoolean(CONFIG_INCLUDES_NULLS).orElse(CONFIG_INCLUDES_NULLS_DEFAULT);
     }
 
     private Yaml newYaml() {
@@ -60,15 +67,13 @@ public class YamlOutput extends ObjectWriterOuput {
         return new Yaml(options);
     }
 
-    public YamlOutput setPretty(Boolean pretty) {
-        this.pretty = pretty != null && pretty;
+    public YamlWriter setPretty(boolean pretty) {
+        this.pretty = pretty;
         return this;
     }
 
-    public YamlOutput setIncludeNull(Boolean includeNull) {
-        if (includeNull != null) {
-            this.includeNull = includeNull;
-        }
+    public YamlWriter setIncludeNull(boolean includeNull) {
+        this.includeNull = includeNull;
         return this;
     }
 

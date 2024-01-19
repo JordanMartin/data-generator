@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TemplateOutputTest {
+class TemplateWriterTest {
 
     @Test
     void basic_template_should_works() throws IOException {
@@ -24,9 +24,9 @@ class TemplateOutputTest {
                 "id=$d.id, source=$d.source, utf8=$d.utf8\n" +
                 "#end";
 
-        String result = ObjectOutput.from(provider)
-                .toTemplate(template)
-                .manyToString(2);
+        String result = new TemplateWriter(provider)
+                .setTemplate(template)
+                .writeToString(2);
 
         assertEquals("id=0, source=template, utf8=éllo\nid=1, source=template, utf8=éllo\n", result);
     }
@@ -37,8 +37,10 @@ class TemplateOutputTest {
                 .field("id", ctx -> 1)
                 .build();
         String template = "#if (baddirective";
-        assertThrows(OutputException.class, () -> {
-            ObjectOutput.from(provider).toTemplate(template).oneToString();
+        assertThrows(WriterException.class, () -> {
+            new TemplateWriter(provider)
+                    .setTemplate(template)
+                    .writeToString(1);
         });
     }
 
@@ -48,8 +50,10 @@ class TemplateOutputTest {
                 .field("id", ctx -> 1)
                 .build();
         String template = "$noop";
-        assertThrows(OutputException.class, () -> {
-            ObjectOutput.from(provider).toTemplate(template).oneToString();
+        assertThrows(WriterException.class, () -> {
+            new TemplateWriter(provider)
+                    .setTemplate(template)
+                    .writeToString(1);
         });
     }
 }

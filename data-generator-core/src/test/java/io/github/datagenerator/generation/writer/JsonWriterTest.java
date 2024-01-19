@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class XmlWriterTest {
+class JsonWriterTest {
 
     @Test
     void writeOne() throws IOException {
@@ -23,8 +23,7 @@ class XmlWriterTest {
                 .field("child", child)
                 .build();
 
-        String result = new XmlOutput(provider).setObjectName("obj").oneToString();
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><obj><id>0</id><a>a</a><child><b>b</b><c>c</c></child></obj>";
-        assertEquals(expected, result);
+        String result = new JsonWriter(provider).writeToString(1);
+        assertEquals("{\"id\":0,\"a\":\"a\",\"child\":{\"b\":\"b\",\"c\":\"c\"}}", result);
     }
 }

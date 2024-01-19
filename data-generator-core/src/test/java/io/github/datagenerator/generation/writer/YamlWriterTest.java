@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
@@ -8,10 +8,9 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class JsonWriterTest {
-
+class YamlWriterTest {
     @Test
-    void writeOne() throws IOException {
+    void write() throws IOException {
         MapProvider child = new MapProviderBuilder()
                 .field("b", (objectContext) -> "b")
                 .field("c", (objectContext) -> "c")
@@ -23,7 +22,17 @@ class JsonWriterTest {
                 .field("child", child)
                 .build();
 
-        String result = new JsonOutput(provider).oneToString();
-        assertEquals("{\"id\":0,\"a\":\"a\",\"child\":{\"b\":\"b\",\"c\":\"c\"}}", result);
+        String result = new YamlWriter(provider).writeToString(2);
+        var expected = "- id: 0\n" +
+                "  a: a\n" +
+                "  child:\n" +
+                "    b: b\n" +
+                "    c: c\n" +
+                "- id: 0\n" +
+                "  a: a\n" +
+                "  child:\n" +
+                "    b: b\n" +
+                "    c: c\n";
+        assertEquals(expected, result);
     }
 }

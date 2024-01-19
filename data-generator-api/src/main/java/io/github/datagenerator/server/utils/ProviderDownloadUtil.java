@@ -1,6 +1,6 @@
 package io.github.datagenerator.server.utils;
 
-import io.github.datagenerator.server.domain.OutputConfig;
+import io.github.datagenerator.server.domain.FormOutputConfig;
 import io.github.datagenerator.server.domain.ProviderConf;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -28,10 +28,10 @@ public class ProviderDownloadUtil {
      * @param providerConf La configuration du générateur
      */
     public static Response singleFile(ProviderConf providerConf) {
-        OutputConfig outputConfig = providerConf.getOutputConfig();
-        int count = outputConfig.getCount();
+        FormOutputConfig config = providerConf.getOutputConfig();
+        int count = config.getRequiredInteger("count");
         StreamingOutput streamingOutput = out -> providerConf.getOutput().writeMany(out, count);
-        String filename = getFilename(outputConfig);
+        String filename = getFilename(config);
         return Response
                 .ok(streamingOutput)
                 .header(HttpHeaders.CONTENT_TYPE, providerConf.getContentType())
@@ -39,12 +39,12 @@ public class ProviderDownloadUtil {
                 .build();
     }
 
-    public static Response gzipObjects(ProviderConf providerConf) {
-        int count = providerConf.getOutputConfig().getCount();
-        String filename = getFilename(providerConf.getOutputConfig()) + ".gz";
+    public static Response gzipObjects(ProviderConf config) {
+        int count = config.getOutputConfig().getRequiredInteger("count");
+        String filename = getFilename(config.getOutputConfig()) + ".gz";
         StreamingOutput streamingOutput = out -> {
             try (OutputStream gzipOut = new GZIPOutputStream(out)) {
-                providerConf.getOutput().writeMany(gzipOut, count);
+                config.getOutput().writeMany(gzipOut, count);
             }
         };
 
@@ -58,22 +58,23 @@ public class ProviderDownloadUtil {
     /**
      * Génère un ZIP avec un objet par fichier
      *
-     * @param providerConf La configuration du générateur
+     * @param config La configuration du générateur
      */
-    public static Response zipMultipleObjectPerFile(ProviderConf providerConf) {
-        OutputConfig outputConfig = providerConf.getOutputConfig();
+    public static Response zipMultipleObjectPerFile(ProviderConf config) {
+        FormOutputConfig outputConfig = config.getOutputConfig();
         StreamingOutput streamingOutput = out -> {
-            int countPerFile = outputConfig.getCountPerFile();
-            int count = outputConfig.getCount();
+            int countPerFile = outputConfig.getRequiredInteger("count_per_file");
+            int count = outputConfig.getRequiredInteger("count");
             try (ZipOutputStream zos = new ZipOutputStream(out)) {
                 int fileNum = 0;
                 while (count > 0) {
                     int numberToWrite = Math.min(count, countPerFile);
-                    String entryName = Optional.ofNullable(outputConfig.getTemplateFilename()).orElse("#uuid")
+                    String templateFilename = outputConfig.getRequiredString("filename_template");
+                    String entryName = Optional.ofNullable(templateFilename).orElse("#uuid")
                             .replace("#num", Integer.toString(fileNum++))
                             .replace("#uuid", UUID.randomUUID().toString());
                     zos.putNextEntry(new ZipEntry(entryName));
-                    providerConf.getOutput().writeMany(zos, numberToWrite);
+                    config.getOutput().writeMany(zos, numberToWrite);
                     zos.closeEntry();
                     count -= countPerFile;
                 }
@@ -93,8 +94,8 @@ public class ProviderDownloadUtil {
      * @param providerConf La configuration du générateur
      */
     public static Response zipOneObjectPerFile(ProviderConf providerConf) {
-        OutputConfig outputConfig = providerConf.getOutputConfig();
-        int count = outputConfig.getCount();
+        FormOutputConfig outputConfig = providerConf.getOutputConfig();
+        int count = outputConfig.getRequiredInteger("count");
         StreamingOutput streamingOutput = out -> {
             try (ZipOutputStream zos = new ZipOutputStream(out)) {
                 for (int i = 0; i < count; i++) {
@@ -117,14 +118,14 @@ public class ProviderDownloadUtil {
     /**
      * Calcule le nom du fichier à partir de la date courante et de la configuration du format de sortie
      *
-     * @param outputConfig La configuration du générateur
+     * @param config La configuration du générateur
      */
-    static String getFilename(OutputConfig outputConfig) {
+    static String getFilename(FormOutputConfig config) {
         String date = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
         return String.format("%d__%s.%s",
-                outputConfig.getCount(),
+                config.getRequiredInteger("count"),
                 date,
-                outputConfig.getFormat()
+                config.getRequiredString("format")
         );
 
     }
@@ -132,12 +133,13 @@ public class ProviderDownloadUtil {
     /**
      * Retourne le nom du fichier à insérer dans le zip en fonction de l'expression du nom
      *
-     * @param outputConfig La configuration du générateur
+     * @param config La configuration du générateur
      * @param object       Les champs de l'objet
      * @param index        Index du fichier génré
      */
-    static String getEntryFilename(OutputConfig outputConfig, Map<String, ?> object, int index) {
-        String filename = Optional.ofNullable(outputConfig.getTemplateFilename()).orElse("#uuid")
+    static String getEntryFilename(FormOutputConfig config, Map<String, ?> object, int index) {
+        String templateFilename = config.getRequiredString("filename_template");
+        String filename = Optional.ofNullable(templateFilename).orElse("#uuid")
                 .replace("#num", Integer.toString(index))
                 .replace("#uuid", UUID.randomUUID().toString());
 

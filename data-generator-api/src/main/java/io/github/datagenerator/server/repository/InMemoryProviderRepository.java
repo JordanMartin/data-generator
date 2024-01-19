@@ -1,6 +1,6 @@
 package io.github.datagenerator.server.repository;
 
-import io.github.datagenerator.server.domain.OutputConfig;
+import io.github.datagenerator.server.domain.FormOutputConfig;
 import io.github.datagenerator.server.domain.ProviderConf;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,7 +15,7 @@ public class InMemoryProviderRepository implements ProviderRepository {
     private final Map<String, ProviderConf> map = new HashMap<>();
 
     @Override
-    public ProviderConf createOrUpdate(String name, String template, OutputConfig outputConfig) {
+    public ProviderConf createOrUpdate(String name, String template, FormOutputConfig outputConfig) {
         return map.put(name, ProviderConf.from(name, template, outputConfig));
     }
 

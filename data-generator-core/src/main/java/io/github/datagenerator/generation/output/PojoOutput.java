@@ -1,4 +1,4 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.output;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.datagenerator.domain.core.MapProvider;

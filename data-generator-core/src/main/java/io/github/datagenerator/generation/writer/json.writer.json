@@ -1,0 +1,17 @@
+{
+  "name": "json",
+  "config": [
+    {
+      "name": "pretty",
+      "type": "boolean",
+      "description": "Pretty the json",
+      "default": "true"
+    },
+    {
+      "name": "include_null",
+      "type": "boolean",
+      "description": "Include null fields in the result object",
+      "default": "true"
+    }
+  ]
+}

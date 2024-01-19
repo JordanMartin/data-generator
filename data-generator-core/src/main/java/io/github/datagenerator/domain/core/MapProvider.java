@@ -71,4 +71,5 @@ public class MapProvider implements ValueProvider<Map<String, ?>> {
     public Map<String, Object> get() {
         return get((ObjectContext) null);
     }
+
 }

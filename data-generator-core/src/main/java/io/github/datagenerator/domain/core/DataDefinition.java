@@ -11,19 +11,27 @@ public class DataDefinition {
         this.refFields = new LinkedHashMap<>();
     }
 
-    public void field(String name, ValueProvider<?> provider) {
+    public DataDefinition field(String name, ValueProvider<?> provider) {
         fields.put(name, provider);
+        return this;
     }
 
-    public void field(String name, StatelessValueProvider<?> provider) {
+    public DataDefinition field(String name, StatelessValueProvider<?> provider) {
         fields.put(name, provider);
+        return this;
     }
 
-    public void refField(String name, ValueProvider<?> provider) {
+    public DataDefinition refField(String name, ValueProvider<?> provider) {
         refFields.put(name, provider);
+        return this;
     }
 
-    public void refField(String name, StatelessValueProvider<?> provider) {
+    public DataDefinition refField(String name, StatelessValueProvider<?> provider) {
         refFields.put(name, provider);
+        return this;
+    }
+
+    public MapProvider build() {
+        return new MapProvider(this);
     }
 }

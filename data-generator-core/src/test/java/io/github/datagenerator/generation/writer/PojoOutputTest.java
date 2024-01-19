@@ -1,14 +1,13 @@
-package io.github.datagenerator.output;
+package io.github.datagenerator.generation.writer;
 
 import io.github.datagenerator.domain.core.MapProvider;
 import io.github.datagenerator.domain.providers.MapProviderBuilder;
 import io.github.datagenerator.domain.providers.base.IntIncrement;
+import io.github.datagenerator.generation.output.PojoOutput;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PojoOutputTest {
 
